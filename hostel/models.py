@@ -59,7 +59,7 @@ class Bed(models.Model):
         unique_together = ('room', 'bed_number')
 
     def __str__(self):
-        return f"Bed {self.bed_number} - {self.room}"
+        return f"Bed {self.bed_number} - {self.room}" 
 
     def clean(self):
         if self.room_id:
