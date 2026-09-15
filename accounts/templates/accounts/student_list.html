@@ -13,6 +13,7 @@
             <th>Course</th>
             <th>Year</th>
             <th>Guardian</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -23,10 +24,13 @@
             <td>{{ student.course }}</td>
             <td>{{ student.get_year_display }}</td>
             <td>{{ student.guardian_name }}</td>
+            <td>
+                <a href="{% url 'accounts:student_edit' student.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+            </td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="5" class="text-center">No students found.</td>
+            <td colspan="6" class="text-center">No students found.</td>
         </tr>
         {% endfor %}
     </tbody>

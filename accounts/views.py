@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import login_required
 from .models import StudentProfile,User
 from django.shortcuts import redirect,render
 from .forms import StudentProfileForm,StudentUserForm
+from django.shortcuts import get_object_or_404
+
 
 
 @login_required
@@ -39,6 +41,31 @@ def student_add(request):
         'user_form': user_form,
         'profile_form': profile_form,
     })
+
+
+@login_required
+
+def student_edit(request,pk):
+    if not(request.user.is_admin) and (request.user.is_warden):
+        return redirect('dashboard:home')
+    student=get_object_or_404(StudentProfile,pk=pk)
+
+    if request.method=='POST':
+        profile_form=StudentProfileForm(request.POST,instance=student)
+        if profile_form.is_valid():
+            profile_form.save()
+            return redirect('accounts:student_list')
+    else:
+        profile_form=StudentProfileForm(instance=student)
+    return render(request,'accounts/student_edit.html',{
+        'profile_form':profile_form,
+        'student':student,
+
+    })
+
+    
+
+
 
 
         
