@@ -3,14 +3,24 @@ from .models import StudentProfile,User
 from django.shortcuts import redirect,render
 from .forms import StudentProfileForm,StudentUserForm
 from django.shortcuts import get_object_or_404
+from django.db import models
+
 
 
 
 @login_required
-
 def student_list(request):
-    students=StudentProfile.objects.all()
-    return render(request,'accounts/student_list.html',{'students':students})
+    query = request.GET.get('q', '')
+    students = StudentProfile.objects.all()
+
+    if query:
+        students = students.filter(
+            models.Q(student_id__icontains=query) |
+            models.Q(user__username__icontains=query) |
+            models.Q(course__icontains=query)
+        )
+
+    return render(request, 'accounts/student_list.html', {'students': students, 'query': query})
 
 
 @login_required
@@ -62,6 +72,22 @@ def student_edit(request,pk):
         'student':student,
 
     })
+
+@login_required
+def student_delete(request,pk):
+    if not(request.user.is_admin) and (request.user.is_warden):
+        return redirect('dashboard:home')
+    
+    student=get_object_or_404(StudentProfile,pk=pk)
+
+    if request.method=='POST':
+        student.user.delete()
+        return redirect('accounts:student_list')
+    
+    return render(request,'accounts/student_confirm_delete.html',{'student':student})
+
+
+
 
     
 

@@ -5,6 +5,11 @@
 {% block content %}
 <h2>Students</h2>
 
+<form method="get" class="d-flex mb-3 mt-3" style="max-width: 400px;">
+    <input type="text" name="q" value="{{ query }}" class="form-control me-2" placeholder="Search by ID, name, or course">
+    <button type="submit" class="btn btn-outline-dark">Search</button>
+</form>
+
 <table class="table table-bordered table-striped mt-3">
     <thead>
         <tr>
@@ -25,7 +30,10 @@
             <td>{{ student.get_year_display }}</td>
             <td>{{ student.guardian_name }}</td>
             <td>
-                <a href="{% url 'accounts:student_edit' student.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <td>
+    <a href="{% url 'accounts:student_edit' student.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+    <a href="{% url 'accounts:student_delete' student.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+</td>
             </td>
         </tr>
         {% empty %}
