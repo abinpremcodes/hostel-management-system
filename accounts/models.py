@@ -12,6 +12,17 @@ class User(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
+    @property
+    def is_admin(self):
+        return self.role == self.Role.ADMIN
+
+    @property
+    def is_warden(self):
+        return self.role == self.Role.WARDEN
+
+    @property
+    def is_student(self):
+        return self.role == self.Role.STUDENT
 
 
 class StudentProfile(models.Model):
