@@ -21,7 +21,15 @@ urlpatterns=[
     path('rooms/add/',views.room_add,name='room_add'),
     path('rooms/<int:pk>/edit/',views.room_edit,name='room_edit'),
     path('rooms/<int:pk>/delete/',views.room_delete,name='room_delete'),
-    
+
+
+
+    path('beds/',views.bed_list,name='bed_list'),
+    path('beds/add/',views.bed_add,name='bed_add'),
+    path('beds/<int:pk>/edit/',views.bed_edit,name='bed_edit'),
+    path('beds/<int:pk>/delete/',views.bed_delete,name='bed_delete'),
+
+
 
 
     

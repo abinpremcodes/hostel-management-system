@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Beds{% endblock %}
+
+{% block content %}
+<h2>Beds</h2>
+
+<a href="{% url 'hostel:bed_add' %}" class="btn btn-dark mb-3">Add Bed</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Bed Number</th>
+            <th>Room</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bed in beds %}
+        <tr>
+            <td>{{ bed.bed_number }}</td>
+            <td>{{ bed.room }}</td>
+            <td>{{ bed.get_status_display }}</td>
+            <td>
+                <a href="{% url 'hostel:bed_edit' bed.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a href="{% url 'hostel:bed_delete' bed.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center">No beds found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

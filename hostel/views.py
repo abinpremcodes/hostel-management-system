@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Building,Floor,Room
-from .forms import BuildingForm,FloorForm,RoomForm
+from .models import Building,Floor,Room,Bed
+from .forms import BuildingForm,FloorForm,RoomForm,BedForm
 
 @login_required
 def building_list(request):
@@ -160,6 +160,61 @@ def room_delete(request,pk):
         return redirect('hostel:room_list')
     return render(request,'hostel/room_confirm_delete.html',{'room':room})
 
+
+
+
+@login_required
+def bed_list(request):
+    beds=Bed.objects.all()
+    return render(request,'hostel/bed_list.html',{'beds':beds})
+
+
+@login_required
+def bed_add(request):
+    if not(request.user.is_admin or request.user.is_warden):
+        return redirect('dashboard:home')
+
+    if request.method=='POST':
+        form=BedForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('hostel:bed_list')
+    else:
+        form=BedForm()
+    return render(request,'hostel/bed_form.html',{'form':form})
+
+
+@login_required
+def bed_edit(request,pk):
+    if not(request.user.is_admin or request.user.is_warden):
+        return redirect('dashboard:home')
+
+    bed=get_object_or_404(Bed,pk=pk)
+
+    if request.method=='POST':
+        form=BedForm(request.POST,instance=bed)
+        if form.is_valid():
+            form.save()
+            return redirect('hostel:bed_list')
+    else:
+        form=BedForm(instance=bed)
+    return render(request,'hostel/bed_form.html',{'form':form})
+
+
+@login_required
+def  bed_delete(request,pk):
+    if not(request.user.is_admin or request.user.is_warden):
+        return redirect('dashboard:home')
+
+    bed=get_object_or_404(Bed,pk=pk)
+
+    if request.method=='POST':
+        bed.delete()
+        return redirect('hostel:bed_list')
+    return render(request,'hostel/bed_confirm_delete.html',{'bed':bed})
+
+
+    
 
 
 
