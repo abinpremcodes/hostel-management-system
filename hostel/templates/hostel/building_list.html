@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Buildings{% endblock %}
+
+{% block content %}
+<h2>Buildings</h2>
+
+<a href="{% url 'hostel:building_add' %}" class="btn btn-dark mb-3">Add Building</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for building in buildings %}
+        <tr>
+            <td>{{ building.name }}</td>
+            <td>{{ building.address }}</td>
+            <td>
+                <a href="{% url 'hostel:building_edit' building.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a href="{% url 'hostel:building_delete' building.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3" class="text-center">No buildings found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
