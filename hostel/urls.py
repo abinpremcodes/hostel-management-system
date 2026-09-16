@@ -9,5 +9,12 @@ urlpatterns=[
     path('buildings/<int:pk>/edit/',views.building_edit,name='building_edit'),
     path('buildings/<int:pk>/delete/',views.building_delete,name='building_delete'),
 
+
+    path('floors/',views.floor_list,name='floor_list'),
+    path('floors/add/',views.floor_add,name='floor_add'),
+    path('floors/<int:pk>/edit/',views.floor_edit,name='floor_edit'),
+    path('floors/<int:pk>/delete/',views.floor_delete,name='floor_delete'),
+    
+
     
 ]

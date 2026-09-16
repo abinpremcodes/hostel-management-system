@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Floors{% endblock %}
+
+{% block content %}
+<h2>Floors</h2>
+
+<a href="{% url 'hostel:floor_add' %}" class="btn btn-dark mb-3">Add Floor</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Building</th>
+            <th>Floor Number</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for floor in floors %}
+        <tr>
+            <td>{{ floor.building.name }}</td>
+            <td>{{ floor.floor_number }}</td>
+            <td>
+                <a href="{% url 'hostel:floor_edit' floor.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a href="{% url 'hostel:floor_delete' floor.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3" class="text-center">No floors found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

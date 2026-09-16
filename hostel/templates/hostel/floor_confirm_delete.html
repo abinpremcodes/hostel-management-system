@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Floor{% endblock %}
+
+{% block content %}
+<h2>Delete Floor</h2>
+
+<p>Are you sure you want to delete <strong>{{ floor }}</strong>? This will also delete all its Rooms and Beds.</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a href="{% url 'hostel:floor_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
