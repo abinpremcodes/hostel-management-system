@@ -14,7 +14,15 @@ urlpatterns=[
     path('floors/add/',views.floor_add,name='floor_add'),
     path('floors/<int:pk>/edit/',views.floor_edit,name='floor_edit'),
     path('floors/<int:pk>/delete/',views.floor_delete,name='floor_delete'),
+
+
+
+    path('rooms/',views.room_list,name='room_list'),
+    path('rooms/add/',views.room_add,name='room_add'),
+    path('rooms/<int:pk>/edit/',views.room_edit,name='room_edit'),
+    path('rooms/<int:pk>/delete/',views.room_delete,name='room_delete'),
     
+
 
     
 ]
