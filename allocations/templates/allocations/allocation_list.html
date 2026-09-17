@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Allocations{% endblock %}
+
+{% block content %}
+<h2>Allocations</h2>
+
+<a href="{% url 'allocations:allocation_add' %}" class="btn btn-dark mb-3">Allocate Student</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Bed</th>
+            <th>Allocated Date</th>
+            <th>Vacated Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for allocation in allocations %}
+        <tr>
+            <td>{{ allocation.student }}</td>
+            <td>{{ allocation.bed }}</td>
+            <td>{{ allocation.allocated_date }}</td>
+            <td>{{ allocation.vacated_date|default:"—" }}</td>
+            <td>{{ allocation.get_status_display }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">No allocations found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
