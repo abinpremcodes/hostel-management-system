@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Transfer Student{% endblock %}
+
+{% block content %}
+<h2>Transfer {{ allocation.student }}</h2>
+<p>Currently in: <strong>{{ allocation.bed }}</strong></p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-dark">Transfer</button>
+</form>
+{% endblock %}

@@ -15,6 +15,7 @@
             <th>Allocated Date</th>
             <th>Vacated Date</th>
             <th>Status</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -25,10 +26,16 @@
             <td>{{ allocation.allocated_date }}</td>
             <td>{{ allocation.vacated_date|default:"—" }}</td>
             <td>{{ allocation.get_status_display }}</td>
+            <td>
+                {% if allocation.status == 'ACTIVE' %}
+                    <a href="{% url 'allocations:allocation_vacate' allocation.pk %}" class="btn btn-sm btn-outline-warning">Vacate</a>
+                     <a href="{% url 'allocations:allocation_transfer' allocation.pk %}" class="btn btn-sm btn-outline-info">Transfer</a>
+                {% endif %}
+            </td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="5" class="text-center">No allocations found.</td>
+            <td colspan="6" class="text-center">No allocations found.</td>
         </tr>
         {% endfor %}
     </tbody>

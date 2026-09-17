@@ -11,3 +11,7 @@ class AllocationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['bed'].queryset = Bed.objects.filter(status=Bed.Status.AVAILABLE)
+
+
+class TransferForm(forms.Form):
+    new_bed = forms.ModelChoiceField(queryset=Bed.objects.filter(status=Bed.Status.AVAILABLE))
