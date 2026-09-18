@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Fee{% endblock %}
+
+{% block content %}
+<h2>Delete Fee</h2>
+
+<p>Are you sure you want to delete this fee for <strong>{{ fees.student }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a href="{% url 'fees:fee_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Fees{% endblock %}
+
+{% block content %}
+<h2>Fees</h2>
+
+<a href="{% url 'fees:fee_add' %}" class="btn btn-dark mb-3">Add Fee</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for fee in fees %}
+        <tr>
+            <td>{{ fee.student }}</td>
+            <td>{{ fee.get_fee_type_display }}</td>
+            <td>₹{{ fee.amount }}</td>
+            <td>{{ fee.due_date }}</td>
+            <td>{{ fee.get_status_display }}</td>
+            <td>
+                <a href="{% url 'fees:fee_edit' fee.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a href="{% url 'fees:fee_delete' fee.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" class="text-center">No fees found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

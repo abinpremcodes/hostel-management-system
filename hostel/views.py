@@ -57,8 +57,6 @@ def building_delete(request,pk):
 
 
 
-
-
 @login_required
 def floor_list(request):
     floors=Floor.objects.all()

@@ -23,6 +23,7 @@ urlpatterns = [
     path('',include('dashboard.urls')),
     path('hostel/', include('hostel.urls')),
     path('allocations/',include('allocations.urls')),
+    path('fees/', include('fees.urls')),
 
 
 
