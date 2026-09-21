@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Visitors{% endblock %}
+
+{% block content %}
+<h2>Visitors</h2>
+
+<a href="{% url 'visitors:visitor_add' %}" class="btn btn-dark mb-3">Add Visitor</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Visitor Name</th>
+            <th>Student</th>
+            <th>Phone</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for visitor in visitors %}
+        <tr>
+            <td>{{ visitor.visitor_name }}</td>
+            <td>{{ visitor.student }}</td>
+            <td>{{ visitor.phone }}</td>
+            <td>{{ visitor.check_in }}</td>
+            <td>{{ visitor.check_out|default:"Still inside" }}</td>
+            <td>
+                {% if visitor.is_checked_in %}
+                    <a href="{% url 'visitors:visitor_checkout' visitor.pk %}" class="btn btn-sm btn-outline-warning">Check Out</a>
+                {% endif %}
+                <a href="{% url 'visitors:visitor_edit' visitor.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a href="{% url 'visitors:visitor_delete' visitor.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" class="text-center">No visitors found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
