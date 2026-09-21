@@ -35,6 +35,14 @@ class Fee (models.Model):
             self.status = self.Status.PENDING
         self.save()
 
+    @property
+    def amount_paid(self):
+        return sum(p.amount for p in self.payments.all())
+
+    @property
+    def balance(self):
+        return self.amount - self.amount_paid
+
 
 class Payment(models.Model):
     class Method(models.TextChoices):

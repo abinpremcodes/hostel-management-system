@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Fee
-from .forms import FeeForm
+from .forms import FeeForm,PaymentForm
 
 
 @login_required
@@ -54,6 +54,28 @@ def fee_delete(request,pk):
         return redirect('fees:fee_list')
 
     return render(request,'fees/fee_confirm_delete.html',{'fees':fees})
+
+
+
+
+@login_required
+def record_payment(request, pk):
+    if not (request.user.is_admin or request.user.is_warden):
+        return redirect('dashboard:home')
+
+    fee = get_object_or_404(Fee, pk=pk)
+
+    if request.method == 'POST':
+        form = PaymentForm(request.POST)
+        if form.is_valid():
+            payment = form.save(commit=False)
+            payment.fee = fee
+            payment.save()
+            return redirect('fees:fee_list')
+    else:
+        form = PaymentForm()
+
+    return render(request, 'fees/record_payment.html', {'form': form, 'fee': fee})
 
 
 

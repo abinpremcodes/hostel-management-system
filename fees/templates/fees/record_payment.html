@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Record Payment{% endblock %}
+
+{% block content %}
+<h2>Record Payment</h2>
+<p>For: <strong>{{ fee.student }}</strong> - {{ fee.get_fee_type_display }} - ₹{{ fee.amount }} (Status: {{ fee.get_status_display }})</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-dark">Save Payment</button>
+</form>
+{% endblock %}

@@ -9,5 +9,8 @@ urlpatterns=[
     path('add/',views.fee_add,name='fee_add'),
     path('<int:pk>/edit/',views.fee_edit,name='fee_edit'),
     path('<int:pk>/delete/',views.fee_delete,name='fee_delete'),
-    
+     path('<int:pk>/pay/', views.record_payment, name='record_payment'),
+
+
+
 ]
