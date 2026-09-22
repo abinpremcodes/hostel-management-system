@@ -6,11 +6,11 @@
 <h2>Students</h2>
 
 <form method="get" class="d-flex mb-3 mt-3" style="max-width: 400px;">
-    <input type="text" name="q" value="{{ query }}" class="form-control me-2" placeholder="Search by ID, name, or course">
+    <input type="text" id="liveSearchBox" class="form-control me-2" placeholder="Type to filter instantly...">
     <button type="submit" class="btn btn-outline-dark">Search</button>
 </form>
 
-<table class="table table-bordered table-striped mt-3">
+<table class="table table-bordered table-striped" id="studentTable">
     <thead>
         <tr>
             <th>Student ID</th>
@@ -30,10 +30,8 @@
             <td>{{ student.get_year_display }}</td>
             <td>{{ student.guardian_name }}</td>
             <td>
-                <td>
-    <a href="{% url 'accounts:student_edit' student.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
-    <a href="{% url 'accounts:student_delete' student.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
-</td>
+                <a href="{% url 'accounts:student_edit' student.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a href="{% url 'accounts:student_delete' student.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
             </td>
         </tr>
         {% empty %}
@@ -43,4 +41,42 @@
         {% endfor %}
     </tbody>
 </table>
+
+<script>
+document.getElementById('liveSearchBox').addEventListener('keyup', function() {
+    const searchText = this.value.toLowerCase();
+    const table = document.getElementById('studentTable');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    let visibleCount = 0;
+
+    for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        if (cells.length < 3) continue;
+
+        const studentId = cells[0].textContent.toLowerCase();
+        const name = cells[1].textContent.toLowerCase();
+        const course = cells[2].textContent.toLowerCase();
+        const combinedText = studentId + ' ' + name + ' ' + course;
+
+        if (combinedText.includes(searchText)) {
+            rows[i].style.display = '';
+            visibleCount++;
+        } else {
+            rows[i].style.display = 'none';
+        }
+    }
+
+    let noResultsRow = document.getElementById('noResultsRow');
+    if (visibleCount === 0) {
+        if (!noResultsRow) {
+            noResultsRow = document.createElement('tr');
+            noResultsRow.id = 'noResultsRow';
+            noResultsRow.innerHTML = '<td colspan="6" class="text-center">No matching students found.</td>';
+            table.getElementsByTagName('tbody')[0].appendChild(noResultsRow);
+        }
+    } else if (noResultsRow) {
+        noResultsRow.remove();
+    }
+});
+</script>
 {% endblock %}
