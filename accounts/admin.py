@@ -15,6 +15,8 @@ class CustomUserAdmin(UserAdmin):
 class StudentProfileAdmin(admin.ModelAdmin):
     list_display=('student_id','user','course','year')
 
+
+
     
     
 

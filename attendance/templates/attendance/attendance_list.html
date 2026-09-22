@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance{% endblock %}
+
+{% block content %}
+<h2>Attendance</h2>
+
+<a href="{% url 'attendance:attendance_add' %}" class="btn btn-dark mb-3">Mark Attendance</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in attendance %}
+        <tr>
+            <td>{{ record.student }}</td>
+            <td>{{ record.date }}</td>
+            <td>{{ record.get_status_display }}</td>
+            <td>
+                <a href="{% url 'attendance:attendance_edit' record.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <a href="{% url 'attendance:attendance_delete' record.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center">No attendance records found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
