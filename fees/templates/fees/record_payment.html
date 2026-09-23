@@ -5,10 +5,35 @@
 {% block content %}
 <h2>Record Payment</h2>
 <p>For: <strong>{{ fee.student }}</strong> - {{ fee.get_fee_type_display }} - ₹{{ fee.amount }} (Status: {{ fee.get_status_display }})</p>
+<p>Current balance: ₹<span id="currentBalance">{{ fee.balance }}</span></p>
 
-<form method="post">
+<form method="post" id="paymentForm">
     {% csrf_token %}
     {{ form.as_p }}
+    <p id="liveCalculation" class="text-muted"></p>
     <button type="submit" class="btn btn-dark">Save Payment</button>
 </form>
+
+<script>
+const currentBalance = parseFloat(document.getElementById('currentBalance').textContent);
+
+document.getElementById('id_amount').addEventListener('input', function() {
+    const enteredAmount = parseFloat(this.value) || 0;
+    const remaining = currentBalance - enteredAmount;
+    const displayBox = document.getElementById('liveCalculation');
+
+    if (this.value === '') {
+        displayBox.textContent = '';
+        return;
+    }
+
+    if (remaining < 0) {
+        displayBox.innerHTML = `<span class="text-danger">This exceeds the balance by ₹${Math.abs(remaining).toFixed(2)}</span>`;
+    } else if (remaining === 0) {
+        displayBox.innerHTML = `<span class="text-success">This will fully clear the balance!</span>`;
+    } else {
+        displayBox.innerHTML = `Remaining balance after this payment: ₹${remaining.toFixed(2)}`;
+    }
+});
+</script>
 {% endblock %}
