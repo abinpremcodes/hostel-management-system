@@ -4,6 +4,8 @@ from django.shortcuts import redirect,render
 from .forms import StudentProfileForm,StudentUserForm
 from django.shortcuts import get_object_or_404
 from django.db import models
+from django.contrib import messages
+
 
 
 
@@ -41,6 +43,8 @@ def student_add(request):
            new_profile = profile_form.save(commit=False)
            new_profile.user = new_user
            new_profile.save()
+
+           messages.success(request, f"Student {new_profile.student_id} added successfully!")
 
            return redirect('accounts:student_list')
     else:

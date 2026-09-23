@@ -5,9 +5,26 @@
 {% block content %}
 <h2>Complaint</h2>
 
-<form method="post">
+<form method="post" id="complaintForm" novalidate>
     {% csrf_token %}
     {{ form.as_p }}
+    <div id="formError" class="alert alert-danger d-none"></div>
     <button type="submit" class="btn btn-dark">Save</button>
 </form>
+
+<script>
+document.getElementById('complaintForm').addEventListener('submit', function(event) {
+    const title = document.getElementById('id_title').value.trim();
+    const description = document.getElementById('id_description').value.trim();
+    const errorBox = document.getElementById('formError');
+
+    if (title === '' || description === '') {
+        event.preventDefault();
+        errorBox.textContent = 'Title and Description cannot be empty or just spaces.';
+        errorBox.classList.remove('d-none');
+    } else {
+        errorBox.classList.add('d-none');
+    }
+});
+</script>
 {% endblock %}
