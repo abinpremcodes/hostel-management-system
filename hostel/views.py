@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import Building,Floor,Room,Bed
 from .forms import BuildingForm,FloorForm,RoomForm,BedForm
+from django.http import JsonResponse
+
 
 @login_required
 def building_list(request):
@@ -210,6 +212,28 @@ def  bed_delete(request,pk):
         bed.delete()
         return redirect('hostel:bed_list')
     return render(request,'hostel/bed_confirm_delete.html',{'bed':bed})
+
+
+@login_required
+def api_rooms_by_building(request, building_id):
+    rooms = Room.objects.filter(floor__building_id=building_id)
+    data = [{'id': r.id, 'label': f"{r.room_number} ({r.floor})"} for r in rooms]
+    return JsonResponse({'rooms': data})
+
+
+@login_required
+def api_beds_by_room(request, room_id):
+    beds = Bed.objects.filter(room_id=room_id, status=Bed.Status.AVAILABLE)
+    data = [{'id': b.id, 'label': f"Bed {b.bed_number}"} for b in beds]
+    return JsonResponse({'beds': data})
+
+
+
+@login_required
+def api_buildings(request):
+    buildings = Building.objects.all()
+    data = [{'id': b.id, 'label': b.name} for b in buildings]
+    return JsonResponse({'buildings': data})
 
 
     

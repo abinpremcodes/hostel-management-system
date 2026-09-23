@@ -5,9 +5,87 @@
 {% block content %}
 <h2>Allocate Student to Bed</h2>
 
+{% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+{% endif %}
+
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form.student.label_tag }} {{ form.student }}
+
+    <div class="mb-3 mt-3">
+        <label class="form-label">Building</label>
+        <select id="buildingSelect" class="form-select">
+            <option value="">-- Select Building --</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Room</label>
+        <select id="roomSelect" class="form-select" disabled>
+            <option value="">-- Select Building First --</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        {{ form.bed.label_tag }}
+        {{ form.bed }}
+    </div>
+
     <button type="submit" class="btn btn-dark">Allocate</button>
 </form>
+
+<script>
+async function loadBuildings() {
+    const response = await fetch('/hostel/api/buildings/');
+    const data = await response.json();
+    const buildingSelect = document.getElementById('buildingSelect');
+    data.buildings.forEach(function(building) {
+        const option = document.createElement('option');
+        option.value = building.id;
+        option.textContent = building.label;
+        buildingSelect.appendChild(option);
+    });
+}
+
+document.getElementById('buildingSelect').addEventListener('change', async function() {
+    const buildingId = this.value;
+    const roomSelect = document.getElementById('roomSelect');
+    roomSelect.innerHTML = '<option value="">-- Select Room --</option>';
+
+    if (!buildingId) {
+        roomSelect.disabled = true;
+        return;
+    }
+
+    const response = await fetch(`/hostel/api/rooms-by-building/${buildingId}/`);
+    const data = await response.json();
+    data.rooms.forEach(function(room) {
+        const option = document.createElement('option');
+        option.value = room.id;
+        option.textContent = room.label;
+        roomSelect.appendChild(option);
+    });
+    roomSelect.disabled = false;
+});
+
+document.getElementById('roomSelect').addEventListener('change', async function() {
+    const roomId = this.value;
+    const bedSelect = document.getElementById('id_bed');
+    bedSelect.innerHTML = '<option value="">-- Select Bed --</option>';
+
+    if (!roomId) return;
+
+    const response = await fetch(`/hostel/api/beds-by-room/${roomId}/`);
+    const data = await response.json();
+    data.beds.forEach(function(bed) {
+        const option = document.createElement('option');
+        option.value = bed.id;
+        option.textContent = bed.label;
+        bedSelect.appendChild(option);
+    });
+});
+
+loadBuildings();
+</script>
 {% endblock %}

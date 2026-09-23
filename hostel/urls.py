@@ -28,6 +28,9 @@ urlpatterns=[
     path('beds/add/',views.bed_add,name='bed_add'),
     path('beds/<int:pk>/edit/',views.bed_edit,name='bed_edit'),
     path('beds/<int:pk>/delete/',views.bed_delete,name='bed_delete'),
+    path('api/rooms-by-building/<int:building_id>/', views.api_rooms_by_building, name='api_rooms_by_building'),
+    path('api/beds-by-room/<int:room_id>/', views.api_beds_by_room, name='api_beds_by_room'),
+    path('api/buildings/', views.api_buildings, name='api_buildings'),
 
 
 
