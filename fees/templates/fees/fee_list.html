@@ -1,11 +1,15 @@
+
 {% extends "base.html" %}
 
 {% block title %}Fees{% endblock %}
 
 {% block content %}
+
 <h2>Fees</h2>
 
-<a href="{% url 'fees:fee_add' %}" class="btn btn-dark mb-3">Add Fee</a>
+<a href="{% url 'fees:fee_add' %}" class="btn btn-dark mb-3">
+    Add Fee
+</a>
 
 <table class="table table-bordered table-striped">
     <thead>
@@ -19,6 +23,7 @@
             <th>Actions</th>
         </tr>
     </thead>
+
     <tbody>
         {% for fee in fees %}
         <tr>
@@ -28,17 +33,116 @@
             <td>{{ fee.due_date }}</td>
             <td>{{ fee.get_status_display }}</td>
             <td>₹{{ fee.balance }}</td>
+
             <td>
-                <a href="{% url 'fees:record_payment' fee.pk %}" class="btn btn-sm btn-outline-success">Record Payment</a>
-                <a href="{% url 'fees:fee_edit' fee.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                <a href="{% url 'fees:fee_delete' fee.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                <a href="{% url 'fees:record_payment' fee.pk %}"
+                   class="btn btn-sm btn-outline-success">
+                    Record Payment
+                </a>
+
+                <a href="{% url 'fees:fee_edit' fee.pk %}"
+                   class="btn btn-sm btn-outline-primary">
+                    Edit
+                </a>
+
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger delete-fee-btn"
+                        data-fee-name="{{ fee.student }} - {{ fee.get_fee_type_display }}"
+                        data-delete-url="{% url 'fees:fee_delete' fee.pk %}">
+                    Delete
+                </button>
             </td>
         </tr>
+
         {% empty %}
         <tr>
-            <td colspan="7" class="text-center">No fees found.</td>
+            <td colspan="7" class="text-center">
+                No fees found.
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+
+<div class="modal fade" id="deleteModal" tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Confirm Delete
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                Are you sure you want to delete
+                <strong id="deleteFeeName"></strong>?
+
+                This action cannot be undone.
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <form id="deleteForm" method="post">
+
+                    {% csrf_token %}
+
+                    <button type="submit"
+                            class="btn btn-danger">
+                        Yes, Delete
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+document.querySelectorAll('.delete-fee-btn').forEach(function(button) {
+
+    button.addEventListener('click', function() {
+
+        const feeName = this.dataset.feeName;
+        const deleteUrl = this.dataset.deleteUrl;
+
+        document.getElementById('deleteFeeName').textContent = feeName;
+
+        document.getElementById('deleteForm').action = deleteUrl;
+
+        const modal = new bootstrap.Modal(
+            document.getElementById('deleteModal')
+        );
+
+        modal.show();
+
+    });
+
+});
+
+</script>
+
 {% endblock %}
+

@@ -18,6 +18,7 @@
             <th>Actions</th>
         </tr>
     </thead>
+
     <tbody>
         {% for complaint in complaints %}
         <tr>
@@ -26,12 +27,27 @@
             <td>{{ complaint.get_category_display }}</td>
             <td>{{ complaint.get_priority_display }}</td>
             <td>{{ complaint.get_status_display }}</td>
+
             <td>
-                <a href="{% url 'complaints:update_status' complaint.pk %}" class="btn btn-sm btn-outline-success">Update Status</a>
-                <a href="{% url 'complaints:complaint_edit' complaint.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                <a href="{% url 'complaints:complaint_delete' complaint.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                <a href="{% url 'complaints:update_status' complaint.pk %}"
+                   class="btn btn-sm btn-outline-success">
+                    Update Status
+                </a>
+
+                <a href="{% url 'complaints:complaint_edit' complaint.pk %}"
+                   class="btn btn-sm btn-outline-primary">
+                    Edit
+                </a>
+
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger delete-complaint-btn"
+                        data-complaint-name="{{ complaint.title }}"
+                        data-delete-url="{% url 'complaints:complaint_delete' complaint.pk %}">
+                    Delete
+                </button>
             </td>
         </tr>
+
         {% empty %}
         <tr>
             <td colspan="6" class="text-center">No complaints found.</td>
@@ -39,4 +55,77 @@
         {% endfor %}
     </tbody>
 </table>
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    Confirm Delete
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                Are you sure you want to delete
+                <strong id="deleteComplaintName"></strong>?
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <form id="deleteForm" method="post">
+                    {% csrf_token %}
+
+                    <button type="submit" class="btn btn-danger">
+                        Yes, Delete
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const deleteButtons = document.querySelectorAll(".delete-complaint-btn");
+    const deleteComplaintName = document.getElementById("deleteComplaintName");
+    const deleteForm = document.getElementById("deleteForm");
+    const deleteModal = new bootstrap.Modal(
+        document.getElementById("deleteModal")
+    );
+
+    deleteButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const complaintName = this.dataset.complaintName;
+            const deleteUrl = this.dataset.deleteUrl;
+
+            deleteComplaintName.textContent = complaintName;
+            deleteForm.action = deleteUrl;
+
+            deleteModal.show();
+        });
+
+    });
+
+});
+</script>
+
 {% endblock %}

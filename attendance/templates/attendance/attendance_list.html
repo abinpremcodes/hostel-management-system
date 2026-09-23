@@ -5,9 +5,16 @@
 {% block content %}
 <h2>Attendance</h2>
 
-<a href="{% url 'attendance:attendance_add' %}" class="btn btn-dark mb-3">Mark Attendance</a>
+<a href="{% url 'attendance:attendance_add' %}" class="btn btn-dark mb-3">
+    Mark Attendance
+</a>
 
-<table class="table table-bordered table-striped">
+<div class="mb-3" style="max-width: 250px;">
+    <label class="form-label">Filter by date</label>
+    <input type="date" id="dateFilter" class="form-control">
+</div>
+
+<table class="table table-bordered table-striped" id="attendanceTable">
     <thead>
         <tr>
             <th>Student</th>
@@ -16,22 +23,147 @@
             <th>Actions</th>
         </tr>
     </thead>
+
     <tbody>
         {% for record in attendance %}
-        <tr>
+        <tr data-date="{{ record.date|date:'Y-m-d' }}">
             <td>{{ record.student }}</td>
             <td>{{ record.date }}</td>
             <td>{{ record.get_status_display }}</td>
+
             <td>
-                <a href="{% url 'attendance:attendance_edit' record.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                <a href="{% url 'attendance:attendance_delete' record.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                <a href="{% url 'attendance:attendance_edit' record.pk %}"
+                   class="btn btn-sm btn-outline-primary">
+                    Edit
+                </a>
+
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger delete-attendance-btn"
+                        data-attendance-name="{{ record.student }} - {{ record.date }}"
+                        data-delete-url="{% url 'attendance:attendance_delete' record.pk %}">
+                    Delete
+                </button>
             </td>
         </tr>
+
         {% empty %}
         <tr>
-            <td colspan="4" class="text-center">No attendance records found.</td>
+            <td colspan="4" class="text-center">
+                No attendance records found.
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade"
+     id="deleteModal"
+     tabindex="-1"
+     aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    Confirm Delete
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                Are you sure you want to delete
+                <strong id="deleteAttendanceName"></strong>?
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <form id="deleteForm" method="post">
+                    {% csrf_token %}
+
+                    <button type="submit" class="btn btn-danger">
+                        Yes, Delete
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+document.getElementById('dateFilter').addEventListener('change', function() {
+
+    const selectedDate = this.value;
+
+    const rows = document
+        .getElementById('attendanceTable')
+        .getElementsByTagName('tbody')[0]
+        .getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+
+        const rowDate = rows[i].getAttribute('data-date');
+
+        if (!rowDate) continue;
+
+        if (selectedDate === '' || rowDate === selectedDate) {
+            rows[i].style.display = '';
+        } else {
+            rows[i].style.display = 'none';
+        }
+    }
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const deleteButtons = document.querySelectorAll(
+        ".delete-attendance-btn"
+    );
+
+    const deleteAttendanceName = document.getElementById(
+        "deleteAttendanceName"
+    );
+
+    const deleteForm = document.getElementById("deleteForm");
+
+    const deleteModal = new bootstrap.Modal(
+        document.getElementById("deleteModal")
+    );
+
+    deleteButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const attendanceName = this.dataset.attendanceName;
+            const deleteUrl = this.dataset.deleteUrl;
+
+            deleteAttendanceName.textContent = attendanceName;
+            deleteForm.action = deleteUrl;
+
+            deleteModal.show();
+        });
+
+    });
+
+});
+</script>
+
 {% endblock %}

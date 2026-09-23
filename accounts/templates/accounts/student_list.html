@@ -5,6 +5,8 @@
 {% block content %}
 <h2>Students</h2>
 
+<a href="{% url 'accounts:student_add' %}" class="btn btn-dark mb-3">Add Student</a>
+
 <form method="get" class="d-flex mb-3 mt-3" style="max-width: 400px;">
     <input type="text" id="liveSearchBox" class="form-control me-2" placeholder="Type to filter instantly...">
     <button type="submit" class="btn btn-outline-dark">Search</button>
@@ -31,7 +33,10 @@
             <td>{{ student.guardian_name }}</td>
             <td>
                 <a href="{% url 'accounts:student_edit' student.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                <a href="{% url 'accounts:student_delete' student.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                <button type="button" class="btn btn-sm btn-outline-danger"
+                        onclick="showDeleteModal('{{ student.user.username }}', '{% url 'accounts:student_delete' student.pk %}')">
+                    Delete
+                </button>
             </td>
         </tr>
         {% empty %}
@@ -41,6 +46,27 @@
         {% endfor %}
     </tbody>
 </table>
+
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <strong id="deleteStudentName"></strong>? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 document.getElementById('liveSearchBox').addEventListener('keyup', function() {
@@ -78,5 +104,12 @@ document.getElementById('liveSearchBox').addEventListener('keyup', function() {
         noResultsRow.remove();
     }
 });
+
+function showDeleteModal(studentName, deleteUrl) {
+    document.getElementById('deleteStudentName').textContent = studentName;
+    document.getElementById('deleteForm').action = deleteUrl;
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    modal.show();
+}
 </script>
 {% endblock %}

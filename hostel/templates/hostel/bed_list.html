@@ -1,11 +1,15 @@
+```html
 {% extends "base.html" %}
 
 {% block title %}Beds{% endblock %}
 
 {% block content %}
+
 <h2>Beds</h2>
 
-<a href="{% url 'hostel:bed_add' %}" class="btn btn-dark mb-3">Add Bed</a>
+<a href="{% url 'hostel:bed_add' %}" class="btn btn-dark mb-3">
+    Add Bed
+</a>
 
 <table class="table table-bordered table-striped">
     <thead>
@@ -16,22 +20,120 @@
             <th>Actions</th>
         </tr>
     </thead>
+
     <tbody>
         {% for bed in beds %}
         <tr>
             <td>{{ bed.bed_number }}</td>
             <td>{{ bed.room }}</td>
             <td>{{ bed.get_status_display }}</td>
+
             <td>
-                <a href="{% url 'hostel:bed_edit' bed.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                <a href="{% url 'hostel:bed_delete' bed.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                <a href="{% url 'hostel:bed_edit' bed.pk %}"
+                   class="btn btn-sm btn-outline-primary">
+                    Edit
+                </a>
+
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger delete-bed-btn"
+                        data-bed-name="Bed {{ bed.bed_number }}"
+                        data-delete-url="{% url 'hostel:bed_delete' bed.pk %}">
+                    Delete
+                </button>
             </td>
         </tr>
+
         {% empty %}
         <tr>
-            <td colspan="4" class="text-center">No beds found.</td>
+            <td colspan="4" class="text-center">
+                No beds found.
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+
+<!-- Delete Confirmation Modal -->
+
+<div class="modal fade" id="deleteModal" tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Confirm Delete
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                Are you sure you want to delete
+                <strong id="deleteBedName"></strong>?
+
+                This action cannot be undone.
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <form id="deleteForm" method="post">
+
+                    {% csrf_token %}
+
+                    <button type="submit"
+                            class="btn btn-danger">
+                        Yes, Delete
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+document.querySelectorAll('.delete-bed-btn').forEach(function(button) {
+
+    button.addEventListener('click', function() {
+
+        const bedName = this.dataset.bedName;
+        const deleteUrl = this.dataset.deleteUrl;
+
+        document.getElementById('deleteBedName').textContent = bedName;
+
+        document.getElementById('deleteForm').action = deleteUrl;
+
+        const modal = new bootstrap.Modal(
+            document.getElementById('deleteModal')
+        );
+
+        modal.show();
+
+    });
+
+});
+
+</script>
+
 {% endblock %}
+```
