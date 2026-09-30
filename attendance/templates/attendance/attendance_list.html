@@ -1,169 +1,701 @@
+
 {% extends "base.html" %}
 
 {% block title %}Attendance{% endblock %}
 
 {% block content %}
-<h2>Attendance</h2>
 
-<a href="{% url 'attendance:attendance_add' %}" class="btn btn-dark mb-3">
-    Mark Attendance
-</a>
+<style>
+    .attendance-header {
+        margin-bottom: 24px;
+    }
 
-<div class="mb-3" style="max-width: 250px;">
-    <label class="form-label">Filter by date</label>
-    <input type="date" id="dateFilter" class="form-control">
+    .attendance-header h2 {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 4px;
+    }
+
+    .attendance-header p {
+        color: var(--muted);
+        margin-bottom: 0;
+    }
+
+    .attendance-add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .attendance-card {
+        background: var(--card);
+        border: 0;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .attendance-toolbar {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 20px;
+    }
+
+    .attendance-filter {
+        width: 250px;
+    }
+
+    .attendance-filter label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .attendance-filter input {
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 9px 12px;
+        font-size: 14px;
+        width: 100%;
+    }
+
+    .attendance-filter input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
+        outline: none;
+    }
+
+    .attendance-count {
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 6px 11px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .attendance-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .attendance-table {
+        min-width: 700px;
+        margin-bottom: 0;
+    }
+
+    .attendance-table thead th {
+        background: #f8fafc;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-bottom: 1px solid var(--border);
+        padding: 14px 16px;
+        white-space: nowrap;
+    }
+
+    .attendance-table tbody td {
+        padding: 16px;
+        border-bottom: 1px solid #f0f1f5;
+        color: var(--text);
+        vertical-align: middle;
+    }
+
+    .attendance-table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .attendance-table tbody tr:hover {
+        background: #fafbff;
+    }
+
+    .student-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .student-name {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .student-id {
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .attendance-date {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 11px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-present {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .status-absent {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .status-default {
+        background: #f1f5f9;
+        color: #64748b;
+    }
+
+    .attendance-actions {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .attendance-action-btn {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .attendance-action-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .empty-state {
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .empty-state-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        background: var(--primary-light);
+        color: var(--primary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin-bottom: 16px;
+    }
+
+    .empty-state h5 {
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .empty-state p {
+        color: var(--muted);
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 700px) {
+        .attendance-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .attendance-filter {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .attendance-header {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 15px;
+        }
+
+        .attendance-add-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+
+<!-- Page Header -->
+<div class="attendance-header d-flex justify-content-between align-items-center">
+
+    <div>
+
+        <h2>
+            <i class="bi bi-calendar-check me-2"></i>
+            Attendance
+        </h2>
+
+        <p>
+            Track and manage student attendance
+        </p>
+
+    </div>
+
+
+    <a href="{% url 'attendance:attendance_add' %}"
+       class="btn btn-dark attendance-add-btn">
+
+        <i class="bi bi-plus-circle"></i>
+
+        Mark Attendance
+
+    </a>
+
 </div>
 
-<table class="table table-bordered table-striped" id="attendanceTable">
-    <thead>
-        <tr>
-            <th>Student</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
 
-    <tbody>
-        {% for record in attendance %}
-        <tr data-date="{{ record.date|date:'Y-m-d' }}">
-            <td>{{ record.student }}</td>
-            <td>{{ record.date }}</td>
-            <td>{{ record.get_status_display }}</td>
+<!-- Attendance Card -->
+<div class="attendance-card">
 
-            <td>
-                <a href="{% url 'attendance:attendance_edit' record.pk %}"
-                   class="btn btn-sm btn-outline-primary">
-                    Edit
-                </a>
+    <!-- Filter Toolbar -->
+    <div class="attendance-toolbar">
 
-                <button type="button"
-                        class="btn btn-sm btn-outline-danger delete-attendance-btn"
-                        data-attendance-name="{{ record.student }} - {{ record.date }}"
-                        data-delete-url="{% url 'attendance:attendance_delete' record.pk %}">
-                    Delete
-                </button>
-            </td>
-        </tr>
+        <div class="attendance-filter">
 
-        {% empty %}
-        <tr>
-            <td colspan="4" class="text-center">
-                No attendance records found.
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+            <label for="dateFilter">
+                <i class="bi bi-calendar3 me-1"></i>
+                Filter by Date
+            </label>
+
+            <input type="date"
+                   id="dateFilter"
+                   class="form-control">
+
+        </div>
+
+
+        <span class="attendance-count">
+
+            {{ attendance|length }}
+            record{{ attendance|length|pluralize }}
+
+        </span>
+
+    </div>
+
+
+    <!-- Table -->
+    <div class="attendance-table-wrapper">
+
+        <table class="table attendance-table align-middle"
+               id="attendanceTable">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Student
+                    </th>
+
+                    <th>
+                        Date
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th class="text-center">
+                        Actions
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for record in attendance %}
+
+                <tr data-date="{{ record.date|date:'Y-m-d' }}">
+
+                    <!-- Student -->
+                    <td>
+
+                        <div class="student-info">
+
+                            {% if record.student.user.get_full_name %}
+
+                                <div class="student-name">
+                                    {{ record.student.user.get_full_name }}
+                                </div>
+
+                            {% else %}
+
+                                <div class="student-name">
+                                    {{ record.student.user.username }}
+                                </div>
+
+                            {% endif %}
+
+
+                            <div class="student-id">
+
+                                <i class="bi bi-person-badge me-1"></i>
+
+                                {{ record.student.student_id }}
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- Date -->
+                    <td>
+
+                        <div class="attendance-date">
+
+                            <i class="bi bi-calendar3 me-1"></i>
+
+                            {{ record.date|date:"d M Y" }}
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- Status -->
+                    <td>
+
+                        {% if record.status == "present" %}
+
+                            <span class="status-badge status-present">
+
+                                <i class="bi bi-check-circle"></i>
+
+                                {{ record.get_status_display }}
+
+                            </span>
+
+                        {% elif record.status == "absent" %}
+
+                            <span class="status-badge status-absent">
+
+                                <i class="bi bi-x-circle"></i>
+
+                                {{ record.get_status_display }}
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-badge status-default">
+
+                                {{ record.get_status_display }}
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- Actions -->
+                    <td>
+
+                        <div class="attendance-actions">
+
+                            <!-- Edit -->
+                            <a href="{% url 'attendance:attendance_edit' record.pk %}"
+                               class="btn btn-outline-primary attendance-action-btn"
+                               title="Edit Attendance">
+
+                                <i class="bi bi-pencil"></i>
+
+                            </a>
+
+
+                            <!-- Delete -->
+                            <button type="button"
+                                    class="btn btn-outline-danger attendance-action-btn delete-attendance-btn"
+                                    data-attendance-name="{{ record.student }} - {{ record.date }}"
+                                    data-delete-url="{% url 'attendance:attendance_delete' record.pk %}"
+                                    title="Delete Attendance">
+
+                                <i class="bi bi-trash"></i>
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="4">
+
+                        <div class="empty-state">
+
+                            <div class="empty-state-icon">
+
+                                <i class="bi bi-calendar-x"></i>
+
+                            </div>
+
+
+                            <h5>
+                                No attendance records found
+                            </h5>
+
+
+                            <p>
+                                No attendance has been marked yet.
+                            </p>
+
+
+                            <a href="{% url 'attendance:attendance_add' %}"
+                               class="btn btn-dark">
+
+                                <i class="bi bi-plus-circle me-1"></i>
+
+                                Mark Attendance
+
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
 
 
 <!-- Delete Confirmation Modal -->
+
 <div class="modal fade"
      id="deleteModal"
      tabindex="-1"
      aria-labelledby="deleteModalLabel"
      aria-hidden="true">
 
-    <div class="modal-dialog">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
 
             <div class="modal-header">
+
                 <h5 class="modal-title" id="deleteModalLabel">
+
+                    <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+
                     Confirm Delete
+
                 </h5>
+
 
                 <button type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close">
                 </button>
+
             </div>
 
+
             <div class="modal-body">
+
                 Are you sure you want to delete
+
                 <strong id="deleteAttendanceName"></strong>?
+
+                <div class="text-muted small mt-2">
+
+                    This action cannot be undone.
+
+                </div>
+
             </div>
+
 
             <div class="modal-footer">
 
                 <button type="button"
                         class="btn btn-secondary"
                         data-bs-dismiss="modal">
+
                     Cancel
+
                 </button>
 
+
                 <form id="deleteForm" method="post">
+
                     {% csrf_token %}
 
-                    <button type="submit" class="btn btn-danger">
+                    <button type="submit"
+                            class="btn btn-danger">
+
+                        <i class="bi bi-trash me-1"></i>
+
                         Yes, Delete
+
                     </button>
+
                 </form>
 
             </div>
 
         </div>
+
     </div>
+
 </div>
 
 
 <script>
-document.getElementById('dateFilter').addEventListener('change', function() {
-
-    const selectedDate = this.value;
-
-    const rows = document
-        .getElementById('attendanceTable')
-        .getElementsByTagName('tbody')[0]
-        .getElementsByTagName('tr');
-
-    for (let i = 0; i < rows.length; i++) {
-
-        const rowDate = rows[i].getAttribute('data-date');
-
-        if (!rowDate) continue;
-
-        if (selectedDate === '' || rowDate === selectedDate) {
-            rows[i].style.display = '';
-        } else {
-            rows[i].style.display = 'none';
-        }
-    }
-});
-
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const deleteButtons = document.querySelectorAll(
-        ".delete-attendance-btn"
-    );
+    /* =========================
+       DATE FILTER
+    ========================= */
 
-    const deleteAttendanceName = document.getElementById(
-        "deleteAttendanceName"
-    );
+    const dateFilter =
+        document.getElementById("dateFilter");
 
-    const deleteForm = document.getElementById("deleteForm");
+    const attendanceTable =
+        document.getElementById("attendanceTable");
 
-    const deleteModal = new bootstrap.Modal(
-        document.getElementById("deleteModal")
-    );
+
+    if (dateFilter && attendanceTable) {
+
+        dateFilter.addEventListener("change", function () {
+
+            const selectedDate = this.value;
+
+            const rows =
+                attendanceTable
+                .querySelector("tbody")
+                .querySelectorAll("tr[data-date]");
+
+
+            rows.forEach(function (row) {
+
+                const rowDate =
+                    row.getAttribute("data-date");
+
+
+                if (
+                    selectedDate === "" ||
+                    rowDate === selectedDate
+                ) {
+
+                    row.style.display = "";
+
+                } else {
+
+                    row.style.display = "none";
+
+                }
+
+            });
+
+        });
+
+    }
+
+
+    /* =========================
+       DELETE MODAL
+    ========================= */
+
+    const deleteButtons =
+        document.querySelectorAll(
+            ".delete-attendance-btn"
+        );
+
+    const deleteAttendanceName =
+        document.getElementById(
+            "deleteAttendanceName"
+        );
+
+    const deleteForm =
+        document.getElementById("deleteForm");
+
+    const deleteModalElement =
+        document.getElementById("deleteModal");
+
+
+    if (!deleteModalElement) {
+        return;
+    }
+
+
+    const deleteModal =
+        new bootstrap.Modal(deleteModalElement);
+
 
     deleteButtons.forEach(function (button) {
 
         button.addEventListener("click", function () {
 
-            const attendanceName = this.dataset.attendanceName;
-            const deleteUrl = this.dataset.deleteUrl;
+            const attendanceName =
+                this.dataset.attendanceName;
 
-            deleteAttendanceName.textContent = attendanceName;
-            deleteForm.action = deleteUrl;
+            const deleteUrl =
+                this.dataset.deleteUrl;
+
+
+            deleteAttendanceName.textContent =
+                attendanceName;
+
+            deleteForm.action =
+                deleteUrl;
+
 
             deleteModal.show();
+
         });
 
     });
 
 });
+
 </script>
 
 {% endblock %}
+
+
+

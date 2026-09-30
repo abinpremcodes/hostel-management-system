@@ -1,107 +1,747 @@
-```html
 {% extends "base.html" %}
 
 {% block title %}Beds{% endblock %}
 
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   BED LIST PAGE
+========================================================= */
+
+.bed-page-header {
+    margin-bottom: 24px;
+}
+
+.bed-page-header h2 {
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.bed-page-header p {
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   STAT CARD
+========================================================= */
+
+.bed-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 18px 20px;
+
+    margin-bottom: 22px;
+}
+
+.bed-stat-icon {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-size: 21px;
+}
+
+.bed-stat-number {
+    font-size: 22px;
+    font-weight: 700;
+
+    color: var(--text-dark);
+
+    line-height: 1.1;
+}
+
+.bed-stat-label {
+    font-size: 12px;
+
+    color: var(--text-muted);
+}
+
+
+/* =========================================================
+   BED TABLE CARD
+========================================================= */
+
+.bed-table-card {
+    overflow: hidden;
+}
+
+.bed-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 20px;
+
+    border-bottom: 1px solid var(--border);
+
+    background: #ffffff;
+}
+
+.bed-table-header h5 {
+    margin: 0;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    color: var(--text-dark);
+}
+
+.bed-table-header p {
+    margin: 4px 0 0;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.bed-table-wrapper {
+    overflow-x: auto;
+}
+
+.bed-table {
+    margin-bottom: 0;
+}
+
+.bed-table thead th {
+    padding: 13px 16px;
+
+    background: #f8f9fc;
+
+    border-bottom: 1px solid var(--border);
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    white-space: nowrap;
+}
+
+.bed-table tbody td {
+    padding: 14px 16px;
+
+    vertical-align: middle;
+
+    border-color: var(--border);
+
+    color: var(--text-dark);
+
+    font-size: 13px;
+}
+
+.bed-table tbody tr {
+    transition: var(--transition);
+}
+
+.bed-table tbody tr:hover {
+    background: #fafbff;
+}
+
+
+/* =========================================================
+   BED NUMBER
+========================================================= */
+
+.bed-number-wrapper {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.bed-icon {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-size: 15px;
+}
+
+.bed-number {
+    font-weight: 600;
+
+    color: var(--text-dark);
+}
+
+
+/* =========================================================
+   ROOM
+========================================================= */
+
+.bed-room {
+    color: var(--text-muted);
+
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.bed-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    background: #eef1ff;
+
+    color: var(--primary);
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.bed-status::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.bed-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 7px;
+}
+
+.bed-actions .action-btn {
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border-radius: 8px;
+}
+
+.bed-actions .action-btn i {
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.bed-empty-state {
+    padding: 55px 20px;
+
+    text-align: center;
+
+    color: var(--text-muted);
+}
+
+.bed-empty-icon {
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: #f1f3f8;
+
+    font-size: 24px;
+}
+
+.bed-empty-state h5 {
+    margin-bottom: 5px;
+
+    color: var(--text-dark);
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+.bed-empty-state p {
+    margin-bottom: 0;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   DELETE MODAL
+========================================================= */
+
+#deleteModal .modal-content {
+    border: none;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow: var(--shadow-md);
+}
+
+#deleteModal .modal-header {
+    padding: 18px 20px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+#deleteModal .modal-title {
+    font-size: 16px;
+
+    font-weight: 700;
+
+    color: var(--text-dark);
+}
+
+#deleteModal .modal-body {
+    padding: 20px;
+
+    color: var(--text-muted);
+
+    font-size: 13px;
+}
+
+#deleteModal .modal-body strong {
+    color: var(--text-dark);
+}
+
+#deleteModal .modal-footer {
+    padding: 14px 20px;
+
+    border-top: 1px solid var(--border);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .bed-page-header {
+        flex-direction: column;
+
+        align-items: flex-start !important;
+
+        gap: 15px;
+    }
+
+    .bed-page-header .btn {
+        width: 100%;
+    }
+
+    .bed-table-header {
+        padding: 16px;
+    }
+
+    .bed-table tbody td,
+    .bed-table thead th {
+        padding: 12px;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
 {% block content %}
 
-<h2>Beds</h2>
 
-<a href="{% url 'hostel:bed_add' %}" class="btn btn-dark mb-3">
-    Add Bed
-</a>
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Bed Number</th>
-            <th>Room</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+<div class="bed-page-header d-flex justify-content-between align-items-center">
 
-    <tbody>
-        {% for bed in beds %}
-        <tr>
-            <td>{{ bed.bed_number }}</td>
-            <td>{{ bed.room }}</td>
-            <td>{{ bed.get_status_display }}</td>
+    <div>
 
-            <td>
-                <a href="{% url 'hostel:bed_edit' bed.pk %}"
-                   class="btn btn-sm btn-outline-primary">
-                    Edit
-                </a>
+        <h2 class="mb-1">
+            Beds
+        </h2>
 
-                <button type="button"
-                        class="btn btn-sm btn-outline-danger delete-bed-btn"
-                        data-bed-name="Bed {{ bed.bed_number }}"
-                        data-delete-url="{% url 'hostel:bed_delete' bed.pk %}">
-                    Delete
-                </button>
-            </td>
-        </tr>
+        <p class="text-muted mb-0">
+            Manage hostel beds and their availability status.
+        </p>
 
-        {% empty %}
-        <tr>
-            <td colspan="4" class="text-center">
-                No beds found.
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    </div>
 
 
-<!-- Delete Confirmation Modal -->
+    <a
+        href="{% url 'hostel:bed_add' %}"
+        class="btn btn-primary"
+    >
 
-<div class="modal fade" id="deleteModal" tabindex="-1">
+        <i class="bi bi-plus-circle me-1"></i>
 
-    <div class="modal-dialog">
+        Add Bed
+
+    </a>
+
+</div>
+
+
+
+<!-- =========================================================
+     BED STAT
+========================================================= -->
+
+<div class="card bed-stat-card">
+
+    <div class="bed-stat-icon">
+
+        <i class="bi bi-person-square"></i>
+
+    </div>
+
+
+    <div>
+
+        <div class="bed-stat-number">
+            {{ beds|length }}
+        </div>
+
+        <div class="bed-stat-label">
+            Total Beds
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     BED TABLE
+========================================================= -->
+
+<div class="card bed-table-card">
+
+
+    <div class="bed-table-header">
+
+        <div>
+
+            <h5>
+
+                <i class="bi bi-person-square me-2"></i>
+
+                Bed List
+
+            </h5>
+
+            <p class="text-muted">
+                View and manage all hostel beds.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="bed-table-wrapper">
+
+        <table class="table bed-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Bed Number
+                    </th>
+
+                    <th>
+                        Room
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th class="text-end">
+                        Actions
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for bed in beds %}
+
+                <tr>
+
+
+                    <!-- BED NUMBER -->
+
+                    <td>
+
+                        <div class="bed-number-wrapper">
+
+                            <div class="bed-icon">
+
+                                <i class="bi bi-person-square"></i>
+
+                            </div>
+
+                            <span class="bed-number">
+                                {{ bed.bed_number }}
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- ROOM -->
+
+                    <td>
+
+                        <span class="bed-room">
+                            {{ bed.room }}
+                        </span>
+
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        <span class="bed-status">
+
+                            {{ bed.get_status_display }}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- ACTIONS -->
+
+                    <td>
+
+                        <div class="bed-actions">
+
+
+                            <!-- EDIT -->
+
+                            <a
+                                href="{% url 'hostel:bed_edit' bed.pk %}"
+                                class="btn btn-sm btn-outline-primary action-btn"
+                                title="Edit Bed"
+                            >
+
+                                <i class="bi bi-pencil"></i>
+
+                            </a>
+
+
+                            <!-- DELETE -->
+
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-outline-danger action-btn delete-bed-btn"
+                                title="Delete Bed"
+                                data-bed-name="Bed {{ bed.bed_number }}"
+                                data-delete-url="{% url 'hostel:bed_delete' bed.pk %}"
+                            >
+
+                                <i class="bi bi-trash"></i>
+
+                            </button>
+
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="4">
+
+                        <div class="bed-empty-state">
+
+                            <div class="bed-empty-icon">
+
+                                <i class="bi bi-person-square"></i>
+
+                            </div>
+
+                            <h5>
+                                No Beds Found
+                            </h5>
+
+                            <p>
+                                Add your first bed to get started.
+                            </p>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     DELETE CONFIRMATION MODAL
+========================================================= -->
+
+<div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
 
         <div class="modal-content">
 
+
             <div class="modal-header">
+
                 <h5 class="modal-title">
+
+                    <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+
                     Confirm Delete
+
                 </h5>
 
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal">
-                </button>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
             </div>
+
 
             <div class="modal-body">
 
                 Are you sure you want to delete
+
                 <strong id="deleteBedName"></strong>?
+
+                <br><br>
 
                 This action cannot be undone.
 
             </div>
 
+
             <div class="modal-footer">
 
-                <button type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal">
+                <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    data-bs-dismiss="modal"
+                >
+
                     Cancel
+
                 </button>
 
-                <form id="deleteForm" method="post">
+
+                <form
+                    id="deleteForm"
+                    method="post"
+                >
 
                     {% csrf_token %}
 
-                    <button type="submit"
-                            class="btn btn-danger">
+                    <button
+                        type="submit"
+                        class="btn btn-danger"
+                    >
+
+                        <i class="bi bi-trash me-1"></i>
+
                         Yes, Delete
+
                     </button>
 
                 </form>
 
             </div>
+
 
         </div>
 
@@ -110,6 +750,11 @@
 </div>
 
 
+
+<!-- =========================================================
+     DELETE MODAL JAVASCRIPT
+========================================================= -->
+
 <script>
 
 document.querySelectorAll('.delete-bed-btn').forEach(function(button) {
@@ -117,15 +762,19 @@ document.querySelectorAll('.delete-bed-btn').forEach(function(button) {
     button.addEventListener('click', function() {
 
         const bedName = this.dataset.bedName;
+
         const deleteUrl = this.dataset.deleteUrl;
+
 
         document.getElementById('deleteBedName').textContent = bedName;
 
         document.getElementById('deleteForm').action = deleteUrl;
 
+
         const modal = new bootstrap.Modal(
             document.getElementById('deleteModal')
         );
+
 
         modal.show();
 
@@ -135,5 +784,5 @@ document.querySelectorAll('.delete-bed-btn').forEach(function(button) {
 
 </script>
 
+
 {% endblock %}
-```

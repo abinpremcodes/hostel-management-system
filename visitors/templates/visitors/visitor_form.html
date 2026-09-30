@@ -1,13 +1,396 @@
+
 {% extends "base.html" %}
 
-{% block title %}Visitor Form{% endblock %}
+{% block title %}Visitor{% endblock %}
 
 {% block content %}
-<h2>Visitor</h2>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-dark">Save</button>
-</form>
+<style>
+    .visitor-form-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .visitor-form-header {
+        margin-bottom: 24px;
+    }
+
+    .visitor-form-header h2 {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 5px;
+    }
+
+    .visitor-form-header p {
+        color: var(--muted);
+        margin-bottom: 0;
+    }
+
+    .visitor-form-card {
+        background: var(--card);
+        border: 0;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .visitor-form-card-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+        background: #fafbff;
+    }
+
+    .visitor-form-card-header h5 {
+        margin: 0;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .visitor-form-card-body {
+        padding: 28px 24px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .visitor-form-card input,
+    .visitor-form-card select,
+    .visitor-form-card textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 10px 12px;
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--text);
+        background: #fff;
+        transition: all 0.2s ease;
+    }
+
+    .visitor-form-card input:focus,
+    .visitor-form-card select:focus,
+    .visitor-form-card textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
+        outline: none;
+    }
+
+    .visitor-form-card textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .visitor-form-card .helptext {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .visitor-form-card ul.errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 5px 0 0;
+        color: #dc2626;
+        font-size: 13px;
+    }
+
+    .visitor-form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border);
+        margin-top: 10px;
+    }
+
+    .form-action-right {
+        display: flex;
+        gap: 10px;
+    }
+
+    .visitor-form-actions .btn {
+        border-radius: 9px;
+        font-weight: 600;
+        padding: 9px 18px;
+    }
+
+    @media (max-width: 576px) {
+
+        .visitor-form-card-body {
+            padding: 20px 16px;
+        }
+
+        .visitor-form-actions {
+            flex-direction: column-reverse;
+            align-items: stretch;
+        }
+
+        .form-action-right {
+            flex-direction: column;
+        }
+
+        .visitor-form-actions .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<div class="visitor-form-wrapper">
+
+    <!-- Page Header -->
+    <div class="visitor-form-header">
+
+        <h2>
+
+            <i class="bi bi-person-badge me-2"></i>
+
+            {% if form.instance.pk %}
+                Edit Visitor
+            {% else %}
+                Add Visitor
+            {% endif %}
+
+        </h2>
+
+
+        <p>
+
+            {% if form.instance.pk %}
+                Update the visitor information below.
+            {% else %}
+                Add a visitor record to the hostel.
+            {% endif %}
+
+        </p>
+
+    </div>
+
+
+    <!-- Form Card -->
+    <div class="visitor-form-card">
+
+        <div class="visitor-form-card-header">
+
+            <h5>
+
+                <i class="bi bi-pencil-square me-2"></i>
+
+                Visitor Details
+
+            </h5>
+
+        </div>
+
+
+        <div class="visitor-form-card-body">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <!-- Non-field errors -->
+                {% if form.non_field_errors %}
+
+                    <div class="alert alert-danger">
+
+                        <i class="bi bi-exclamation-circle me-1"></i>
+
+                        {{ form.non_field_errors }}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Visitor Name -->
+                {% if form.visitor_name %}
+
+                    <div class="form-group">
+
+                        <label for="{{ form.visitor_name.id_for_label }}">
+                            Visitor Name
+                        </label>
+
+                        {{ form.visitor_name }}
+
+                        {% if form.visitor_name.errors %}
+                            {{ form.visitor_name.errors }}
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Student -->
+                {% if form.student %}
+
+                    <div class="form-group">
+
+                        <label for="{{ form.student.id_for_label }}">
+                            Student
+                        </label>
+
+                        {{ form.student }}
+
+                        {% if form.student.errors %}
+                            {{ form.student.errors }}
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Phone -->
+                {% if form.phone %}
+
+                    <div class="form-group">
+
+                        <label for="{{ form.phone.id_for_label }}">
+                            Phone Number
+                        </label>
+
+                        {{ form.phone }}
+
+                        {% if form.phone.errors %}
+                            {{ form.phone.errors }}
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Check In -->
+                {% if form.check_in %}
+
+                    <div class="form-group">
+
+                        <label for="{{ form.check_in.id_for_label }}">
+                            Check In
+                        </label>
+
+                        {{ form.check_in }}
+
+                        {% if form.check_in.errors %}
+                            {{ form.check_in.errors }}
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Check Out -->
+                {% if form.check_out %}
+
+                    <div class="form-group">
+
+                        <label for="{{ form.check_out.id_for_label }}">
+                            Check Out
+                        </label>
+
+                        {{ form.check_out }}
+
+                        {% if form.check_out.errors %}
+                            {{ form.check_out.errors }}
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Other fields -->
+                {% for field in form %}
+
+                    {% if field.name != "visitor_name" and field.name != "student" and field.name != "phone" and field.name != "check_in" and field.name != "check_out" %}
+
+                        <div class="form-group">
+
+                            {{ field.label_tag }}
+
+                            {{ field }}
+
+                            {% if field.help_text %}
+                                <small class="helptext">
+                                    {{ field.help_text }}
+                                </small>
+                            {% endif %}
+
+                            {% if field.errors %}
+                                {{ field.errors }}
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                <!-- Buttons -->
+                <div class="visitor-form-actions">
+
+                    <a href="{% url 'visitors:visitor_list' %}"
+                       class="btn btn-light border">
+
+                        <i class="bi bi-arrow-left me-1"></i>
+
+                        Back
+
+                    </a>
+
+
+                    <div class="form-action-right">
+
+                        <a href="{% url 'visitors:visitor_list' %}"
+                           class="btn btn-outline-secondary">
+
+                            Cancel
+
+                        </a>
+
+
+                        <button type="submit"
+                                class="btn btn-dark">
+
+                            <i class="bi bi-check-circle me-1"></i>
+
+                            {% if form.instance.pk %}
+                                Update Visitor
+                            {% else %}
+                                Save Visitor
+                            {% endif %}
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}
+
+

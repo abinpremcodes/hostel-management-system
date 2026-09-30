@@ -2,12 +2,372 @@
 
 {% block title %}Room Form{% endblock %}
 
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   ROOM FORM PAGE
+========================================================= */
+
+.room-form-header {
+    margin-bottom: 24px;
+}
+
+.room-form-header h2 {
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+
+/* =========================================================
+   FORM CARD
+========================================================= */
+
+.room-form-card {
+    overflow: hidden;
+
+    margin-bottom: 20px;
+
+    transition: var(--transition);
+}
+
+.room-form-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow: var(--shadow-md);
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.room-form-card-header {
+    padding: 18px 20px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.room-form-card-header h5 {
+    font-size: 16px;
+
+    font-weight: 700;
+
+    color: var(--text-dark);
+}
+
+.room-form-card-header p {
+    font-size: 12px;
+
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   FORM BODY
+========================================================= */
+
+.room-form-card-body {
+    padding: 22px;
+}
+
+
+/* =========================================================
+   DJANGO FORM
+========================================================= */
+
+.room-form-card-body p {
+    margin-bottom: 18px;
+}
+
+.room-form-card-body label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: var(--text-dark);
+}
+
+.room-form-card-body input,
+.room-form-card-body select,
+.room-form-card-body textarea {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border: 1px solid #dfe3eb;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: var(--text-dark);
+
+    font-size: 13px;
+
+    transition: var(--transition);
+}
+
+.room-form-card-body input:focus,
+.room-form-card-body select:focus,
+.room-form-card-body textarea:focus {
+    border-color: var(--primary);
+
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.room-form-card-body textarea {
+    min-height: 110px;
+
+    resize: vertical;
+}
+
+
+/* =========================================================
+   HELP TEXT
+========================================================= */
+
+.room-form-card-body .helptext {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 11px;
+
+    color: var(--text-muted);
+}
+
+
+/* =========================================================
+   ERROR MESSAGES
+========================================================= */
+
+.room-form-card-body .errorlist {
+    list-style: none;
+
+    padding: 0;
+
+    margin: 5px 0 7px;
+
+    color: var(--danger);
+
+    font-size: 12px;
+}
+
+.room-form-card-body .errorlist li {
+    margin-bottom: 3px;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.room-form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 24px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid var(--border);
+}
+
+.room-form-actions .btn {
+    min-width: 120px;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.room-back-btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .room-form-header {
+        align-items: flex-start !important;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .room-back-btn {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+    .room-form-card-body {
+        padding: 18px;
+    }
+
+    .room-form-actions {
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+    }
+
+    .room-form-actions .btn {
+        width: 100%;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
 {% block content %}
-<h2>Room</h2>
+
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="room-form-header d-flex justify-content-between align-items-center">
+
+    <div>
+
+        <h2 class="mb-1">
+            Room
+        </h2>
+
+        <p class="text-muted mb-0">
+            Add or update a hostel room.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{% url 'hostel:room_list' %}"
+        class="btn btn-outline-secondary room-back-btn"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        Back to Rooms
+
+    </a>
+
+</div>
+
+
+
+<!-- =========================================================
+     ROOM FORM
+========================================================= -->
 
 <form method="post">
+
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-dark">Save</button>
+
+
+    <div class="card room-form-card">
+
+
+        <!-- CARD HEADER -->
+
+        <div class="room-form-card-header">
+
+            <h5 class="mb-1">
+
+                <i class="bi bi-door-open me-2"></i>
+
+                Room Information
+
+            </h5>
+
+            <p class="text-muted">
+
+                Enter the room details, capacity and status.
+
+            </p>
+
+        </div>
+
+
+        <!-- CARD BODY -->
+
+        <div class="room-form-card-body">
+
+            {{ form.as_p }}
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         FORM ACTIONS
+    ====================================================== -->
+
+    <div class="room-form-actions">
+
+
+        <a
+            href="{% url 'hostel:room_list' %}"
+            class="btn btn-outline-secondary"
+        >
+
+            <i class="bi bi-x-circle me-1"></i>
+
+            Cancel
+
+        </a>
+
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+
+            <i class="bi bi-check-circle me-1"></i>
+
+            Save Room
+
+        </button>
+
+
+    </div>
+
+
 </form>
+
+
 {% endblock %}

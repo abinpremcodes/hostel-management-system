@@ -1,111 +1,808 @@
-```html id="7c4x9m"
 {% extends "base.html" %}
 
 {% block title %}Rooms{% endblock %}
 
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   ROOM LIST PAGE
+========================================================= */
+
+.room-page-header {
+    margin-bottom: 24px;
+}
+
+.room-page-header h2 {
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.room-page-header p {
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   STAT CARD
+========================================================= */
+
+.room-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 18px 20px;
+
+    margin-bottom: 22px;
+}
+
+.room-stat-icon {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-size: 21px;
+}
+
+.room-stat-number {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.1;
+}
+
+.room-stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+
+/* =========================================================
+   ROOM TABLE CARD
+========================================================= */
+
+.room-table-card {
+    overflow: hidden;
+}
+
+.room-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 20px;
+
+    border-bottom: 1px solid var(--border);
+
+    background: #ffffff;
+}
+
+.room-table-header h5 {
+    margin: 0;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    color: var(--text-dark);
+}
+
+.room-table-header p {
+    margin: 4px 0 0;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.room-table-wrapper {
+    overflow-x: auto;
+}
+
+.room-table {
+    margin-bottom: 0;
+}
+
+.room-table thead th {
+    padding: 13px 16px;
+
+    background: #f8f9fc;
+
+    border-bottom: 1px solid var(--border);
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    white-space: nowrap;
+}
+
+.room-table tbody td {
+    padding: 14px 16px;
+
+    vertical-align: middle;
+
+    border-color: var(--border);
+
+    color: var(--text-dark);
+
+    font-size: 13px;
+}
+
+.room-table tbody tr {
+    transition: var(--transition);
+}
+
+.room-table tbody tr:hover {
+    background: #fafbff;
+}
+
+
+/* =========================================================
+   ROOM NUMBER
+========================================================= */
+
+.room-number-wrapper {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.room-icon {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-size: 15px;
+}
+
+.room-number {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+
+/* =========================================================
+   FLOOR
+========================================================= */
+
+.room-floor {
+    color: var(--text-muted);
+}
+
+
+/* =========================================================
+   ROOM TYPE
+========================================================= */
+
+.room-type-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 9px;
+
+    border-radius: 7px;
+
+    background: #f1f3f8;
+
+    color: var(--text-dark);
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   CAPACITY
+========================================================= */
+
+.room-capacity {
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.room-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    background: #eef1ff;
+
+    color: var(--primary);
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.room-status::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.room-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 7px;
+}
+
+.room-actions .action-btn {
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border-radius: 8px;
+}
+
+.room-actions .action-btn i {
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.room-empty-state {
+    padding: 55px 20px;
+
+    text-align: center;
+
+    color: var(--text-muted);
+}
+
+.room-empty-icon {
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: #f1f3f8;
+
+    font-size: 24px;
+}
+
+.room-empty-state h5 {
+    margin-bottom: 5px;
+
+    color: var(--text-dark);
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.room-empty-state p {
+    margin-bottom: 0;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   DELETE MODAL
+========================================================= */
+
+#deleteModal .modal-content {
+    border: none;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow: var(--shadow-md);
+}
+
+#deleteModal .modal-header {
+    padding: 18px 20px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+#deleteModal .modal-title {
+    font-size: 16px;
+
+    font-weight: 700;
+
+    color: var(--text-dark);
+}
+
+#deleteModal .modal-body {
+    padding: 20px;
+
+    color: var(--text-muted);
+
+    font-size: 13px;
+}
+
+#deleteModal .modal-body strong {
+    color: var(--text-dark);
+}
+
+#deleteModal .modal-footer {
+    padding: 14px 20px;
+
+    border-top: 1px solid var(--border);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .room-page-header {
+        flex-direction: column;
+
+        align-items: flex-start !important;
+
+        gap: 15px;
+    }
+
+    .room-page-header .btn {
+        width: 100%;
+    }
+
+    .room-table-header {
+        padding: 16px;
+    }
+
+    .room-table tbody td,
+    .room-table thead th {
+        padding: 12px;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
 {% block content %}
 
-<h2>Rooms</h2>
 
-<a href="{% url 'hostel:room_add' %}" class="btn btn-dark mb-3">
-    Add Room
-</a>
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Room Number</th>
-            <th>Floor</th>
-            <th>Type</th>
-            <th>Capacity</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+<div class="room-page-header d-flex justify-content-between align-items-center">
 
-    <tbody>
-        {% for room in rooms %}
-        <tr>
-            <td>{{ room.room_number }}</td>
-            <td>{{ room.floor }}</td>
-            <td>{{ room.get_room_type_display }}</td>
-            <td>{{ room.capacity }}</td>
-            <td>{{ room.get_status_display }}</td>
+    <div>
 
-            <td>
-                <a href="{% url 'hostel:room_edit' room.pk %}"
-                   class="btn btn-sm btn-outline-primary">
-                    Edit
-                </a>
+        <h2 class="mb-1">
+            Rooms
+        </h2>
 
-                <button type="button"
-                        class="btn btn-sm btn-outline-danger delete-room-btn"
-                        data-room-name="Room {{ room.room_number }}"
-                        data-delete-url="{% url 'hostel:room_delete' room.pk %}">
-                    Delete
-                </button>
-            </td>
-        </tr>
+        <p class="text-muted mb-0">
+            Manage hostel rooms, capacity and availability.
+        </p>
 
-        {% empty %}
-        <tr>
-            <td colspan="6" class="text-center">
-                No rooms found.
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    </div>
 
 
-<!-- Delete Confirmation Modal -->
+    <a
+        href="{% url 'hostel:room_add' %}"
+        class="btn btn-primary"
+    >
 
-<div class="modal fade" id="deleteModal" tabindex="-1">
+        <i class="bi bi-plus-circle me-1"></i>
 
-    <div class="modal-dialog">
+        Add Room
+
+    </a>
+
+</div>
+
+
+
+<!-- =========================================================
+     ROOM STAT
+========================================================= -->
+
+<div class="card room-stat-card">
+
+    <div class="room-stat-icon">
+
+        <i class="bi bi-door-open"></i>
+
+    </div>
+
+
+    <div>
+
+        <div class="room-stat-number">
+            {{ rooms|length }}
+        </div>
+
+        <div class="room-stat-label">
+            Total Rooms
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     ROOM TABLE
+========================================================= -->
+
+<div class="card room-table-card">
+
+
+    <div class="room-table-header">
+
+        <div>
+
+            <h5>
+
+                <i class="bi bi-door-open me-2"></i>
+
+                Room List
+
+            </h5>
+
+            <p class="text-muted">
+                View and manage all hostel rooms.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="room-table-wrapper">
+
+        <table class="table room-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Room Number
+                    </th>
+
+                    <th>
+                        Floor
+                    </th>
+
+                    <th>
+                        Type
+                    </th>
+
+                    <th>
+                        Capacity
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th class="text-end">
+                        Actions
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for room in rooms %}
+
+                <tr>
+
+
+                    <!-- ROOM NUMBER -->
+
+                    <td>
+
+                        <div class="room-number-wrapper">
+
+                            <div class="room-icon">
+
+                                <i class="bi bi-door-open"></i>
+
+                            </div>
+
+                            <span class="room-number">
+                                {{ room.room_number }}
+                            </span>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- FLOOR -->
+
+                    <td>
+
+                        <span class="room-floor">
+                            {{ room.floor }}
+                        </span>
+
+                    </td>
+
+
+                    <!-- TYPE -->
+
+                    <td>
+
+                        <span class="room-type-badge">
+
+                            {{ room.get_room_type_display }}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- CAPACITY -->
+
+                    <td>
+
+                        <span class="room-capacity">
+
+                            {{ room.capacity }}
+
+                        </span>
+
+                        <small class="text-muted">
+                            beds
+                        </small>
+
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        <span class="room-status">
+
+                            {{ room.get_status_display }}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- ACTIONS -->
+
+                    <td>
+
+                        <div class="room-actions">
+
+
+                            <!-- EDIT -->
+
+                            <a
+                                href="{% url 'hostel:room_edit' room.pk %}"
+                                class="btn btn-sm btn-outline-primary action-btn"
+                                title="Edit Room"
+                            >
+
+                                <i class="bi bi-pencil"></i>
+
+                            </a>
+
+
+                            <!-- DELETE -->
+
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-outline-danger action-btn delete-room-btn"
+                                title="Delete Room"
+                                data-room-name="Room {{ room.room_number }}"
+                                data-delete-url="{% url 'hostel:room_delete' room.pk %}"
+                            >
+
+                                <i class="bi bi-trash"></i>
+
+                            </button>
+
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="6">
+
+                        <div class="room-empty-state">
+
+                            <div class="room-empty-icon">
+
+                                <i class="bi bi-door-open"></i>
+
+                            </div>
+
+                            <h5>
+                                No Rooms Found
+                            </h5>
+
+                            <p>
+                                Add your first room to get started.
+                            </p>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     DELETE CONFIRMATION MODAL
+========================================================= -->
+
+<div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
 
         <div class="modal-content">
 
+
             <div class="modal-header">
+
                 <h5 class="modal-title">
+
+                    <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+
                     Confirm Delete
+
                 </h5>
 
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal">
-                </button>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
             </div>
+
 
             <div class="modal-body">
 
                 Are you sure you want to delete
+
                 <strong id="deleteRoomName"></strong>?
+
+                <br><br>
 
                 This action cannot be undone.
 
             </div>
 
+
             <div class="modal-footer">
 
-                <button type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal">
+                <button
+                    type="button"
+                    class="btn btn-outline-secondary"
+                    data-bs-dismiss="modal"
+                >
+
                     Cancel
+
                 </button>
 
-                <form id="deleteForm" method="post">
+
+                <form
+                    id="deleteForm"
+                    method="post"
+                >
 
                     {% csrf_token %}
 
-                    <button type="submit"
-                            class="btn btn-danger">
+                    <button
+                        type="submit"
+                        class="btn btn-danger"
+                    >
+
+                        <i class="bi bi-trash me-1"></i>
+
                         Yes, Delete
+
                     </button>
 
                 </form>
 
             </div>
+
 
         </div>
 
@@ -114,6 +811,11 @@
 </div>
 
 
+
+<!-- =========================================================
+     DELETE MODAL JAVASCRIPT
+========================================================= -->
+
 <script>
 
 document.querySelectorAll('.delete-room-btn').forEach(function(button) {
@@ -121,15 +823,19 @@ document.querySelectorAll('.delete-room-btn').forEach(function(button) {
     button.addEventListener('click', function() {
 
         const roomName = this.dataset.roomName;
+
         const deleteUrl = this.dataset.deleteUrl;
+
 
         document.getElementById('deleteRoomName').textContent = roomName;
 
         document.getElementById('deleteForm').action = deleteUrl;
 
+
         const modal = new bootstrap.Modal(
             document.getElementById('deleteModal')
         );
+
 
         modal.show();
 
@@ -139,5 +845,5 @@ document.querySelectorAll('.delete-room-btn').forEach(function(button) {
 
 </script>
 
+
 {% endblock %}
-```

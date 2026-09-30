@@ -9,9 +9,10 @@ from hostel.models import Bed
 
 @login_required
 def allocation_list(request):
-    allocations=Allocation.objects.all()
-    return render (request,'allocations/allocation_list.html',{'allocations':allocations})
-
+    if not (request.user.is_admin or request.user.is_warden):
+        return redirect('dashboard:home')
+    allocations = Allocation.objects.all()
+    return render(request, 'allocations/allocation_list.html', {'allocations': allocations})
 
 @login_required
 def allocation_add(request):
@@ -66,7 +67,7 @@ def allocation_transfer(request,pk):
             allocation.save()
 
             allocation.bed.status=Bed.Status.AVAILABLE
-            allocation.save()
+            allocation.bed.save()
 
 
             Allocation.objects.create(student=allocation.student, bed=new_bed)

@@ -2,14 +2,316 @@
 
 {% block title %}Delete Student{% endblock %}
 
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   DELETE STUDENT PAGE
+========================================================= */
+
+.delete-student-wrapper {
+    max-width: 650px;
+
+    margin: 40px auto;
+}
+
+
+/* =========================================================
+   DELETE CARD
+========================================================= */
+
+.delete-student-card {
+    overflow: hidden;
+
+    transition: var(--transition);
+}
+
+.delete-student-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow: var(--shadow-md);
+}
+
+
+/* =========================================================
+   WARNING ICON
+========================================================= */
+
+.delete-student-icon {
+    width: 72px;
+    height: 72px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #fff1f2;
+
+    color: var(--danger);
+
+    font-size: 30px;
+
+    border: 1px solid #fecdd3;
+}
+
+
+/* =========================================================
+   STUDENT INFO
+========================================================= */
+
+.delete-student-info {
+    background: #f8f9fc;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    padding: 15px 18px;
+
+    margin: 20px 0;
+}
+
+.delete-student-info-label {
+    font-size: 11px;
+
+    color: var(--text-muted);
+
+    margin-bottom: 3px;
+}
+
+.delete-student-info-value {
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: var(--text-dark);
+}
+
+
+/* =========================================================
+   WARNING MESSAGE
+========================================================= */
+
+.delete-warning {
+    padding: 12px 14px;
+
+    background: #fff7ed;
+
+    border: 1px solid #fed7aa;
+
+    border-radius: 9px;
+
+    color: #9a3412;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.delete-student-actions {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 24px;
+}
+
+.delete-student-actions .btn {
+    min-width: 130px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 576px) {
+
+    .delete-student-wrapper {
+        margin: 20px auto;
+    }
+
+    .delete-student-card .card-body {
+        padding: 24px 18px !important;
+    }
+
+    .delete-student-actions {
+        flex-direction: column-reverse;
+    }
+
+    .delete-student-actions .btn {
+        width: 100%;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
 {% block content %}
-<h2>Delete Student</h2>
 
-<p>Are you sure you want to delete <strong>{{ student.student_id }} - {{ student.user.username }}</strong>? This cannot be undone.</p>
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, Delete</button>
-    <a href="{% url 'accounts:student_list' %}" class="btn btn-secondary">Cancel</a>
-</form>
+<div class="delete-student-wrapper">
+
+    <div class="card border-0 delete-student-card">
+
+        <div class="card-body text-center p-5">
+
+
+            <!-- =================================================
+                 WARNING ICON
+            ================================================== -->
+
+            <div class="delete-student-icon">
+
+                <i class="bi bi-trash3"></i>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 TITLE
+            ================================================== -->
+
+            <h3 class="fw-bold mb-2">
+
+                Delete Student?
+
+            </h3>
+
+
+            <p class="text-muted mb-0">
+
+                You are about to permanently delete this student
+                from the hostel system.
+
+            </p>
+
+
+
+            <!-- =================================================
+                 STUDENT INFORMATION
+            ================================================== -->
+
+            <div class="delete-student-info text-start">
+
+
+                <div class="mb-3">
+
+                    <div class="delete-student-info-label">
+                        Student ID
+                    </div>
+
+                    <div class="delete-student-info-value">
+
+                        <i class="bi bi-person-badge me-1"></i>
+
+                        {{ student.student_id }}
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <div class="delete-student-info-label">
+                        Student Name
+                    </div>
+
+                    <div class="delete-student-info-value">
+
+                        <i class="bi bi-person me-1"></i>
+
+                        {{ student.user.username }}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 WARNING
+            ================================================== -->
+
+            <div class="delete-warning text-start">
+
+                <i class="bi bi-exclamation-triangle me-1"></i>
+
+                <strong>This action cannot be undone.</strong>
+
+                All information associated with this student will
+                be permanently removed.
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ACTIONS
+            ================================================== -->
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <div class="delete-student-actions">
+
+
+                    <a
+                        href="{% url 'accounts:student_list' %}"
+                        class="btn btn-outline-secondary"
+                    >
+
+                        <i class="bi bi-arrow-left me-1"></i>
+
+                        Cancel
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger"
+                    >
+
+                        <i class="bi bi-trash3 me-1"></i>
+
+                        Yes, Delete Student
+
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
 {% endblock %}

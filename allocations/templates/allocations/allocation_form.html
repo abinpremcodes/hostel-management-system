@@ -3,89 +3,649 @@
 {% block title %}Allocate Student{% endblock %}
 
 {% block content %}
-<h2>Allocate Student to Bed</h2>
 
-{% if form.non_field_errors %}
-    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-{% endif %}
+<style>
+    .allocation-page {
+        max-width: 900px;
+        margin: 0 auto;
+    }
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.student.label_tag }} {{ form.student }}
+    .allocation-header {
+        margin-bottom: 24px;
+    }
 
-    <div class="mb-3 mt-3">
-        <label class="form-label">Building</label>
-        <select id="buildingSelect" class="form-select">
-            <option value="">-- Select Building --</option>
-        </select>
+    .allocation-header h2 {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+    }
+
+    .allocation-header p {
+        color: var(--muted);
+        margin: 0;
+    }
+
+    .allocation-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .allocation-card-header {
+        padding: 22px 28px;
+        border-bottom: 1px solid var(--border);
+        background: #fafbff;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .allocation-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        background: var(--primary-light);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+        flex-shrink: 0;
+    }
+
+    .allocation-card-header h5 {
+        margin: 0;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .allocation-card-header p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .allocation-card-body {
+        padding: 30px;
+    }
+
+    .form-section {
+        margin-bottom: 26px;
+    }
+
+    .form-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 18px;
+    }
+
+    .section-title i {
+        color: var(--primary);
+        font-size: 17px;
+    }
+
+    .field-group {
+        margin-bottom: 20px;
+    }
+
+    .field-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .field-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 8px;
+    }
+
+    .field-group select,
+    .field-group input {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 13px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 14px;
+        transition: .2s ease;
+    }
+
+    .field-group select:focus,
+    .field-group input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+        outline: none;
+    }
+
+    .field-group select:disabled {
+        background: #f3f4f6;
+        color: #9ca3af;
+        cursor: not-allowed;
+    }
+
+    .field-help {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .required {
+        color: var(--danger);
+    }
+
+    .alert-danger {
+        border-radius: 10px;
+        border: 1px solid #fecaca;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .allocation-flow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 26px;
+        padding: 15px 18px;
+        background: var(--primary-light);
+        border: 1px solid #dfe3ff;
+        border-radius: 12px;
+    }
+
+    .flow-item {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--primary-dark);
+    }
+
+    .flow-item i {
+        font-size: 15px;
+    }
+
+    .flow-arrow {
+        color: #9ca3af;
+        font-size: 14px;
+    }
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 30px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+    }
+
+    .allocate-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 42px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        background: var(--primary);
+        color: #fff;
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 14px;
+        transition: .2s ease;
+    }
+
+    .allocate-btn:hover {
+        background: var(--primary-dark);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .cancel-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 42px;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+
+    @media (max-width: 576px) {
+
+        .allocation-card-body {
+            padding: 20px;
+        }
+
+        .allocation-card-header {
+            padding: 18px 20px;
+        }
+
+        .allocation-flow {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .flow-arrow {
+            display: none;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .form-actions .allocate-btn,
+        .form-actions .cancel-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<div class="allocation-page">
+
+    <!-- PAGE HEADER -->
+    <div class="allocation-header">
+
+        <a href="{% url 'allocations:allocation_list' %}" class="back-btn">
+            <i class="bi bi-arrow-left"></i>
+            Back to Allocations
+        </a>
+
+        <h2>
+            <i class="bi bi-door-open me-2"></i>
+            Allocate Student
+        </h2>
+
+        <p>
+            Assign a student to an available bed in the hostel.
+        </p>
+
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Room</label>
-        <select id="roomSelect" class="form-select" disabled>
-            <option value="">-- Select Building First --</option>
-        </select>
+
+    <!-- MAIN CARD -->
+    <div class="allocation-card">
+
+        <!-- CARD HEADER -->
+        <div class="allocation-card-header">
+
+            <div class="allocation-icon">
+                <i class="bi bi-person-plus"></i>
+            </div>
+
+            <div>
+                <h5>New Room Allocation</h5>
+                <p>Select a student and assign their room and bed.</p>
+            </div>
+
+        </div>
+
+
+        <!-- CARD BODY -->
+        <div class="allocation-card-body">
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+
+            <!-- ALLOCATION FLOW -->
+            <div class="allocation-flow">
+
+                <div class="flow-item">
+                    <i class="bi bi-building"></i>
+                    Building
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="bi bi-chevron-right"></i>
+                </div>
+
+                <div class="flow-item">
+                    <i class="bi bi-door-closed"></i>
+                    Room
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="bi bi-chevron-right"></i>
+                </div>
+
+                <div class="flow-item">
+                    <i class="bi bi-grid-3x3-gap"></i>
+                    Bed
+                </div>
+
+            </div>
+
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <!-- STUDENT -->
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <i class="bi bi-person"></i>
+                        Student Details
+                    </div>
+
+                    <div class="field-group">
+
+                        {{ form.student.label_tag }}
+
+                        {{ form.student }}
+
+                        {% if form.student.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.student.errors }}
+                            </div>
+                        {% endif %}
+
+                        <div class="field-help">
+                            Select the student who will receive the room allocation.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ROOM DETAILS -->
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <i class="bi bi-buildings"></i>
+                        Room & Bed Details
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <!-- BUILDING -->
+                        <div class="col-md-4">
+
+                            <div class="field-group mb-0">
+
+                                <label for="buildingSelect">
+                                    Building
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="buildingSelect"
+                                    class="form-select"
+                                >
+
+                                    <option value="">
+                                        Select Building
+                                    </option>
+
+                                </select>
+
+                                <div class="field-help">
+                                    Choose the hostel building.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ROOM -->
+                        <div class="col-md-4">
+
+                            <div class="field-group mb-0">
+
+                                <label for="roomSelect">
+                                    Room
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    id="roomSelect"
+                                    class="form-select"
+                                    disabled
+                                >
+
+                                    <option value="">
+                                        Select Building First
+                                    </option>
+
+                                </select>
+
+                                <div class="field-help">
+                                    Rooms load automatically.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- BED -->
+                        <div class="col-md-4">
+
+                            <div class="field-group mb-0">
+
+                                {{ form.bed.label_tag }}
+
+                                {{ form.bed }}
+
+                                {% if form.bed.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ form.bed.errors }}
+                                    </div>
+                                {% endif %}
+
+                                <div class="field-help">
+                                    Available beds will appear here.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="allocate-btn"
+                    >
+                        <i class="bi bi-check-lg"></i>
+                        Allocate Student
+                    </button>
+
+                    <a
+                        href="{% url 'allocations:allocation_list' %}"
+                        class="btn btn-light border cancel-btn"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
     </div>
 
-    <div class="mb-3">
-        {{ form.bed.label_tag }}
-        {{ form.bed }}
-    </div>
+</div>
 
-    <button type="submit" class="btn btn-dark">Allocate</button>
-</form>
+
+<!-- =========================================
+     AJAX: BUILDING → ROOM → BED
+========================================= -->
 
 <script>
+
 async function loadBuildings() {
+
     const response = await fetch('/hostel/api/buildings/');
     const data = await response.json();
-    const buildingSelect = document.getElementById('buildingSelect');
+
+    const buildingSelect =
+        document.getElementById('buildingSelect');
+
     data.buildings.forEach(function(building) {
-        const option = document.createElement('option');
+
+        const option =
+            document.createElement('option');
+
         option.value = building.id;
         option.textContent = building.label;
+
         buildingSelect.appendChild(option);
+
     });
 }
 
-document.getElementById('buildingSelect').addEventListener('change', async function() {
-    const buildingId = this.value;
-    const roomSelect = document.getElementById('roomSelect');
-    roomSelect.innerHTML = '<option value="">-- Select Room --</option>';
 
-    if (!buildingId) {
-        roomSelect.disabled = true;
-        return;
-    }
+document
+    .getElementById('buildingSelect')
+    .addEventListener('change', async function() {
 
-    const response = await fetch(`/hostel/api/rooms-by-building/${buildingId}/`);
-    const data = await response.json();
-    data.rooms.forEach(function(room) {
-        const option = document.createElement('option');
-        option.value = room.id;
-        option.textContent = room.label;
-        roomSelect.appendChild(option);
+        const buildingId = this.value;
+
+        const roomSelect =
+            document.getElementById('roomSelect');
+
+        const bedSelect =
+            document.getElementById('id_bed');
+
+
+        roomSelect.innerHTML =
+            '<option value="">Select Room</option>';
+
+        bedSelect.innerHTML =
+            '<option value="">Select Bed</option>';
+
+
+        if (!buildingId) {
+
+            roomSelect.disabled = true;
+            bedSelect.disabled = true;
+
+            return;
+        }
+
+
+        const response =
+            await fetch(
+                `/hostel/api/rooms-by-building/${buildingId}/`
+            );
+
+        const data =
+            await response.json();
+
+
+        data.rooms.forEach(function(room) {
+
+            const option =
+                document.createElement('option');
+
+            option.value = room.id;
+            option.textContent = room.label;
+
+            roomSelect.appendChild(option);
+
+        });
+
+
+        roomSelect.disabled = false;
+        bedSelect.disabled = true;
+
     });
-    roomSelect.disabled = false;
-});
 
-document.getElementById('roomSelect').addEventListener('change', async function() {
-    const roomId = this.value;
-    const bedSelect = document.getElementById('id_bed');
-    bedSelect.innerHTML = '<option value="">-- Select Bed --</option>';
 
-    if (!roomId) return;
+document
+    .getElementById('roomSelect')
+    .addEventListener('change', async function() {
 
-    const response = await fetch(`/hostel/api/beds-by-room/${roomId}/`);
-    const data = await response.json();
-    data.beds.forEach(function(bed) {
-        const option = document.createElement('option');
-        option.value = bed.id;
-        option.textContent = bed.label;
-        bedSelect.appendChild(option);
+        const roomId = this.value;
+
+        const bedSelect =
+            document.getElementById('id_bed');
+
+
+        bedSelect.innerHTML =
+            '<option value="">Select Bed</option>';
+
+
+        if (!roomId) {
+
+            bedSelect.disabled = true;
+
+            return;
+        }
+
+
+        const response =
+            await fetch(
+                `/hostel/api/beds-by-room/${roomId}/`
+            );
+
+        const data =
+            await response.json();
+
+
+        data.beds.forEach(function(bed) {
+
+            const option =
+                document.createElement('option');
+
+            option.value = bed.id;
+            option.textContent = bed.label;
+
+            bedSelect.appendChild(option);
+
+        });
+
+
+        bedSelect.disabled = false;
+
     });
-});
+
 
 loadBuildings();
+
 </script>
+
 {% endblock %}

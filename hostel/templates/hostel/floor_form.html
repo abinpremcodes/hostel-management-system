@@ -2,12 +2,372 @@
 
 {% block title %}Floor Form{% endblock %}
 
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   FLOOR FORM PAGE
+========================================================= */
+
+.floor-form-header {
+    margin-bottom: 24px;
+}
+
+.floor-form-header h2 {
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+
+/* =========================================================
+   FORM CARD
+========================================================= */
+
+.floor-form-card {
+    overflow: hidden;
+
+    margin-bottom: 20px;
+
+    transition: var(--transition);
+}
+
+.floor-form-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow: var(--shadow-md);
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.floor-form-card-header {
+    padding: 18px 20px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.floor-form-card-header h5 {
+    font-size: 16px;
+
+    font-weight: 700;
+
+    color: var(--text-dark);
+}
+
+.floor-form-card-header p {
+    font-size: 12px;
+
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   FORM BODY
+========================================================= */
+
+.floor-form-card-body {
+    padding: 22px;
+}
+
+
+/* =========================================================
+   DJANGO FORM
+========================================================= */
+
+.floor-form-card-body p {
+    margin-bottom: 18px;
+}
+
+.floor-form-card-body label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: var(--text-dark);
+}
+
+.floor-form-card-body input,
+.floor-form-card-body select,
+.floor-form-card-body textarea {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border: 1px solid #dfe3eb;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: var(--text-dark);
+
+    font-size: 13px;
+
+    transition: var(--transition);
+}
+
+.floor-form-card-body input:focus,
+.floor-form-card-body select:focus,
+.floor-form-card-body textarea:focus {
+    border-color: var(--primary);
+
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.floor-form-card-body textarea {
+    min-height: 110px;
+
+    resize: vertical;
+}
+
+
+/* =========================================================
+   HELP TEXT
+========================================================= */
+
+.floor-form-card-body .helptext {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 11px;
+
+    color: var(--text-muted);
+}
+
+
+/* =========================================================
+   ERROR MESSAGES
+========================================================= */
+
+.floor-form-card-body .errorlist {
+    list-style: none;
+
+    padding: 0;
+
+    margin: 5px 0 7px;
+
+    color: var(--danger);
+
+    font-size: 12px;
+}
+
+.floor-form-card-body .errorlist li {
+    margin-bottom: 3px;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.floor-form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 24px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid var(--border);
+}
+
+.floor-form-actions .btn {
+    min-width: 120px;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.floor-back-btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .floor-form-header {
+        align-items: flex-start !important;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .floor-back-btn {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+    .floor-form-card-body {
+        padding: 18px;
+    }
+
+    .floor-form-actions {
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+    }
+
+    .floor-form-actions .btn {
+        width: 100%;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
 {% block content %}
-<h2>Floor</h2>
+
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="floor-form-header d-flex justify-content-between align-items-center">
+
+    <div>
+
+        <h2 class="mb-1">
+            Floor
+        </h2>
+
+        <p class="text-muted mb-0">
+            Add or update a hostel floor.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{% url 'hostel:floor_list' %}"
+        class="btn btn-outline-secondary floor-back-btn"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        Back to Floors
+
+    </a>
+
+</div>
+
+
+
+<!-- =========================================================
+     FLOOR FORM
+========================================================= -->
 
 <form method="post">
+
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-dark">Save</button>
+
+
+    <div class="card floor-form-card">
+
+
+        <!-- CARD HEADER -->
+
+        <div class="floor-form-card-header">
+
+            <h5 class="mb-1">
+
+                <i class="bi bi-layers me-2"></i>
+
+                Floor Information
+
+            </h5>
+
+            <p class="text-muted">
+
+                Select the building and enter the floor number.
+
+            </p>
+
+        </div>
+
+
+        <!-- CARD BODY -->
+
+        <div class="floor-form-card-body">
+
+            {{ form.as_p }}
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         FORM ACTIONS
+    ====================================================== -->
+
+    <div class="floor-form-actions">
+
+
+        <a
+            href="{% url 'hostel:floor_list' %}"
+            class="btn btn-outline-secondary"
+        >
+
+            <i class="bi bi-x-circle me-1"></i>
+
+            Cancel
+
+        </a>
+
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+
+            <i class="bi bi-check-circle me-1"></i>
+
+            Save Floor
+
+        </button>
+
+
+    </div>
+
+
 </form>
+
+
 {% endblock %}

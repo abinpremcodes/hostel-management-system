@@ -2,12 +2,372 @@
 
 {% block title %}Bed Form{% endblock %}
 
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   BED FORM PAGE
+========================================================= */
+
+.bed-form-header {
+    margin-bottom: 24px;
+}
+
+.bed-form-header h2 {
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+
+/* =========================================================
+   FORM CARD
+========================================================= */
+
+.bed-form-card {
+    overflow: hidden;
+
+    margin-bottom: 20px;
+
+    transition: var(--transition);
+}
+
+.bed-form-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow: var(--shadow-md);
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.bed-form-card-header {
+    padding: 18px 20px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.bed-form-card-header h5 {
+    font-size: 16px;
+
+    font-weight: 700;
+
+    color: var(--text-dark);
+}
+
+.bed-form-card-header p {
+    font-size: 12px;
+
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   FORM BODY
+========================================================= */
+
+.bed-form-card-body {
+    padding: 22px;
+}
+
+
+/* =========================================================
+   DJANGO FORM
+========================================================= */
+
+.bed-form-card-body p {
+    margin-bottom: 18px;
+}
+
+.bed-form-card-body label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: var(--text-dark);
+}
+
+.bed-form-card-body input,
+.bed-form-card-body select,
+.bed-form-card-body textarea {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border: 1px solid #dfe3eb;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: var(--text-dark);
+
+    font-size: 13px;
+
+    transition: var(--transition);
+}
+
+.bed-form-card-body input:focus,
+.bed-form-card-body select:focus,
+.bed-form-card-body textarea:focus {
+    border-color: var(--primary);
+
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.bed-form-card-body textarea {
+    min-height: 110px;
+
+    resize: vertical;
+}
+
+
+/* =========================================================
+   HELP TEXT
+========================================================= */
+
+.bed-form-card-body .helptext {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 11px;
+
+    color: var(--text-muted);
+}
+
+
+/* =========================================================
+   ERROR MESSAGES
+========================================================= */
+
+.bed-form-card-body .errorlist {
+    list-style: none;
+
+    padding: 0;
+
+    margin: 5px 0 7px;
+
+    color: var(--danger);
+
+    font-size: 12px;
+}
+
+.bed-form-card-body .errorlist li {
+    margin-bottom: 3px;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.bed-form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 24px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid var(--border);
+}
+
+.bed-form-actions .btn {
+    min-width: 120px;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.bed-back-btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .bed-form-header {
+        align-items: flex-start !important;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .bed-back-btn {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+    .bed-form-card-body {
+        padding: 18px;
+    }
+
+    .bed-form-actions {
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+    }
+
+    .bed-form-actions .btn {
+        width: 100%;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
 {% block content %}
-<h2>Bed</h2>
+
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="bed-form-header d-flex justify-content-between align-items-center">
+
+    <div>
+
+        <h2 class="mb-1">
+            Bed
+        </h2>
+
+        <p class="text-muted mb-0">
+            Add or update a hostel bed.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{% url 'hostel:bed_list' %}"
+        class="btn btn-outline-secondary bed-back-btn"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        Back to Beds
+
+    </a>
+
+</div>
+
+
+
+<!-- =========================================================
+     BED FORM
+========================================================= -->
 
 <form method="post">
+
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-dark">Save</button>
+
+
+    <div class="card bed-form-card">
+
+
+        <!-- CARD HEADER -->
+
+        <div class="bed-form-card-header">
+
+            <h5 class="mb-1">
+
+                <i class="bi bi-person-square me-2"></i>
+
+                Bed Information
+
+            </h5>
+
+            <p class="text-muted">
+
+                Select the room and enter the bed details.
+
+            </p>
+
+        </div>
+
+
+        <!-- CARD BODY -->
+
+        <div class="bed-form-card-body">
+
+            {{ form.as_p }}
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         FORM ACTIONS
+    ====================================================== -->
+
+    <div class="bed-form-actions">
+
+
+        <a
+            href="{% url 'hostel:bed_list' %}"
+            class="btn btn-outline-secondary"
+        >
+
+            <i class="bi bi-x-circle me-1"></i>
+
+            Cancel
+
+        </a>
+
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+
+            <i class="bi bi-check-circle me-1"></i>
+
+            Save Bed
+
+        </button>
+
+
+    </div>
+
+
 </form>
+
+
 {% endblock %}

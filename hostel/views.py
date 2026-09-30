@@ -7,8 +7,10 @@ from django.http import JsonResponse
 
 @login_required
 def building_list(request):
-    buildings=Building.objects.all()
-    return render(request,'hostel/building_list.html',{'buildings':buildings})
+    if not (request.user.is_admin or request.user.is_warden):
+        return redirect('dashboard:home')
+    buildings = Building.objects.all()
+    return render(request, 'hostel/building_list.html', {'buildings': buildings})
 
 
 @login_required
@@ -61,6 +63,8 @@ def building_delete(request,pk):
 
 @login_required
 def floor_list(request):
+    if not(request.user.is_admin or request.user.is_warden):
+        return redirect ('dashboard:home')
     floors=Floor.objects.all()
     return render(request,'hostel/floor_list.html',{'floors':floors})
 
@@ -112,6 +116,8 @@ def floor_delete(request,pk):
 
 @login_required
 def room_list(request):
+    if not (request.user.is_admin or request.user.is_warden):
+        return redirect('dashboard:home')
     rooms=Room.objects.all()
     return render(request,'hostel/room_list.html',{'rooms':rooms})
 
@@ -165,9 +171,10 @@ def room_delete(request,pk):
 
 @login_required
 def bed_list(request):
-    beds=Bed.objects.all()
-    return render(request,'hostel/bed_list.html',{'beds':beds})
-
+    if not (request.user.is_admin or request.user.is_warden):
+        return redirect('dashboard:home')
+    beds = Bed.objects.all()
+    return render(request, 'hostel/bed_list.html', {'beds': beds})
 
 @login_required
 def bed_add(request):

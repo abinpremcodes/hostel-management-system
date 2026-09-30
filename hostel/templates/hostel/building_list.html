@@ -1,107 +1,409 @@
-```html
 {% extends "base.html" %}
 
 {% block title %}Buildings{% endblock %}
 
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   BUILDINGS PAGE
+========================================================= */
+
+.buildings-page-header {
+    margin-bottom: 24px;
+}
+
+.buildings-page-header h2 {
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+
+/* =========================================================
+   BUILDING STATS
+========================================================= */
+
+.building-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    margin-bottom: 24px;
+}
+
+.building-stat {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 10px;
+
+    min-height: 58px;
+
+    padding: 8px 18px 8px 10px;
+
+    background: var(--card-bg);
+
+    border: 1px solid var(--border);
+
+    border-radius: 999px;
+
+    box-shadow: var(--shadow-sm);
+
+    transition: var(--transition);
+}
+
+.building-stat:hover {
+    transform: translateY(-3px);
+
+    box-shadow: var(--shadow-md);
+
+    border-color: #d5d9e5;
+}
+
+.building-stat-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--primary);
+
+    color: white;
+
+    flex-shrink: 0;
+
+    transition: var(--transition);
+}
+
+.building-stat:hover .building-stat-icon {
+    transform: scale(1.08) rotate(4deg);
+}
+
+.building-stat-label {
+    font-size: 11px;
+
+    color: var(--text-muted);
+
+    margin-bottom: 1px;
+}
+
+.building-stat-number {
+    font-size: 17px;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+    color: var(--text-dark);
+}
+
+
+/* =========================================================
+   BUILDINGS CARD
+========================================================= */
+
+.buildings-card {
+    overflow: hidden;
+
+    transition: var(--transition);
+}
+
+.buildings-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.buildings-card-header {
+    padding: 18px 20px;
+
+    background: white;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.buildings-card-header h5 {
+    font-size: 16px;
+}
+
+.buildings-card-header small {
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.buildings-table {
+    margin-bottom: 0;
+}
+
+.buildings-table thead th {
+    background: #f8f9fc;
+
+    color: #667085;
+
+    border-bottom: 1px solid var(--border);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+
+    padding: 13px 14px;
+
+    white-space: nowrap;
+}
+
+.buildings-table tbody td {
+    padding: 15px 14px;
+
+    border-color: #eef0f4;
+
+    font-size: 13px;
+}
+
+.building-row {
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.building-row:hover {
+    background: #f7f8ff !important;
+}
+
+
+/* =========================================================
+   BUILDING ICON
+========================================================= */
+
+.building-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    flex-shrink: 0;
+
+    transition: var(--transition);
+}
+
+.building-row:hover .building-icon {
+    transform: scale(1.08);
+
+    background: var(--primary);
+
+    color: white;
+}
+
+.building-name {
+    font-weight: 600;
+
+    color: var(--text-dark);
+
+    transition: var(--transition);
+}
+
+.building-row:hover .building-name {
+    color: var(--primary);
+}
+
+
+/* =========================================================
+   ADDRESS
+========================================================= */
+
+.building-address {
+    color: var(--text-muted);
+
+    max-width: 450px;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.building-action-btn {
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    transition: var(--transition);
+}
+
+.building-action-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.building-empty-state {
+    padding: 45px 20px;
+}
+
+.building-empty-icon {
+    width: 64px;
+    height: 64px;
+
+    margin: 0 auto 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    font-size: 26px;
+
+    transition: var(--transition);
+}
+
+.building-empty-state:hover .building-empty-icon {
+    transform: translateY(-4px) scale(1.05);
+}
+
+
+/* =========================================================
+   DELETE MODAL
+========================================================= */
+
+.delete-warning-box {
+    background: #fff7f7;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 10px;
+
+    padding: 12px 14px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .buildings-page-header {
+        align-items: flex-start !important;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .buildings-page-header .btn {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+    .building-stat {
+        flex: 1 1 180px;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
 {% block content %}
 
-<h2>Buildings</h2>
 
-<a href="{% url 'hostel:building_add' %}" class="btn btn-dark mb-3">
-    Add Building
-</a>
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+<div class="buildings-page-header d-flex justify-content-between align-items-center">
 
-    <tbody>
-        {% for building in buildings %}
-        <tr>
-            <td>{{ building.name }}</td>
-            <td>{{ building.address }}</td>
+    <div>
 
-            <td>
-                <a href="{% url 'hostel:building_edit' building.pk %}"
-                   class="btn btn-sm btn-outline-primary">
-                    Edit
-                </a>
+        <h2 class="mb-1">
+            Buildings
+        </h2>
 
-                <button type="button"
-                        class="btn btn-sm btn-outline-danger delete-building-btn"
-                        data-building-name="{{ building.name }}"
-                        data-delete-url="{% url 'hostel:building_delete' building.pk %}">
-                    Delete
-                </button>
-            </td>
-        </tr>
+        <p class="text-muted mb-0">
+            Manage hostel buildings and their locations.
+        </p>
 
-        {% empty %}
-        <tr>
-            <td colspan="3" class="text-center">
-                No buildings found.
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    </div>
 
 
-<!-- Delete Confirmation Modal -->
+    {% if user.is_admin or user.is_warden %}
 
-<div class="modal fade" id="deleteModal" tabindex="-1">
+    <a
+        href="{% url 'hostel:building_add' %}"
+        class="btn btn-primary d-inline-flex align-items-center gap-1"
+    >
 
-    <div class="modal-dialog">
+        <i class="bi bi-building-add"></i>
 
-        <div class="modal-content">
+        Add Building
 
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Confirm Delete
-                </h5>
+    </a>
 
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal">
-                </button>
+    {% endif %}
+
+</div>
+
+
+
+<!-- =========================================================
+     BUILDING STATISTICS
+========================================================= -->
+
+<div class="building-stats">
+
+    <div class="building-stat">
+
+        <div class="building-stat-icon">
+
+            <i class="bi bi-buildings"></i>
+
+        </div>
+
+        <div>
+
+            <div class="building-stat-label">
+                Total Buildings
             </div>
 
-
-            <div class="modal-body">
-
-                Are you sure you want to delete
-                <strong id="deleteBuildingName"></strong>?
-
-                This action cannot be undone.
-
-            </div>
-
-
-            <div class="modal-footer">
-
-                <button type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal">
-                    Cancel
-                </button>
-
-
-                <form id="deleteForm" method="post">
-
-                    {% csrf_token %}
-
-                    <button type="submit"
-                            class="btn btn-danger">
-                        Yes, Delete
-                    </button>
-
-                </form>
-
+            <div class="building-stat-number">
+                {{ buildings|length }}
             </div>
 
         </div>
@@ -111,30 +413,429 @@
 </div>
 
 
+
+<!-- =========================================================
+     BUILDINGS TABLE
+========================================================= -->
+
+<div class="card buildings-card">
+
+
+    <!-- HEADER -->
+
+    <div class="buildings-card-header">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h5 class="fw-bold mb-1">
+                    Building Records
+                </h5>
+
+                <small class="text-muted">
+                    View and manage registered hostel buildings.
+                </small>
+
+            </div>
+
+
+            <span class="badge bg-dark rounded-pill px-3 py-2">
+
+                {{ buildings|length }}
+
+                {% if buildings|length == 1 %}
+                    Building
+                {% else %}
+                    Buildings
+                {% endif %}
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TABLE -->
+
+    <div class="table-responsive">
+
+        <table class="table table-hover align-middle buildings-table">
+
+            <thead>
+
+                <tr>
+
+                    <th class="ps-4">
+                        Building
+                    </th>
+
+                    <th>
+                        Address
+                    </th>
+
+                    {% if user.is_admin or user.is_warden %}
+
+                    <th class="text-end pe-4">
+                        Actions
+                    </th>
+
+                    {% endif %}
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for building in buildings %}
+
+                <tr class="building-row">
+
+
+                    <!-- BUILDING -->
+
+                    <td class="ps-4">
+
+                        <div class="d-flex align-items-center">
+
+                            <div class="building-icon me-3">
+
+                                <i class="bi bi-building"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <div class="building-name">
+
+                                    {{ building.name }}
+
+                                </div>
+
+                                <small class="text-muted">
+
+                                    Hostel Building
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+
+                    <!-- ADDRESS -->
+
+                    <td>
+
+                        {% if building.address %}
+
+                        <span class="building-address">
+
+                            <i class="bi bi-geo-alt me-1"></i>
+
+                            {{ building.address }}
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="text-muted">
+
+                            Address not provided
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+
+                    <!-- ACTIONS -->
+
+                    {% if user.is_admin or user.is_warden %}
+
+                    <td class="text-end pe-4">
+
+
+                        <a
+                            href="{% url 'hostel:building_edit' building.pk %}"
+                            class="action-btn me-1"
+                            title="Edit building"
+                        >
+
+                            <i class="bi bi-pencil"></i>
+
+                        </a>
+
+
+                        <button
+                            type="button"
+                            class="action-btn text-danger delete-building-btn"
+                            title="Delete building"
+                            data-building-name="{{ building.name|escapejs }}"
+                            data-delete-url="{% url 'hostel:building_delete' building.pk %}"
+                        >
+
+                            <i class="bi bi-trash"></i>
+
+                        </button>
+
+
+                    </td>
+
+                    {% endif %}
+
+                </tr>
+
+
+                {% empty %}
+
+
+                <!-- EMPTY STATE -->
+
+                <tr>
+
+                    <td
+                        colspan="{% if user.is_admin or user.is_warden %}3{% else %}2{% endif %}"
+                    >
+
+                        <div class="building-empty-state text-center">
+
+                            <div class="building-empty-icon">
+
+                                <i class="bi bi-buildings"></i>
+
+                            </div>
+
+
+                            <h5 class="fw-bold">
+                                No buildings found
+                            </h5>
+
+
+                            <p class="text-muted mb-3">
+                                Add your first hostel building to get started.
+                            </p>
+
+
+                            {% if user.is_admin or user.is_warden %}
+
+                            <a
+                                href="{% url 'hostel:building_add' %}"
+                                class="btn btn-primary"
+                            >
+
+                                <i class="bi bi-building-add me-1"></i>
+
+                                Add Building
+
+                            </a>
+
+                            {% endif %}
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     DELETE CONFIRMATION MODAL
+========================================================= -->
+
+<div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+
+            <!-- HEADER -->
+
+            <div class="modal-header">
+
+                <h5 class="modal-title fw-bold">
+
+                    <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+
+                    Confirm Delete
+
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+
+            <!-- BODY -->
+
+            <div class="modal-body">
+
+                <p class="mb-2">
+                    Are you sure you want to delete this building?
+                </p>
+
+
+                <div class="delete-warning-box">
+
+                    <strong id="deleteBuildingName"></strong>
+
+                </div>
+
+
+                <small class="text-danger d-block mt-3">
+
+                    <i class="bi bi-exclamation-circle me-1"></i>
+
+                    This action cannot be undone.
+
+                </small>
+
+            </div>
+
+
+
+            <!-- FOOTER -->
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-light border"
+                    data-bs-dismiss="modal"
+                >
+
+                    Cancel
+
+                </button>
+
+
+                <form
+                    id="deleteForm"
+                    method="post"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger"
+                    >
+
+                        <i class="bi bi-trash me-1"></i>
+
+                        Yes, Delete
+
+                    </button>
+
+                </form>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+{% block extra_js %}
+
 <script>
 
-document.querySelectorAll('.delete-building-btn').forEach(function(button) {
+document.addEventListener("DOMContentLoaded", function () {
 
-    button.addEventListener('click', function() {
 
-        const buildingName = this.dataset.buildingName;
-        const deleteUrl = this.dataset.deleteUrl;
+    /* =====================================================
+       DELETE BUILDING
+    ====================================================== */
 
-        document.getElementById('deleteBuildingName').textContent = buildingName;
+    document
+        .querySelectorAll(".delete-building-btn")
+        .forEach(function (button) {
 
-        document.getElementById('deleteForm').action = deleteUrl;
 
-        const modal = new bootstrap.Modal(
-            document.getElementById('deleteModal')
-        );
+            button.addEventListener("click", function () {
 
-        modal.show();
 
-    });
+                const buildingName =
+                    this.dataset.buildingName;
+
+
+                const deleteUrl =
+                    this.dataset.deleteUrl;
+
+
+                document.getElementById(
+                    "deleteBuildingName"
+                ).textContent =
+                    buildingName;
+
+
+                document.getElementById(
+                    "deleteForm"
+                ).action =
+                    deleteUrl;
+
+
+                const modalElement =
+                    document.getElementById(
+                        "deleteModal"
+                    );
+
+
+                const modal =
+                    new bootstrap.Modal(
+                        modalElement
+                    );
+
+
+                modal.show();
+
+            });
+
+        });
 
 });
 
 </script>
 
 {% endblock %}
-```
+
+
+{% endblock %}

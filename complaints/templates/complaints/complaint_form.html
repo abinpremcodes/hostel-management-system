@@ -1,30 +1,436 @@
+
 {% extends "base.html" %}
 
-{% block title %}Complaint Form{% endblock %}
+{% block title %}Complaint{% endblock %}
 
 {% block content %}
-<h2>Complaint</h2>
 
-<form method="post" id="complaintForm" novalidate>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div id="formError" class="alert alert-danger d-none"></div>
-    <button type="submit" class="btn btn-dark">Save</button>
-</form>
+<style>
+    .complaint-form-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .complaint-form-header {
+        margin-bottom: 24px;
+    }
+
+    .complaint-form-header h2 {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 5px;
+    }
+
+    .complaint-form-header p {
+        color: var(--muted);
+        margin-bottom: 0;
+    }
+
+    .complaint-form-card {
+        background: var(--card);
+        border: 0;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .complaint-form-card-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+        background: #fafbff;
+    }
+
+    .complaint-form-card-header h5 {
+        margin: 0;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .complaint-form-card-body {
+        padding: 28px 24px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .complaint-form-card input,
+    .complaint-form-card select,
+    .complaint-form-card textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 10px 12px;
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--text);
+        background: #fff;
+        transition: all 0.2s ease;
+    }
+
+    .complaint-form-card input:focus,
+    .complaint-form-card select:focus,
+    .complaint-form-card textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
+        outline: none;
+    }
+
+    .complaint-form-card textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .complaint-form-card .helptext {
+        display: block;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .complaint-form-card ul.errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 5px 0 0;
+        color: #dc2626;
+        font-size: 13px;
+    }
+
+    .form-error-box {
+        border-radius: 9px;
+        margin-bottom: 20px;
+    }
+
+    .complaint-form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border);
+        margin-top: 10px;
+    }
+
+    .form-action-right {
+        display: flex;
+        gap: 10px;
+    }
+
+    .complaint-form-actions .btn {
+        border-radius: 9px;
+        font-weight: 600;
+        padding: 9px 18px;
+    }
+
+    @media (max-width: 576px) {
+        .complaint-form-card-body {
+            padding: 20px 16px;
+        }
+
+        .complaint-form-actions {
+            flex-direction: column-reverse;
+            align-items: stretch;
+        }
+
+        .form-action-right {
+            flex-direction: column;
+        }
+
+        .complaint-form-actions .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<div class="complaint-form-wrapper">
+
+    <!-- Page Header -->
+    <div class="complaint-form-header">
+
+        <h2>
+            <i class="bi bi-chat-square-text me-2"></i>
+            {% if form.instance.pk %}
+                Edit Complaint
+            {% else %}
+                Add Complaint
+            {% endif %}
+        </h2>
+
+        <p>
+            {% if form.instance.pk %}
+                Update the complaint details below.
+            {% else %}
+                Submit a new complaint with the required details.
+            {% endif %}
+        </p>
+
+    </div>
+
+
+    <!-- Form Card -->
+    <div class="complaint-form-card">
+
+        <div class="complaint-form-card-header">
+
+            <h5>
+                <i class="bi bi-pencil-square me-2"></i>
+                Complaint Details
+            </h5>
+
+        </div>
+
+
+        <div class="complaint-form-card-body">
+
+            <form method="post"
+                  id="complaintForm"
+                  novalidate>
+
+                {% csrf_token %}
+
+
+                <!-- Django Form Errors -->
+                {% if form.non_field_errors %}
+
+                    <div class="alert alert-danger form-error-box">
+
+                        <i class="bi bi-exclamation-circle me-1"></i>
+
+                        {{ form.non_field_errors }}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Student -->
+                {% if form.student %}
+
+                    <div class="form-group">
+
+                        <label for="{{ form.student.id_for_label }}">
+                            Student
+                        </label>
+
+                        {{ form.student }}
+
+                        {% if form.student.errors %}
+                            {{ form.student.errors }}
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Category -->
+                {% if form.category %}
+
+                    <div class="form-group">
+
+                        <label for="{{ form.category.id_for_label }}">
+                            Category
+                        </label>
+
+                        {{ form.category }}
+
+                        {% if form.category.errors %}
+                            {{ form.category.errors }}
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Priority -->
+                {% if form.priority %}
+
+                    <div class="form-group">
+
+                        <label for="{{ form.priority.id_for_label }}">
+                            Priority
+                        </label>
+
+                        {{ form.priority }}
+
+                        {% if form.priority.errors %}
+                            {{ form.priority.errors }}
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Title -->
+                {% if form.title %}
+
+                    <div class="form-group">
+
+                        <label for="{{ form.title.id_for_label }}">
+                            Complaint Title
+                        </label>
+
+                        {{ form.title }}
+
+                        {% if form.title.errors %}
+                            {{ form.title.errors }}
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Description -->
+                {% if form.description %}
+
+                    <div class="form-group">
+
+                        <label for="{{ form.description.id_for_label }}">
+                            Description
+                        </label>
+
+                        {{ form.description }}
+
+                        {% if form.description.errors %}
+                            {{ form.description.errors }}
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- JavaScript Validation Error -->
+                <div id="formError"
+                     class="alert alert-danger form-error-box d-none">
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="complaint-form-actions">
+
+                    <a href="{% url 'complaints:complaint_list' %}"
+                       class="btn btn-light border">
+
+                        <i class="bi bi-arrow-left me-1"></i>
+
+                        Back
+
+                    </a>
+
+
+                    <div class="form-action-right">
+
+                        <a href="{% url 'complaints:complaint_list' %}"
+                           class="btn btn-outline-secondary">
+
+                            Cancel
+
+                        </a>
+
+
+                        <button type="submit"
+                                class="btn btn-dark">
+
+                            <i class="bi bi-check-circle me-1"></i>
+
+                            {% if form.instance.pk %}
+                                Update Complaint
+                            {% else %}
+                                Save Complaint
+                            {% endif %}
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <script>
-document.getElementById('complaintForm').addEventListener('submit', function(event) {
-    const title = document.getElementById('id_title').value.trim();
-    const description = document.getElementById('id_description').value.trim();
-    const errorBox = document.getElementById('formError');
 
-    if (title === '' || description === '') {
-        event.preventDefault();
-        errorBox.textContent = 'Title and Description cannot be empty or just spaces.';
-        errorBox.classList.remove('d-none');
-    } else {
-        errorBox.classList.add('d-none');
+document.addEventListener("DOMContentLoaded", function () {
+
+    const complaintForm =
+        document.getElementById("complaintForm");
+
+    const titleInput =
+        document.getElementById("id_title");
+
+    const descriptionInput =
+        document.getElementById("id_description");
+
+    const errorBox =
+        document.getElementById("formError");
+
+
+    if (!complaintForm) {
+        return;
     }
+
+
+    complaintForm.addEventListener("submit", function (event) {
+
+        const title =
+            titleInput ? titleInput.value.trim() : "";
+
+        const description =
+            descriptionInput ? descriptionInput.value.trim() : "";
+
+
+        if (title === "" || description === "") {
+
+            event.preventDefault();
+
+            errorBox.textContent =
+                "Title and Description cannot be empty or just spaces.";
+
+            errorBox.classList.remove("d-none");
+
+            if (title === "") {
+
+                titleInput.focus();
+
+            } else if (description === "") {
+
+                descriptionInput.focus();
+
+            }
+
+            return;
+
+        }
+
+
+        errorBox.classList.add("d-none");
+
+    });
+
 });
+
 </script>
+
 {% endblock %}
+
+

@@ -1,13 +1,373 @@
 {% extends "base.html" %}
 
-{% block title %}Building Form{% endblock %}
+{% block title %}Add Building{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   BUILDING FORM PAGE
+========================================================= */
+
+.building-form-header {
+    margin-bottom: 24px;
+}
+
+.building-form-header h2 {
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+
+/* =========================================================
+   FORM CARD
+========================================================= */
+
+.building-form-card {
+    overflow: hidden;
+
+    margin-bottom: 20px;
+
+    transition: var(--transition);
+}
+
+.building-form-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow: var(--shadow-md);
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.building-form-card-header {
+    padding: 18px 20px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.building-form-card-header h5 {
+    font-size: 16px;
+
+    font-weight: 700;
+
+    color: var(--text-dark);
+}
+
+.building-form-card-header p {
+    font-size: 12px;
+
+    margin-bottom: 0;
+}
+
+
+/* =========================================================
+   FORM BODY
+========================================================= */
+
+.building-form-card-body {
+    padding: 22px;
+}
+
+
+/* =========================================================
+   DJANGO FORM
+========================================================= */
+
+.building-form-card-body p {
+    margin-bottom: 18px;
+}
+
+.building-form-card-body label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: var(--text-dark);
+}
+
+.building-form-card-body input,
+.building-form-card-body select,
+.building-form-card-body textarea {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border: 1px solid #dfe3eb;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: var(--text-dark);
+
+    font-size: 13px;
+
+    transition: var(--transition);
+}
+
+.building-form-card-body input:focus,
+.building-form-card-body select:focus,
+.building-form-card-body textarea:focus {
+    border-color: var(--primary);
+
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.building-form-card-body textarea {
+    min-height: 110px;
+
+    resize: vertical;
+}
+
+
+/* =========================================================
+   HELP TEXT
+========================================================= */
+
+.building-form-card-body .helptext {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 11px;
+
+    color: var(--text-muted);
+}
+
+
+/* =========================================================
+   ERROR MESSAGES
+========================================================= */
+
+.building-form-card-body .errorlist {
+    list-style: none;
+
+    padding: 0;
+
+    margin: 5px 0 7px;
+
+    color: var(--danger);
+
+    font-size: 12px;
+}
+
+.building-form-card-body .errorlist li {
+    margin-bottom: 3px;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.building-form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 24px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid var(--border);
+}
+
+.building-form-actions .btn {
+    min-width: 120px;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.building-back-btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .building-form-header {
+        align-items: flex-start !important;
+
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+    .building-back-btn {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+    .building-form-card-body {
+        padding: 18px;
+    }
+
+    .building-form-actions {
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+    }
+
+    .building-form-actions .btn {
+        width: 100%;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
 
 {% block content %}
-<h2>Building</h2>
+
+
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
+
+<div class="building-form-header d-flex justify-content-between align-items-center">
+
+    <div>
+
+        <h2 class="mb-1">
+            Add Building
+        </h2>
+
+        <p class="text-muted mb-0">
+            Register a new hostel building in the system.
+        </p>
+
+    </div>
+
+
+    <a
+        href="{% url 'hostel:building_list' %}"
+        class="btn btn-outline-secondary building-back-btn"
+    >
+
+        <i class="bi bi-arrow-left"></i>
+
+        Back to Buildings
+
+    </a>
+
+</div>
+
+
+
+<!-- =========================================================
+     BUILDING FORM
+========================================================= -->
 
 <form method="post">
+
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-dark">Save</button>
+
+
+    <div class="card building-form-card">
+
+
+        <!-- CARD HEADER -->
+
+        <div class="building-form-card-header">
+
+            <h5 class="mb-1">
+
+                <i class="bi bi-building-add me-2"></i>
+
+                Building Information
+
+            </h5>
+
+            <p class="text-muted">
+
+                Enter the basic information for the hostel building.
+
+            </p>
+
+        </div>
+
+
+        <!-- CARD BODY -->
+
+        <div class="building-form-card-body">
+
+            {{ form.as_p }}
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         FORM ACTIONS
+    ====================================================== -->
+
+    <div class="building-form-actions">
+
+
+        <a
+            href="{% url 'hostel:building_list' %}"
+            class="btn btn-outline-secondary"
+        >
+
+            <i class="bi bi-x-circle me-1"></i>
+
+            Cancel
+
+        </a>
+
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+        >
+
+            <i class="bi bi-check-circle me-1"></i>
+
+            Save Building
+
+        </button>
+
+
+    </div>
+
+
 </form>
+
+
 {% endblock %}

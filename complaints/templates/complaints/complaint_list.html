@@ -1,131 +1,765 @@
+
 {% extends "base.html" %}
 
 {% block title %}Complaints{% endblock %}
 
 {% block content %}
-<h2>Complaints</h2>
 
-<a href="{% url 'complaints:complaint_add' %}" class="btn btn-dark mb-3">Add Complaint</a>
+<style>
+    .complaint-header {
+        margin-bottom: 24px;
+    }
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Student</th>
-            <th>Category</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+    .complaint-header h2 {
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: var(--text);
+    }
 
-    <tbody>
-        {% for complaint in complaints %}
-        <tr>
-            <td>{{ complaint.title }}</td>
-            <td>{{ complaint.student }}</td>
-            <td>{{ complaint.get_category_display }}</td>
-            <td>{{ complaint.get_priority_display }}</td>
-            <td>{{ complaint.get_status_display }}</td>
+    .complaint-header p {
+        color: var(--muted);
+        margin-bottom: 0;
+    }
 
-            <td>
-                <a href="{% url 'complaints:update_status' complaint.pk %}"
-                   class="btn btn-sm btn-outline-success">
-                    Update Status
-                </a>
+    .complaint-add-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
 
-                <a href="{% url 'complaints:complaint_edit' complaint.pk %}"
-                   class="btn btn-sm btn-outline-primary">
-                    Edit
-                </a>
+    .complaint-card {
+        border: 0;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        background: var(--card);
+    }
 
-                <button type="button"
-                        class="btn btn-sm btn-outline-danger delete-complaint-btn"
-                        data-complaint-name="{{ complaint.title }}"
-                        data-delete-url="{% url 'complaints:complaint_delete' complaint.pk %}">
-                    Delete
-                </button>
-            </td>
-        </tr>
+    .complaint-card-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-        {% empty %}
-        <tr>
-            <td colspan="6" class="text-center">No complaints found.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    .complaint-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0;
+    }
+
+    .complaint-count {
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .complaint-table {
+        margin-bottom: 0;
+        min-width: 850px;
+    }
+
+    .complaint-table thead th {
+        background: #f8fafc;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-bottom: 1px solid var(--border);
+        padding: 14px 16px;
+        white-space: nowrap;
+    }
+
+    .complaint-table tbody td {
+        padding: 16px;
+        border-bottom: 1px solid #f0f1f5;
+        color: var(--text);
+        vertical-align: middle;
+    }
+
+    .complaint-table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .complaint-table tbody tr:hover {
+        background: #fafbff;
+    }
+
+    .complaint-title {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 4px;
+    }
+
+    .complaint-description {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+        max-width: 320px;
+    }
+
+    .student-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .student-name {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .student-id {
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .category-text {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .priority-badge,
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .priority-high {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .priority-medium {
+        background: #fef3c7;
+        color: #b45309;
+    }
+
+    .priority-low {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .status-pending {
+        background: #fef3c7;
+        color: #b45309;
+    }
+
+    .status-progress {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .status-resolved {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .status-default {
+        background: #f1f5f9;
+        color: #64748b;
+    }
+
+    .complaint-actions {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .complaint-action-btn {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .complaint-action-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .empty-state {
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .empty-state-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        background: var(--primary-light);
+        color: var(--primary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin-bottom: 16px;
+    }
+
+    .empty-state h5 {
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .empty-state p {
+        color: var(--muted);
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 900px) {
+        .complaint-card {
+            overflow: hidden;
+        }
+
+        .complaint-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .complaint-table {
+            min-width: 850px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .complaint-header {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 15px;
+        }
+
+        .complaint-add-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .complaint-card-header {
+            padding: 15px;
+        }
+    }
+</style>
+
+
+<!-- Page Header -->
+<div class="complaint-header d-flex justify-content-between align-items-center">
+
+    <div>
+        <h2>
+            <i class="bi bi-chat-square-text me-2"></i>
+            Complaints
+        </h2>
+
+        <p>
+            {% if request.user.is_student %}
+                View and track your complaints
+            {% else %}
+                Manage student complaints
+            {% endif %}
+        </p>
+    </div>
+
+
+    <a href="{% url 'complaints:complaint_add' %}"
+       class="btn btn-dark complaint-add-btn">
+
+        <i class="bi bi-plus-circle"></i>
+        Add Complaint
+
+    </a>
+
+</div>
+
+
+<!-- Complaint Card -->
+<div class="complaint-card">
+
+    <div class="complaint-card-header">
+
+        <h5 class="complaint-card-title">
+
+            <i class="bi bi-list-check"></i>
+
+            Complaint List
+
+        </h5>
+
+
+        <span class="complaint-count">
+
+            {{ complaints|length }} complaint{{ complaints|length|pluralize }}
+
+        </span>
+
+    </div>
+
+
+    <div class="complaint-table-wrapper">
+
+        <table class="table complaint-table align-middle">
+
+            <thead>
+
+                <tr>
+
+                    <th style="width: 28%;">
+                        Complaint
+                    </th>
+
+
+                    {% if request.user.is_admin or request.user.is_warden %}
+
+                        <th style="width: 17%;">
+                            Student
+                        </th>
+
+                    {% endif %}
+
+
+                    <th style="width: 14%;">
+                        Category
+                    </th>
+
+
+                    <th style="width: 13%;">
+                        Priority
+                    </th>
+
+
+                    <th style="width: 15%;">
+                        Status
+                    </th>
+
+
+                    {% if request.user.is_admin or request.user.is_warden %}
+
+                        <th style="width: 13%;" class="text-center">
+                            Actions
+                        </th>
+
+                    {% endif %}
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for complaint in complaints %}
+
+                <tr>
+
+                    <!-- Complaint -->
+                    <td>
+
+                        <div class="complaint-title">
+                            {{ complaint.title }}
+                        </div>
+
+                        {% if complaint.description %}
+
+                            <div class="complaint-description">
+
+                                {{ complaint.description|truncatechars:70 }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- Student -->
+                    {% if request.user.is_admin or request.user.is_warden %}
+
+                    <td>
+
+                        <div class="student-info">
+
+                            {% if complaint.student.user.get_full_name %}
+
+                                <div class="student-name">
+                                    {{ complaint.student.user.get_full_name }}
+                                </div>
+
+                            {% else %}
+
+                                <div class="student-name">
+                                    {{ complaint.student.user.username }}
+                                </div>
+
+                            {% endif %}
+
+
+                            <div class="student-id">
+
+                                <i class="bi bi-person-badge me-1"></i>
+
+                                {{ complaint.student.student_id }}
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                    {% endif %}
+
+
+                    <!-- Category -->
+                    <td>
+
+                        <span class="category-text">
+                            {{ complaint.get_category_display }}
+                        </span>
+
+                    </td>
+
+
+                    <!-- Priority -->
+                    <td>
+
+                        {% if complaint.priority == "high" %}
+
+                            <span class="priority-badge priority-high">
+
+                                <i class="bi bi-arrow-up"></i>
+
+                                {{ complaint.get_priority_display }}
+
+                            </span>
+
+                        {% elif complaint.priority == "medium" %}
+
+                            <span class="priority-badge priority-medium">
+
+                                <i class="bi bi-dash"></i>
+
+                                {{ complaint.get_priority_display }}
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="priority-badge priority-low">
+
+                                <i class="bi bi-arrow-down"></i>
+
+                                {{ complaint.get_priority_display }}
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- Status -->
+                    <td>
+
+                        {% if complaint.status == "pending" %}
+
+                            <span class="status-badge status-pending">
+
+                                <i class="bi bi-clock"></i>
+
+                                Pending
+
+                            </span>
+
+                        {% elif complaint.status == "in_progress" %}
+
+                            <span class="status-badge status-progress">
+
+                                <i class="bi bi-arrow-repeat"></i>
+
+                                In Progress
+
+                            </span>
+
+                        {% elif complaint.status == "resolved" %}
+
+                            <span class="status-badge status-resolved">
+
+                                <i class="bi bi-check-circle"></i>
+
+                                Resolved
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-badge status-default">
+
+                                {{ complaint.get_status_display }}
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- Actions -->
+                    {% if request.user.is_admin or request.user.is_warden %}
+
+                    <td>
+
+                        <div class="complaint-actions">
+
+                            <!-- Update Status -->
+                            <a href="{% url 'complaints:update_status' complaint.pk %}"
+                               class="btn btn-outline-success complaint-action-btn"
+                               title="Update Status">
+
+                                <i class="bi bi-arrow-repeat"></i>
+
+                            </a>
+
+
+                            <!-- Edit -->
+                            <a href="{% url 'complaints:complaint_edit' complaint.pk %}"
+                               class="btn btn-outline-primary complaint-action-btn"
+                               title="Edit Complaint">
+
+                                <i class="bi bi-pencil"></i>
+
+                            </a>
+
+
+                            <!-- Delete -->
+                            <button type="button"
+                                    class="btn btn-outline-danger complaint-action-btn delete-complaint-btn"
+                                    data-complaint-name="{{ complaint.title }}"
+                                    data-delete-url="{% url 'complaints:complaint_delete' complaint.pk %}"
+                                    title="Delete Complaint">
+
+                                <i class="bi bi-trash"></i>
+
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                    {% endif %}
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="6">
+
+                        <div class="empty-state">
+
+                            <div class="empty-state-icon">
+
+                                <i class="bi bi-chat-square-text"></i>
+
+                            </div>
+
+
+                            <h5>
+                                No complaints found
+                            </h5>
+
+
+                            <p>
+                                {% if request.user.is_student %}
+                                    You haven't submitted any complaints yet.
+                                {% else %}
+                                    There are no complaints to display.
+                                {% endif %}
+                            </p>
+
+
+                            <a href="{% url 'complaints:complaint_add' %}"
+                               class="btn btn-dark">
+
+                                <i class="bi bi-plus-circle me-1"></i>
+
+                                Add Complaint
+
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
 
 
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
+
+<div class="modal fade"
+     id="deleteModal"
+     tabindex="-1"
+     aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content border-0 shadow">
 
             <div class="modal-header">
+
                 <h5 class="modal-title" id="deleteModalLabel">
+
+                    <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+
                     Confirm Delete
+
                 </h5>
+
 
                 <button type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
                         aria-label="Close">
                 </button>
+
             </div>
+
 
             <div class="modal-body">
+
                 Are you sure you want to delete
+
                 <strong id="deleteComplaintName"></strong>?
+
+                <div class="text-muted small mt-2">
+
+                    This action cannot be undone.
+
+                </div>
+
             </div>
 
+
             <div class="modal-footer">
+
                 <button type="button"
                         class="btn btn-secondary"
                         data-bs-dismiss="modal">
+
                     Cancel
+
                 </button>
 
+
                 <form id="deleteForm" method="post">
+
                     {% csrf_token %}
 
-                    <button type="submit" class="btn btn-danger">
+                    <button type="submit"
+                            class="btn btn-danger">
+
+                        <i class="bi bi-trash me-1"></i>
+
                         Yes, Delete
+
                     </button>
+
                 </form>
+
             </div>
 
         </div>
+
     </div>
+
 </div>
 
 
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
 
-    const deleteButtons = document.querySelectorAll(".delete-complaint-btn");
-    const deleteComplaintName = document.getElementById("deleteComplaintName");
-    const deleteForm = document.getElementById("deleteForm");
-    const deleteModal = new bootstrap.Modal(
-        document.getElementById("deleteModal")
-    );
+    const deleteButtons =
+        document.querySelectorAll(".delete-complaint-btn");
+
+    const deleteComplaintName =
+        document.getElementById("deleteComplaintName");
+
+    const deleteForm =
+        document.getElementById("deleteForm");
+
+    const deleteModalElement =
+        document.getElementById("deleteModal");
+
+
+    if (!deleteModalElement) {
+        return;
+    }
+
+
+    const deleteModal =
+        new bootstrap.Modal(deleteModalElement);
+
 
     deleteButtons.forEach(function (button) {
 
         button.addEventListener("click", function () {
 
-            const complaintName = this.dataset.complaintName;
-            const deleteUrl = this.dataset.deleteUrl;
+            const complaintName =
+                this.dataset.complaintName;
 
-            deleteComplaintName.textContent = complaintName;
-            deleteForm.action = deleteUrl;
+            const deleteUrl =
+                this.dataset.deleteUrl;
+
+
+            deleteComplaintName.textContent =
+                complaintName;
+
+            deleteForm.action =
+                deleteUrl;
+
 
             deleteModal.show();
+
         });
 
     });
 
 });
+
 </script>
 
 {% endblock %}
+```
+
+This keeps your **student/admin separation**, status handling, edit/update/delete actions, and confirmation modal while matching the polished pages we've already done.
+
+Next after this page: **`complaint_form.html`** — we'll polish the Add/Edit Complaint form.

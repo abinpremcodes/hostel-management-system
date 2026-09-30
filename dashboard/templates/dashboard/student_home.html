@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard{% endblock %}
+
+{% block nav_dashboard %}active{% endblock %}
+
+{% block content %}
+
+<!-- Welcome Section -->
+<div class="student-welcome mb-4">
+
+    <div class="d-flex justify-content-between align-items-center">
+
+        <div>
+
+            <div class="small opacity-75 mb-1">
+                Student Dashboard
+            </div>
+
+            <h2 class="fw-bold mb-1">
+                Welcome, {{ student.user.username }} 👋
+            </h2>
+
+            <p class="mb-0 opacity-75">
+                Manage your hostel information from here.
+            </p>
+
+        </div>
+
+        <div class="d-none d-md-block">
+            <i class="bi bi-house-heart" style="font-size: 55px;"></i>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- My Information -->
+<div class="row g-3 mb-4">
+
+    <!-- My Room -->
+    <div class="col-md-4">
+
+        <div class="card kpi-card p-3 h-100">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <div class="student-action-icon">
+                    <i class="bi bi-door-open"></i>
+                </div>
+
+                <div>
+
+                    <div class="text-muted small">
+                        My Room
+                    </div>
+
+                    {% if active_allocation %}
+
+                        <div class="fw-bold">
+                            {{ active_allocation.bed }}
+                        </div>
+
+                    {% else %}
+
+                        <div class="fw-bold text-muted">
+                            Not allocated yet
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- My Fees -->
+    <div class="col-md-4">
+
+        <div class="card kpi-card p-3 h-100">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <div class="student-action-icon">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+
+                <div>
+
+                    <div class="text-muted small">
+                        Pending Fees
+                    </div>
+
+                    <div class="fs-4 fw-bold text-warning">
+                        {{ pending_fees }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Complaints -->
+    <div class="col-md-4">
+
+        <div class="card kpi-card p-3 h-100">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <div class="student-action-icon">
+                    <i class="bi bi-chat-left-text"></i>
+                </div>
+
+                <div>
+
+                    <div class="text-muted small">
+                        Open Complaints
+                    </div>
+
+                    <div class="fs-4 fw-bold text-danger">
+                        {{ open_complaints }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Quick Actions -->
+<div class="mb-3">
+
+    <h5 class="fw-semibold mb-3">
+        Quick Access
+    </h5>
+
+</div>
+
+
+<div class="row g-3">
+
+
+    <!-- My Fees -->
+    <div class="col-md-6 col-lg-4">
+
+        <a
+            href="{% url 'accounts:my_fees' %}"
+            class="card student-action-card p-3 h-100"
+        >
+
+            <div class="d-flex align-items-center gap-3">
+
+                <div class="student-action-icon">
+                    <i class="bi bi-cash-coin"></i>
+                </div>
+
+                <div>
+
+                    <div class="fw-semibold">
+                        My Fees
+                    </div>
+
+                    <small class="text-muted">
+                        View your fees and payment details
+                    </small>
+
+                </div>
+
+                <i class="bi bi-chevron-right ms-auto text-muted"></i>
+
+            </div>
+
+        </a>
+
+    </div>
+
+
+    <!-- My Complaints -->
+    <div class="col-md-6 col-lg-4">
+
+        <a
+            href="{% url 'accounts:my_complaints' %}"
+            class="card student-action-card p-3 h-100"
+        >
+
+            <div class="d-flex align-items-center gap-3">
+
+                <div class="student-action-icon">
+                    <i class="bi bi-exclamation-circle"></i>
+                </div>
+
+                <div>
+
+                    <div class="fw-semibold">
+                        My Complaints
+                    </div>
+
+                    <small class="text-muted">
+                        Submit and track your complaints
+                    </small>
+
+                </div>
+
+                <i class="bi bi-chevron-right ms-auto text-muted"></i>
+
+            </div>
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -2,114 +2,1459 @@
 
 {% block title %}Students{% endblock %}
 
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   STUDENTS PAGE
+========================================================= */
+
+.students-page-header {
+    margin-bottom: 24px;
+}
+
+.students-page-header h2 {
+    font-size: 25px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.students-page-header p {
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   ADD STUDENT BUTTON
+========================================================= */
+
+.add-student-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    padding: 10px 16px;
+
+    font-weight: 600;
+
+    transition: var(--transition);
+}
+
+.add-student-btn:hover {
+    transform: translateY(-3px);
+}
+
+
+/* =========================================================
+   STUDENT STAT PILLS
+========================================================= */
+
+.student-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+
+    margin-bottom: 24px;
+}
+
+.student-stat {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 10px;
+
+    min-height: 58px;
+
+    padding: 8px 18px 8px 10px;
+
+    background: var(--card-bg);
+
+    border: 1px solid var(--border);
+
+    border-radius: 999px;
+
+    box-shadow: var(--shadow-sm);
+
+    transition: var(--transition);
+}
+
+.student-stat:hover {
+    transform: translateY(-3px);
+
+    box-shadow: var(--shadow-md);
+
+    border-color: #d5d9e5;
+}
+
+.student-stat-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+
+    flex-shrink: 0;
+
+    transition: var(--transition);
+}
+
+.student-stat:hover .student-stat-icon {
+    transform: scale(1.08) rotate(4deg);
+}
+
+.student-stat-icon.total {
+    background: #1f2937;
+}
+
+.student-stat-icon.visible {
+    background: var(--primary);
+}
+
+.student-stat-icon.filtered {
+    background: var(--success);
+}
+
+.student-stat-label {
+    font-size: 11px;
+
+    color: var(--text-muted);
+
+    margin-bottom: 1px;
+}
+
+.student-stat-number {
+    font-size: 17px;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+    color: var(--text-dark);
+
+    transition: var(--transition);
+}
+
+.student-stat:hover .student-stat-number {
+    transform: translateX(2px);
+}
+
+
+/* =========================================================
+   FILTER CARD
+========================================================= */
+
+.student-filter-card {
+    margin-bottom: 24px;
+
+    transition: var(--transition);
+}
+
+.student-filter-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow: var(--shadow-md);
+}
+
+.search-input-group .input-group-text {
+    border-color: #dfe3eb;
+
+    color: var(--text-muted);
+
+    border-radius: 9px 0 0 9px;
+}
+
+.search-input-group .form-control {
+    border-left: 0;
+
+    border-radius: 0 9px 9px 0;
+}
+
+.search-input-group:focus-within .input-group-text {
+    border-color: var(--primary);
+
+    color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+
+/* =========================================================
+   STUDENT RECORDS
+========================================================= */
+
+.students-card {
+    overflow: hidden;
+
+    transition: var(--transition);
+}
+
+.students-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.students-card-header {
+    padding: 18px 20px;
+
+    background: white;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.students-card-header h5 {
+    font-size: 16px;
+}
+
+.students-card-header small {
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   COUNT BADGE
+========================================================= */
+
+.student-count-badge {
+    border-radius: 999px;
+
+    padding: 7px 12px;
+
+    font-size: 11px;
+
+    transition: var(--transition);
+}
+
+.student-count-badge:hover {
+    transform: scale(1.05);
+}
+
+
+/* =========================================================
+   STUDENT TABLE
+========================================================= */
+
+.student-table {
+    margin-bottom: 0;
+}
+
+.student-table thead th {
+    background: #f8f9fc;
+
+    color: #667085;
+
+    border-bottom: 1px solid var(--border);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+
+    padding: 13px 14px;
+
+    white-space: nowrap;
+}
+
+.student-table tbody td {
+    padding: 13px 14px;
+
+    border-color: #eef0f4;
+
+    font-size: 13px;
+}
+
+.student-row {
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.student-row:hover {
+    background: #f7f8ff !important;
+}
+
+
+/* =========================================================
+   STUDENT ID
+========================================================= */
+
+.student-id {
+    color: var(--primary);
+
+    font-weight: 600;
+
+    transition: var(--transition);
+}
+
+.student-row:hover .student-id {
+    color: var(--primary-dark);
+}
+
+
+/* =========================================================
+   STUDENT AVATAR
+========================================================= */
+
+.student-avatar {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+    );
+
+    color: white;
+
+    font-weight: 600;
+
+    flex-shrink: 0;
+
+    transition: var(--transition);
+
+    box-shadow:
+        0 4px 10px rgba(79, 70, 229, 0.18);
+}
+
+.student-row:hover .student-avatar {
+    transform: scale(1.08);
+
+    box-shadow:
+        0 6px 14px rgba(79, 70, 229, 0.25);
+}
+
+.student-name {
+    transition: var(--transition);
+}
+
+.student-row:hover .student-name {
+    color: var(--primary);
+}
+
+
+/* =========================================================
+   COURSE BADGE
+========================================================= */
+
+.course-badge {
+    background: #f4f5f8 !important;
+
+    color: #4b5563 !important;
+
+    border-color: #e3e6ec !important;
+
+    font-size: 11px;
+
+    transition: var(--transition);
+}
+
+.course-badge:hover {
+    transform: translateY(-2px);
+
+    background: var(--primary-light) !important;
+
+    color: var(--primary) !important;
+
+    border-color: #cfd2ff !important;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.student-action-btn {
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    transition: var(--transition);
+}
+
+.student-action-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state {
+    padding: 20px;
+}
+
+.empty-icon {
+    transition: var(--transition);
+}
+
+.empty-state:hover .empty-icon {
+    transform: translateY(-4px) scale(1.08);
+
+    color: var(--primary) !important;
+}
+
+
+/* =========================================================
+   DELETE MODAL
+========================================================= */
+
+.delete-warning-box {
+    background: #fff7f7;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 10px;
+
+    padding: 12px 14px;
+
+    transition: var(--transition);
+}
+
+.delete-warning-box:hover {
+    background: #fff2f2;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .students-page-header {
+        align-items: flex-start !important;
+
+        flex-direction: column;
+    }
+
+    .add-student-btn {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+    .student-stats {
+        gap: 8px;
+    }
+
+    .student-stat {
+        flex: 1 1 180px;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
 {% block content %}
-<h2>Students</h2>
 
-<a href="{% url 'accounts:student_add' %}" class="btn btn-dark mb-3">Add Student</a>
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
 
-<form method="get" class="d-flex mb-3 mt-3" style="max-width: 400px;">
-    <input type="text" id="liveSearchBox" class="form-control me-2" placeholder="Type to filter instantly...">
-    <button type="submit" class="btn btn-outline-dark">Search</button>
-</form>
+<div class="students-page-header d-flex justify-content-between align-items-center">
 
-<table class="table table-bordered table-striped" id="studentTable">
-    <thead>
-        <tr>
-            <th>Student ID</th>
-            <th>Name</th>
-            <th>Course</th>
-            <th>Year</th>
-            <th>Guardian</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for student in students %}
-        <tr>
-            <td>{{ student.student_id }}</td>
-            <td>{{ student.user.username }}</td>
-            <td>{{ student.course }}</td>
-            <td>{{ student.get_year_display }}</td>
-            <td>{{ student.guardian_name }}</td>
-            <td>
-                <a href="{% url 'accounts:student_edit' student.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                <button type="button" class="btn btn-sm btn-outline-danger"
-                        onclick="showDeleteModal('{{ student.user.username }}', '{% url 'accounts:student_delete' student.pk %}')">
-                    Delete
-                </button>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="6" class="text-center">No students found.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
 
-<div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete <strong id="deleteStudentName"></strong>? This action cannot be undone.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form id="deleteForm" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
+<div>
+
+    <h2 class="mb-1">
+        Students
+    </h2>
+
+    <p class="text-muted mb-0">
+        Manage hostel students and their information.
+    </p>
+
 </div>
 
+
+{% if user.is_admin or user.is_warden %}
+
+<a
+    href="{% url 'accounts:student_add' %}"
+    class="btn btn-primary add-student-btn"
+>
+
+    <i class="bi bi-person-plus"></i>
+
+    Add Student
+
+</a>
+
+{% endif %}
+
+
+</div>
+
+<!-- =========================================================
+     STUDENT STATISTICS
+========================================================= -->
+
+<div class="student-stats">
+
+
+<!-- TOTAL -->
+
+<div class="student-stat">
+
+    <div class="student-stat-icon total">
+
+        <i class="bi bi-people"></i>
+
+    </div>
+
+    <div>
+
+        <div class="student-stat-label">
+            Total Students
+        </div>
+
+        <div
+            class="student-stat-number"
+            id="totalStudents"
+        >
+            {{ students|length }}
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- VISIBLE -->
+
+<div class="student-stat">
+
+    <div class="student-stat-icon visible">
+
+        <i class="bi bi-eye"></i>
+
+    </div>
+
+    <div>
+
+        <div class="student-stat-label">
+            Visible
+        </div>
+
+        <div
+            class="student-stat-number"
+            id="visibleStudents"
+        >
+            {{ students|length }}
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- FILTERED -->
+
+<div class="student-stat">
+
+    <div class="student-stat-icon filtered">
+
+        <i class="bi bi-filter"></i>
+
+    </div>
+
+    <div>
+
+        <div class="student-stat-label">
+            Results
+        </div>
+
+        <div
+            class="student-stat-number"
+            id="filteredStudents"
+        >
+            {{ students|length }}
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- =========================================================
+     SEARCH & FILTERS
+========================================================= -->
+
+<div class="card student-filter-card">
+
+
+<div class="card-body p-4">
+
+    <div class="row g-3 align-items-end">
+
+
+        <!-- SEARCH -->
+
+        <div class="col-md-6">
+
+            <label class="form-label">
+                Search Students
+            </label>
+
+            <div class="input-group search-input-group">
+
+                <span class="input-group-text bg-white">
+
+                    <i class="bi bi-search"></i>
+
+                </span>
+
+
+                <input
+                    type="text"
+                    id="liveSearchBox"
+                    class="form-control"
+                    placeholder="Search by ID, name or course..."
+                >
+
+            </div>
+
+        </div>
+
+
+
+        <!-- COURSE -->
+
+        <div class="col-md-3">
+
+            <label class="form-label">
+                Course
+            </label>
+
+            <select
+                id="courseFilter"
+                class="form-select"
+            >
+
+                <option value="">
+                    All Courses
+                </option>
+
+
+                {% for student in students %}
+
+                <option value="{{ student.course|lower }}">
+                    {{ student.course }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+
+        <!-- YEAR -->
+
+        <div class="col-md-3">
+
+            <label class="form-label">
+                Year
+            </label>
+
+            <select
+                id="yearFilter"
+                class="form-select"
+            >
+
+                <option value="">
+                    All Years
+                </option>
+
+
+                {% for student in students %}
+
+                <option value="{{ student.get_year_display|lower }}">
+                    {{ student.get_year_display }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- =========================================================
+     STUDENT RECORDS
+========================================================= -->
+
+<div class="card students-card mt-4">
+
+
+<!-- HEADER -->
+
+<div class="students-card-header">
+
+    <div class="d-flex justify-content-between align-items-center">
+
+
+        <div>
+
+            <h5 class="fw-bold mb-1">
+                Student Records
+            </h5>
+
+            <small class="text-muted">
+                Search and manage registered students
+            </small>
+
+        </div>
+
+
+        <span
+            class="badge bg-dark student-count-badge"
+            id="studentCountBadge"
+        >
+
+            {{ students|length }}
+
+            {% if students|length == 1 %}
+                Student
+            {% else %}
+                Students
+            {% endif %}
+
+        </span>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- TABLE -->
+
+<div class="table-responsive">
+
+    <table
+        class="table table-hover align-middle student-table"
+        id="studentTable"
+    >
+
+        <thead>
+
+            <tr>
+
+                <th class="ps-4">
+                    Student ID
+                </th>
+
+                <th>
+                    Name
+                </th>
+
+                <th>
+                    Course
+                </th>
+
+                <th>
+                    Year
+                </th>
+
+                <th>
+                    Guardian
+                </th>
+
+
+                {% if user.is_admin or user.is_warden %}
+
+                <th class="text-end pe-4">
+                    Actions
+                </th>
+
+                {% endif %}
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for student in students %}
+
+            <tr
+                class="student-row"
+                data-student-id="{{ student.student_id|lower }}"
+                data-name="{{ student.user.username|lower }}"
+                data-course="{{ student.course|lower }}"
+                data-year="{{ student.get_year_display|lower }}"
+            >
+
+
+                <!-- STUDENT ID -->
+
+                <td class="ps-4">
+
+                    <span class="student-id">
+                        {{ student.student_id }}
+                    </span>
+
+                </td>
+
+
+
+                <!-- NAME -->
+
+                <td>
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="student-avatar me-2">
+
+                            {{ student.user.username|first|upper }}
+
+                        </div>
+
+
+                        <div>
+
+                            <div class="fw-semibold student-name">
+                                {{ student.user.username }}
+                            </div>
+
+                            <small class="text-muted">
+                                Student
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </td>
+
+
+
+                <!-- COURSE -->
+
+                <td>
+
+                    <span class="badge course-badge border">
+                        {{ student.course }}
+                    </span>
+
+                </td>
+
+
+
+                <!-- YEAR -->
+
+                <td>
+
+                    <span class="text-muted">
+                        {{ student.get_year_display }}
+                    </span>
+
+                </td>
+
+
+
+                <!-- GUARDIAN -->
+
+                <td>
+
+                    {% if student.guardian_name %}
+
+                        {{ student.guardian_name }}
+
+                    {% else %}
+
+                        <span class="text-muted">
+                            Not provided
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+
+
+                <!-- ACTIONS -->
+
+                {% if user.is_admin or user.is_warden %}
+
+                <td class="text-end pe-4">
+
+
+                    <a
+                        href="{% url 'accounts:student_edit' student.pk %}"
+                        class="action-btn me-1"
+                        title="Edit student"
+                    >
+
+                        <i class="bi bi-pencil"></i>
+
+                    </a>
+
+
+                    <button
+                        type="button"
+                        class="action-btn text-danger"
+                        title="Delete student"
+                        onclick="showDeleteModal(
+                            '{{ student.user.username|escapejs }}',
+                            '{% url 'accounts:student_delete' student.pk %}'
+                        )"
+                    >
+
+                        <i class="bi bi-trash"></i>
+
+                    </button>
+
+
+                </td>
+
+                {% endif %}
+
+            </tr>
+
+            {% empty %}
+
+
+            <!-- EMPTY STATE -->
+
+            <tr id="emptyStudentsRow">
+
+                <td
+                    colspan="{% if user.is_admin or user.is_warden %}6{% else %}5{% endif %}"
+                    class="text-center"
+                >
+
+                    <div class="empty-state">
+
+                        <i class="bi bi-people fs-1 text-muted empty-icon"></i>
+
+                        <h5 class="mt-3">
+                            No students found
+                        </h5>
+
+                        <p class="text-muted">
+                            Add your first student to get started.
+                        </p>
+
+
+                        {% if user.is_admin or user.is_warden %}
+
+                        <a
+                            href="{% url 'accounts:student_add' %}"
+                            class="btn btn-primary"
+                        >
+
+                            <i class="bi bi-person-plus me-1"></i>
+
+                            Add Student
+
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+
+<!-- NO SEARCH RESULTS -->
+
+<div
+    id="noResults"
+    class="text-center py-5 d-none"
+>
+
+    <i class="bi bi-search fs-1 text-muted"></i>
+
+    <h5 class="mt-3">
+        No matching students
+    </h5>
+
+    <p class="text-muted mb-0">
+        Try changing your search or filters.
+    </p>
+
+</div>
+
+
+</div>
+
+<!-- =========================================================
+     DELETE MODAL
+========================================================= -->
+
+<div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+
+<div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content">
+
+
+        <!-- HEADER -->
+
+        <div class="modal-header">
+
+            <h5 class="modal-title fw-bold">
+
+                <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+
+                Confirm Delete
+
+            </h5>
+
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+            ></button>
+
+        </div>
+
+
+
+        <!-- BODY -->
+
+        <div class="modal-body">
+
+            <p class="mb-2">
+                Are you sure you want to delete this student?
+            </p>
+
+
+            <div class="delete-warning-box">
+
+                <strong id="deleteStudentName"></strong>
+
+            </div>
+
+
+            <small class="text-danger d-block mt-3">
+
+                <i class="bi bi-exclamation-circle me-1"></i>
+
+                This action cannot be undone.
+
+            </small>
+
+        </div>
+
+
+
+        <!-- FOOTER -->
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                class="btn btn-light border"
+                data-bs-dismiss="modal"
+            >
+
+                Cancel
+
+            </button>
+
+
+            <form
+                id="deleteForm"
+                method="post"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="btn btn-danger"
+                >
+
+                    <i class="bi bi-trash me-1"></i>
+
+                    Yes, Delete
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+{% block extra_js %}
+
 <script>
-document.getElementById('liveSearchBox').addEventListener('keyup', function() {
-    const searchText = this.value.toLowerCase();
-    const table = document.getElementById('studentTable');
-    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-    let visibleCount = 0;
 
-    for (let i = 0; i < rows.length; i++) {
-        const cells = rows[i].getElementsByTagName('td');
-        if (cells.length < 3) continue;
+document.addEventListener("DOMContentLoaded", function () {
 
-        const studentId = cells[0].textContent.toLowerCase();
-        const name = cells[1].textContent.toLowerCase();
-        const course = cells[2].textContent.toLowerCase();
-        const combinedText = studentId + ' ' + name + ' ' + course;
 
-        if (combinedText.includes(searchText)) {
-            rows[i].style.display = '';
-            visibleCount++;
+    const searchBox =
+        document.getElementById("liveSearchBox");
+
+
+    const courseFilter =
+        document.getElementById("courseFilter");
+
+
+    const yearFilter =
+        document.getElementById("yearFilter");
+
+
+    const table =
+        document.getElementById("studentTable");
+
+
+    const tbody =
+        table.querySelector("tbody");
+
+
+    const noResults =
+        document.getElementById("noResults");
+
+
+    const visibleStudents =
+        document.getElementById("visibleStudents");
+
+
+    const filteredStudents =
+        document.getElementById("filteredStudents");
+
+
+    const studentCountBadge =
+        document.getElementById("studentCountBadge");
+
+
+    const rows =
+        Array.from(
+            tbody.querySelectorAll(
+                "tr[data-student-id]"
+            )
+        );
+
+
+    const totalStudents =
+        rows.length;
+
+
+
+    /* =====================================================
+       REMOVE DUPLICATE OPTIONS
+    ===================================================== */
+
+    function removeDuplicateOptions(select) {
+
+        const options =
+            Array.from(select.options);
+
+        const seen =
+            new Set();
+
+
+        options.forEach(function (option, index) {
+
+            if (index === 0) {
+                return;
+            }
+
+
+            const value =
+                option.value;
+
+
+            if (seen.has(value)) {
+
+                option.remove();
+
+            } else {
+
+                seen.add(value);
+
+            }
+
+        });
+
+    }
+
+
+    removeDuplicateOptions(courseFilter);
+
+    removeDuplicateOptions(yearFilter);
+
+
+
+    /* =====================================================
+       FILTER STUDENTS
+    ===================================================== */
+
+    function filterStudents() {
+
+
+        const searchText =
+            searchBox.value
+                .trim()
+                .toLowerCase();
+
+
+        const selectedCourse =
+            courseFilter.value
+                .toLowerCase();
+
+
+        const selectedYear =
+            yearFilter.value
+                .toLowerCase();
+
+
+        let count = 0;
+
+
+        rows.forEach(function (row) {
+
+
+            const studentId =
+                row.dataset.studentId;
+
+
+            const name =
+                row.dataset.name;
+
+
+            const course =
+                row.dataset.course;
+
+
+            const year =
+                row.dataset.year;
+
+
+            const matchesSearch =
+                studentId.includes(searchText) ||
+                name.includes(searchText) ||
+                course.includes(searchText);
+
+
+            const matchesCourse =
+                !selectedCourse ||
+                course === selectedCourse;
+
+
+            const matchesYear =
+                !selectedYear ||
+                year === selectedYear;
+
+
+            if (
+                matchesSearch &&
+                matchesCourse &&
+                matchesYear
+            ) {
+
+                row.style.display = "";
+
+                count++;
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+
+
+        /* =================================================
+           UPDATE COUNTERS
+        ================================================= */
+
+        visibleStudents.textContent =
+            count;
+
+
+        filteredStudents.textContent =
+            count;
+
+
+        studentCountBadge.textContent =
+            count +
+            (
+                count === 1
+                    ? " Student"
+                    : " Students"
+            );
+
+
+
+        /* =================================================
+           NO RESULTS
+        ================================================= */
+
+        if (
+            count === 0 &&
+            totalStudents > 0
+        ) {
+
+            table.style.display = "none";
+
+            noResults.classList.remove(
+                "d-none"
+            );
+
         } else {
-            rows[i].style.display = 'none';
+
+            table.style.display = "";
+
+            noResults.classList.add(
+                "d-none"
+            );
+
         }
+
     }
 
-    let noResultsRow = document.getElementById('noResultsRow');
-    if (visibleCount === 0) {
-        if (!noResultsRow) {
-            noResultsRow = document.createElement('tr');
-            noResultsRow.id = 'noResultsRow';
-            noResultsRow.innerHTML = '<td colspan="6" class="text-center">No matching students found.</td>';
-            table.getElementsByTagName('tbody')[0].appendChild(noResultsRow);
-        }
-    } else if (noResultsRow) {
-        noResultsRow.remove();
-    }
+
+
+    /* =====================================================
+       EVENTS
+    ===================================================== */
+
+    searchBox.addEventListener(
+        "input",
+        filterStudents
+    );
+
+
+    courseFilter.addEventListener(
+        "change",
+        filterStudents
+    );
+
+
+    yearFilter.addEventListener(
+        "change",
+        filterStudents
+    );
+
+
+
+    /* =====================================================
+       INITIAL FILTER
+    ===================================================== */
+
+    filterStudents();
+
 });
 
-function showDeleteModal(studentName, deleteUrl) {
-    document.getElementById('deleteStudentName').textContent = studentName;
-    document.getElementById('deleteForm').action = deleteUrl;
-    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+
+
+/* =========================================================
+   DELETE CONFIRMATION
+========================================================= */
+
+function showDeleteModal(
+    studentName,
+    deleteUrl
+) {
+
+
+    document.getElementById(
+        "deleteStudentName"
+    ).textContent =
+        studentName;
+
+
+    document.getElementById(
+        "deleteForm"
+    ).action =
+        deleteUrl;
+
+
+    const modalElement =
+        document.getElementById(
+            "deleteModal"
+        );
+
+
+    const modal =
+        new bootstrap.Modal(
+            modalElement
+        );
+
+
     modal.show();
+
 }
+
 </script>
+
+{% endblock %}
+
 {% endblock %}

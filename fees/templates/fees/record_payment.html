@@ -3,37 +3,503 @@
 {% block title %}Record Payment{% endblock %}
 
 {% block content %}
-<h2>Record Payment</h2>
-<p>For: <strong>{{ fee.student }}</strong> - {{ fee.get_fee_type_display }} - ₹{{ fee.amount }} (Status: {{ fee.get_status_display }})</p>
-<p>Current balance: ₹<span id="currentBalance">{{ fee.balance }}</span></p>
 
-<form method="post" id="paymentForm">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <p id="liveCalculation" class="text-muted"></p>
-    <button type="submit" class="btn btn-dark">Save Payment</button>
-</form>
+<style>
+    .payment-page {
+        max-width: 850px;
+        margin: 0 auto;
+    }
+
+    .payment-header {
+        margin-bottom: 24px;
+    }
+
+    .payment-header h2 {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+    }
+
+    .payment-header p {
+        color: var(--muted);
+        margin: 0;
+    }
+
+    .payment-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .payment-card-header {
+        padding: 22px 28px;
+        background: #fafbff;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .payment-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        background: var(--primary-light);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+        flex-shrink: 0;
+    }
+
+    .payment-card-header h5 {
+        margin: 0;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .payment-card-header p {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .payment-card-body {
+        padding: 30px;
+    }
+
+    .fee-summary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-bottom: 28px;
+    }
+
+    .summary-box {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        background: #fafbff;
+    }
+
+    .summary-label {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .summary-value {
+        color: var(--text);
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .balance-box {
+        background: var(--primary-light);
+        border-color: #d9ddff;
+    }
+
+    .balance-box .summary-value {
+        color: var(--primary);
+    }
+
+    .form-section {
+        margin-top: 10px;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 18px;
+    }
+
+    .section-title i {
+        color: var(--primary);
+        font-size: 17px;
+    }
+
+    .field-group {
+        margin-bottom: 20px;
+    }
+
+    .field-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 8px;
+    }
+
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 13px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 14px;
+        transition: .2s ease;
+    }
+
+    .field-group textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+        outline: none;
+    }
+
+    .field-group ul.errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 6px 0 0;
+        color: var(--danger);
+        font-size: 13px;
+    }
+
+    .calculation-box {
+        display: none;
+        margin-top: 8px;
+        padding: 13px 15px;
+        border-radius: 10px;
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        font-size: 14px;
+        color: var(--muted);
+    }
+
+    .calculation-box.show {
+        display: block;
+    }
+
+    .calculation-box.success {
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+        color: #15803d;
+    }
+
+    .calculation-box.warning {
+        background: #fff7ed;
+        border-color: #fed7aa;
+        color: #c2410c;
+    }
+
+    .calculation-box.danger {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #dc2626;
+    }
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 30px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+    }
+
+    .save-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 42px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        background: var(--primary);
+        color: #fff;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        transition: .2s ease;
+    }
+
+    .save-btn:hover {
+        background: var(--primary-dark);
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .cancel-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 42px;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+
+    .alert-danger {
+        border-radius: 10px;
+        border: 1px solid #fecaca;
+        font-size: 14px;
+        margin-bottom: 22px;
+    }
+
+    @media (max-width: 700px) {
+        .fee-summary {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .payment-card-body {
+            padding: 20px;
+        }
+
+        .payment-card-header {
+            padding: 18px 20px;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .form-actions .save-btn,
+        .form-actions .cancel-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="payment-page">
+
+    <div class="payment-header">
+
+        <a href="{% url 'fees:fee_list' %}" class="back-btn">
+            <i class="bi bi-arrow-left"></i>
+            Back to Fees
+        </a>
+
+        <h2>
+            <i class="bi bi-cash-stack me-2"></i>
+            Record Payment
+        </h2>
+
+        <p>
+            Record a payment against the student's fee.
+        </p>
+
+    </div>
+
+    <div class="payment-card">
+
+        <div class="payment-card-header">
+
+            <div class="payment-icon">
+                <i class="bi bi-wallet2"></i>
+            </div>
+
+            <div>
+                <h5>Payment Details</h5>
+                <p>Review the fee information and enter the payment amount.</p>
+            </div>
+
+        </div>
+
+        <div class="payment-card-body">
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="fee-summary">
+
+                <div class="summary-box">
+                    <span class="summary-label">Student</span>
+                    <span class="summary-value">
+                        {{ fee.student }}
+                    </span>
+                </div>
+
+                <div class="summary-box">
+                    <span class="summary-label">Fee</span>
+                    <span class="summary-value">
+                        {{ fee.get_fee_type_display }}
+                    </span>
+                </div>
+
+                <div class="summary-box">
+                    <span class="summary-label">Total Amount</span>
+                    <span class="summary-value">
+                        ₹{{ fee.amount }}
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="summary-box balance-box mb-4">
+
+                <span class="summary-label">
+                    Current Balance
+                </span>
+
+                <span class="summary-value">
+                    ₹<span id="currentBalance">{{ fee.balance }}</span>
+                </span>
+
+            </div>
+
+            <form method="post" id="paymentForm">
+
+                {% csrf_token %}
+
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <i class="bi bi-pencil-square"></i>
+                        Enter Payment
+                    </div>
+
+                    {% for field in form %}
+
+                        <div class="field-group">
+
+                            {{ field.label_tag }}
+
+                            {{ field }}
+
+                            {% if field.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ field.errors }}
+                                </div>
+                            {% endif %}
+
+                            {% if field.help_text %}
+                                <div class="text-muted small mt-1">
+                                    {{ field.help_text }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+                    <div id="liveCalculation" class="calculation-box"></div>
+
+                </div>
+
+                <div class="form-actions">
+
+                    <button type="submit" class="save-btn">
+                        <i class="bi bi-check-lg"></i>
+                        Save Payment
+                    </button>
+
+                    <a
+                        href="{% url 'fees:fee_list' %}"
+                        class="btn btn-light border cancel-btn"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
 
 <script>
-const currentBalance = parseFloat(document.getElementById('currentBalance').textContent);
+document.addEventListener("DOMContentLoaded", function () {
 
-document.getElementById('id_amount').addEventListener('input', function() {
-    const enteredAmount = parseFloat(this.value) || 0;
-    const remaining = currentBalance - enteredAmount;
-    const displayBox = document.getElementById('liveCalculation');
+    const balanceElement = document.getElementById("currentBalance");
+    const amountInput = document.getElementById("id_amount");
+    const displayBox = document.getElementById("liveCalculation");
 
-    if (this.value === '') {
-        displayBox.textContent = '';
+    if (!balanceElement || !amountInput || !displayBox) {
         return;
     }
 
-    if (remaining < 0) {
-        displayBox.innerHTML = `<span class="text-danger">This exceeds the balance by ₹${Math.abs(remaining).toFixed(2)}</span>`;
-    } else if (remaining === 0) {
-        displayBox.innerHTML = `<span class="text-success">This will fully clear the balance!</span>`;
-    } else {
-        displayBox.innerHTML = `Remaining balance after this payment: ₹${remaining.toFixed(2)}`;
-    }
+    const currentBalance = parseFloat(balanceElement.textContent) || 0;
+
+    amountInput.setAttribute("min", "0");
+    amountInput.setAttribute("step", "0.01");
+
+    amountInput.addEventListener("input", function () {
+
+        const enteredAmount = parseFloat(this.value) || 0;
+
+        displayBox.className = "calculation-box";
+
+        if (this.value === "") {
+            displayBox.textContent = "";
+            return;
+        }
+
+        if (enteredAmount < 0) {
+            displayBox.textContent = "Payment amount cannot be negative.";
+            displayBox.classList.add("danger");
+            return;
+        }
+
+        const remaining = currentBalance - enteredAmount;
+
+        if (remaining < 0) {
+
+            displayBox.textContent =
+                "This payment exceeds the current balance by ₹" +
+                Math.abs(remaining).toFixed(2);
+
+            displayBox.classList.add("danger");
+
+        } else if (remaining === 0) {
+
+            displayBox.textContent =
+                "This payment will fully clear the balance!";
+
+            displayBox.classList.add("success");
+
+        } else {
+
+            displayBox.textContent =
+                "Remaining balance after this payment: ₹" +
+                remaining.toFixed(2);
+
+            displayBox.classList.add("show");
+
+        }
+
+    });
+
 });
 </script>
+
 {% endblock %}
