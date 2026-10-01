@@ -64,6 +64,27 @@ class StudentProfileForm(forms.ModelForm):
             }),
         }
 
+    def clean_guardian_name(self):
+        name = self.cleaned_data.get('guardian_name', '').strip()
+
+        if not name:
+            raise forms.ValidationError(
+                'Guardian name is required.'
+            )
+
+        allowed_characters = set(
+            "abcdefghijklmnopqrstuvwxyz"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            " .'-"
+        )
+
+        if any(character not in allowed_characters for character in name):
+            raise forms.ValidationError(
+                'Guardian name can contain letters, spaces, periods, hyphens, and apostrophes only.'
+            )
+
+        return name
+
     def clean_guardian_phone(self):
         phone = self.cleaned_data.get('guardian_phone', '').strip()
 
