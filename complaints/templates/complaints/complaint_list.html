@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block title %}Complaints{% endblock %}
@@ -198,6 +197,10 @@
         transform: translateY(-1px);
     }
 
+    .student-edit-btn {
+        color: var(--primary);
+    }
+
     .empty-state {
         padding: 60px 20px;
         text-align: center;
@@ -277,7 +280,6 @@
         </p>
     </div>
 
-
     <a href="{% url 'complaints:complaint_add' %}"
        class="btn btn-dark complaint-add-btn">
 
@@ -295,18 +297,13 @@
     <div class="complaint-card-header">
 
         <h5 class="complaint-card-title">
-
             <i class="bi bi-list-check"></i>
-
             Complaint List
-
         </h5>
 
-
         <span class="complaint-count">
-
-            {{ complaints|length }} complaint{{ complaints|length|pluralize }}
-
+            {{ complaints|length }}
+            complaint{{ complaints|length|pluralize }}
         </span>
 
     </div>
@@ -324,7 +321,6 @@
                         Complaint
                     </th>
 
-
                     {% if request.user.is_admin or request.user.is_warden %}
 
                         <th style="width: 17%;">
@@ -333,26 +329,28 @@
 
                     {% endif %}
 
-
                     <th style="width: 14%;">
                         Category
                     </th>
-
 
                     <th style="width: 13%;">
                         Priority
                     </th>
 
-
                     <th style="width: 15%;">
                         Status
                     </th>
-
 
                     {% if request.user.is_admin or request.user.is_warden %}
 
                         <th style="width: 13%;" class="text-center">
                             Actions
+                        </th>
+
+                    {% elif request.user.is_student %}
+
+                        <th style="width: 10%;" class="text-center">
+                            Action
                         </th>
 
                     {% endif %}
@@ -378,9 +376,7 @@
                         {% if complaint.description %}
 
                             <div class="complaint-description">
-
                                 {{ complaint.description|truncatechars:70 }}
-
                             </div>
 
                         {% endif %}
@@ -408,7 +404,6 @@
                                 </div>
 
                             {% endif %}
-
 
                             <div class="student-id">
 
@@ -519,7 +514,7 @@
                     </td>
 
 
-                    <!-- Actions -->
+                    <!-- Admin / Warden Actions -->
                     {% if request.user.is_admin or request.user.is_warden %}
 
                     <td>
@@ -561,6 +556,27 @@
 
                     </td>
 
+
+                    <!-- Student Action -->
+                    {% elif request.user.is_student %}
+
+                    <td>
+
+                        <div class="complaint-actions">
+
+                            <a href="{% url 'complaints:complaint_edit' complaint.pk %}"
+                               class="btn btn-outline-primary complaint-action-btn student-edit-btn"
+                               title="Edit Complaint"
+                               aria-label="Edit Complaint">
+
+                                <i class="bi bi-pencil"></i>
+
+                            </a>
+
+                        </div>
+
+                    </td>
+
                     {% endif %}
 
                 </tr>
@@ -570,7 +586,15 @@
 
                 <tr>
 
-                    <td colspan="6">
+                    {% if request.user.is_admin or request.user.is_warden %}
+
+                        <td colspan="6">
+
+                    {% else %}
+
+                        <td colspan="5">
+
+                    {% endif %}
 
                         <div class="empty-state">
 
@@ -580,20 +604,23 @@
 
                             </div>
 
-
                             <h5>
                                 No complaints found
                             </h5>
 
-
                             <p>
-                                {% if request.user.is_student %}
-                                    You haven't submitted any complaints yet.
-                                {% else %}
-                                    There are no complaints to display.
-                                {% endif %}
-                            </p>
 
+                                {% if request.user.is_student %}
+
+                                    You haven't submitted any complaints yet.
+
+                                {% else %}
+
+                                    There are no complaints to display.
+
+                                {% endif %}
+
+                            </p>
 
                             <a href="{% url 'complaints:complaint_add' %}"
                                class="btn btn-dark">
@@ -622,7 +649,6 @@
 
 
 <!-- Delete Confirmation Modal -->
-
 <div class="modal fade"
      id="deleteModal"
      tabindex="-1"
@@ -642,7 +668,6 @@
                     Confirm Delete
 
                 </h5>
-
 
                 <button type="button"
                         class="btn-close"
@@ -758,8 +783,3 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 {% endblock %}
-```
-
-This keeps your **student/admin separation**, status handling, edit/update/delete actions, and confirmation modal while matching the polished pages we've already done.
-
-Next after this page: **`complaint_form.html`** — we'll polish the Add/Edit Complaint form.

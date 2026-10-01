@@ -112,7 +112,10 @@
     <!-- Complaints -->
     <div class="col-md-4">
 
-        <div class="card kpi-card p-3 h-100">
+        <a
+            href="{% url 'accounts:my_complaints' %}"
+            class="card kpi-card p-3 h-100 text-decoration-none text-dark d-block"
+        >
 
             <div class="d-flex align-items-center gap-3">
 
@@ -132,9 +135,11 @@
 
                 </div>
 
+                <i class="bi bi-chevron-right ms-auto text-muted"></i>
+
             </div>
 
-        </div>
+        </a>
 
     </div>
 
