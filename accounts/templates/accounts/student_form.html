@@ -73,12 +73,8 @@
 
 
 /* =========================================================
-   DJANGO FORM
+   FORM LABELS
 ========================================================= */
-
-.student-form-card-body p {
-    margin-bottom: 18px;
-}
 
 .student-form-card-body label {
     display: block;
@@ -91,6 +87,22 @@
 
     color: var(--text-dark);
 }
+
+
+/* =========================================================
+   REQUIRED FIELD
+========================================================= */
+
+.student-form-card-body label.required::after {
+    content: " *";
+
+    color: var(--danger);
+}
+
+
+/* =========================================================
+   FORM CONTROLS
+========================================================= */
 
 .student-form-card-body input,
 .student-form-card-body select,
@@ -131,21 +143,6 @@
 
 
 /* =========================================================
-   HELP TEXT
-========================================================= */
-
-.student-form-card-body .helptext {
-    display: block;
-
-    margin-top: 5px;
-
-    font-size: 11px;
-
-    color: var(--text-muted);
-}
-
-
-/* =========================================================
    ERROR MESSAGES
 ========================================================= */
 
@@ -163,17 +160,6 @@
 
 .student-form-card-body .errorlist li {
     margin-bottom: 3px;
-}
-
-
-/* =========================================================
-   REQUIRED FIELD
-========================================================= */
-
-.student-form-card-body label.required::after {
-    content: " *";
-
-    color: var(--danger);
 }
 
 
@@ -292,7 +278,6 @@
 </div>
 
 
-
 <!-- =========================================================
      STUDENT FORM
 ========================================================= -->
@@ -307,7 +292,6 @@
     ====================================================== -->
 
     <div class="card student-form-card">
-
 
         <div class="student-form-card-header">
 
@@ -330,13 +314,110 @@
 
         <div class="student-form-card-body">
 
-            {{ user_form.as_p }}
+            <div class="row g-3">
+
+                <!-- Username -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        Username
+                    </label>
+
+                    {{ user_form.username }}
+
+                    {{ user_form.username.errors }}
+
+                </div>
+
+
+                <!-- First Name -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        First Name
+                    </label>
+
+                    {{ user_form.first_name }}
+
+                    {{ user_form.first_name.errors }}
+
+                </div>
+
+
+                <!-- Last Name -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        Last Name
+                    </label>
+
+                    {{ user_form.last_name }}
+
+                    {{ user_form.last_name.errors }}
+
+                </div>
+
+
+                <!-- Email -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        Email
+                    </label>
+
+                    {{ user_form.email }}
+
+                    {{ user_form.email.errors }}
+
+                </div>
+
+
+                <!-- Phone -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        Phone
+                    </label>
+
+                    {{ user_form.phone }}
+
+                    {{ user_form.phone.errors }}
+
+                </div>
+
+
+                <!-- Password -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        Password
+                    </label>
+
+                    {{ user_form.password1 }}
+
+                    {{ user_form.password1.errors }}
+
+                </div>
+
+
+                <!-- Confirm Password -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        Confirm Password
+                    </label>
+
+                    {{ user_form.password2 }}
+
+                    {{ user_form.password2.errors }}
+
+                </div>
+
+            </div>
 
         </div>
 
-
     </div>
-
 
 
     <!-- =====================================================
@@ -344,7 +425,6 @@
     ====================================================== -->
 
     <div class="card student-form-card">
-
 
         <div class="student-form-card-header">
 
@@ -367,13 +447,96 @@
 
         <div class="student-form-card-body">
 
-            {{ profile_form.as_p }}
+            <div class="row g-3">
+
+                <!-- Student ID -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        Student ID
+                    </label>
+
+                    {{ profile_form.student_id }}
+
+                    {{ profile_form.student_id.errors }}
+
+                </div>
+
+
+                <!-- Course -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        Course
+                    </label>
+
+                    {{ profile_form.course }}
+
+                    {{ profile_form.course.errors }}
+
+                </div>
+
+
+                <!-- Year -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        Year
+                    </label>
+
+                    {{ profile_form.year }}
+
+                    {{ profile_form.year.errors }}
+
+                </div>
+
+
+                <!-- Guardian Name -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        Guardian Name
+                    </label>
+
+                    {{ profile_form.guardian_name }}
+
+                    {{ profile_form.guardian_name.errors }}
+
+                </div>
+
+
+                <!-- Guardian Phone -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        Guardian Phone
+                    </label>
+
+                    {{ profile_form.guardian_phone }}
+
+                    {{ profile_form.guardian_phone.errors }}
+
+                </div>
+
+
+                <!-- Address -->
+                <div class="col-12">
+
+                    <label>
+                        Address
+                    </label>
+
+                    {{ profile_form.address }}
+
+                    {{ profile_form.address.errors }}
+
+                </div>
+
+            </div>
 
         </div>
 
-
     </div>
-
 
 
     <!-- =====================================================
@@ -381,7 +544,6 @@
     ====================================================== -->
 
     <div class="student-form-actions">
-
 
         <a
             href="{% url 'accounts:student_list' %}"
@@ -405,7 +567,6 @@
             Save Student
 
         </button>
-
 
     </div>
 
