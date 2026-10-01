@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}Add Student{% endblock %}
@@ -6,7 +7,6 @@
 {% block extra_css %}
 
 <style>
-
 
 /* =========================================================
    PASSWORD TOGGLE
@@ -22,10 +22,8 @@
 
 .password-toggle {
     position: absolute;
-
     top: 50%;
     right: 10px;
-
     transform: translateY(-50%);
 
     width: 32px;
@@ -36,13 +34,10 @@
     justify-content: center;
 
     padding: 0;
-
     border: none;
-
     background: transparent;
 
     color: var(--text-muted);
-
     cursor: pointer;
 }
 
@@ -53,6 +48,7 @@
 .password-toggle:focus {
     outline: none;
 }
+
 
 /* =========================================================
    ADD STUDENT PAGE
@@ -76,7 +72,6 @@
 .student-form-card {
     overflow: hidden;
     margin-bottom: 20px;
-
     transition: var(--transition);
 }
 
@@ -92,9 +87,7 @@
 
 .student-form-card-header {
     padding: 18px 20px;
-
     background: #ffffff;
-
     border-bottom: 1px solid var(--border);
 }
 
@@ -125,13 +118,9 @@
 
 .student-form-card-body label {
     display: block;
-
     margin-bottom: 7px;
-
     font-size: 13px;
-
     font-weight: 600;
-
     color: var(--text-dark);
 }
 
@@ -142,7 +131,6 @@
 
 .student-form-card-body label.required::after {
     content: " *";
-
     color: var(--danger);
 }
 
@@ -155,19 +143,15 @@
 .student-form-card-body select,
 .student-form-card-body textarea {
     width: 100%;
-
     padding: 10px 12px;
 
     border: 1px solid #dfe3eb;
-
     border-radius: 9px;
 
     background: #ffffff;
-
     color: var(--text-dark);
 
     font-size: 13px;
-
     transition: var(--transition);
 }
 
@@ -175,16 +159,13 @@
 .student-form-card-body select:focus,
 .student-form-card-body textarea:focus {
     border-color: var(--primary);
-
     outline: none;
-
     box-shadow:
         0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
 .student-form-card-body textarea {
     min-height: 100px;
-
     resize: vertical;
 }
 
@@ -195,13 +176,9 @@
 
 .student-form-card-body .errorlist {
     list-style: none;
-
     padding: 0;
-
     margin: 5px 0 7px;
-
     color: var(--danger);
-
     font-size: 12px;
 }
 
@@ -216,17 +193,11 @@
 
 .student-form-actions {
     display: flex;
-
     justify-content: flex-end;
-
     align-items: center;
-
     gap: 10px;
-
     margin-top: 24px;
-
     padding-top: 20px;
-
     border-top: 1px solid var(--border);
 }
 
@@ -241,9 +212,7 @@
 
 .student-back-btn {
     display: inline-flex;
-
     align-items: center;
-
     gap: 5px;
 }
 
@@ -256,15 +225,12 @@
 
     .student-form-header {
         align-items: flex-start !important;
-
         flex-direction: column;
-
         gap: 15px;
     }
 
     .student-back-btn {
         width: 100%;
-
         justify-content: center;
     }
 
@@ -274,7 +240,6 @@
 
     .student-form-actions {
         flex-direction: column-reverse;
-
         align-items: stretch;
     }
 
@@ -436,54 +401,56 @@
                 <!-- Password -->
                 <div class="col-md-6">
 
-    <label class="required">
-        Password
-    </label>
+                    <label class="required">
+                        Password
+                    </label>
 
-    <div class="password-wrapper">
+                    <div class="password-wrapper">
 
-        {{ user_form.password1 }}
+                        {{ user_form.password1 }}
 
-        <button
-            type="button"
-            class="password-toggle"
-            onclick="togglePassword('id_password1', this)"
-            aria-label="Show password"
-        >
-            <i class="bi bi-eye"></i>
-        </button>
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword('id_password1', this)"
+                            aria-label="Show password"
+                        >
+                            <i class="bi bi-eye"></i>
+                        </button>
 
-    </div>
+                    </div>
 
-    {{ user_form.password1.errors }}
+                    {{ user_form.password1.errors }}
 
-</div>
+                </div>
+
 
                 <!-- Confirm Password -->
                 <div class="col-md-6">
 
-    <label class="required">
-        Confirm Password
-    </label>
+                    <label class="required">
+                        Confirm Password
+                    </label>
 
-    <div class="password-wrapper">
+                    <div class="password-wrapper">
 
-        {{ user_form.password2 }}
+                        {{ user_form.password2 }}
 
-        <button
-            type="button"
-            class="password-toggle"
-            onclick="togglePassword('id_password2', this)"
-            aria-label="Show password"
-        >
-            <i class="bi bi-eye"></i>
-        </button>
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword('id_password2', this)"
+                            aria-label="Show password"
+                        >
+                            <i class="bi bi-eye"></i>
+                        </button>
 
-    </div>
+                    </div>
 
-    {{ user_form.password2.errors }}
+                    {{ user_form.password2.errors }}
 
-</div>
+                </div>
+
             </div>
 
         </div>
@@ -558,6 +525,20 @@
                     {{ profile_form.year }}
 
                     {{ profile_form.year.errors }}
+
+                </div>
+
+
+                <!-- Gender -->
+                <div class="col-md-6">
+
+                    <label class="required">
+                        Gender
+                    </label>
+
+                    {{ profile_form.gender }}
+
+                    {{ profile_form.gender.errors }}
 
                 </div>
 
@@ -652,12 +633,15 @@ function togglePassword(inputId, button) {
     const input = document.getElementById(inputId);
     const icon = button.querySelector("i");
 
+    if (!input) {
+        return;
+    }
+
     if (input.type === "password") {
 
         input.type = "text";
 
         icon.classList.remove("bi-eye");
-
         icon.classList.add("bi-eye-slash");
 
         button.setAttribute("aria-label", "Hide password");
@@ -667,15 +651,14 @@ function togglePassword(inputId, button) {
         input.type = "password";
 
         icon.classList.remove("bi-eye-slash");
-
         icon.classList.add("bi-eye");
 
         button.setAttribute("aria-label", "Show password");
-
     }
-
 }
 
 </script>
 
+
 {% endblock %}
+

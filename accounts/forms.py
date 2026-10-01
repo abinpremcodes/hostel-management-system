@@ -1,3 +1,4 @@
+
 from django import forms
 from .models import StudentProfile, User
 from django.contrib.auth.forms import UserCreationForm
@@ -44,12 +45,21 @@ class StudentUserForm(UserCreationForm):
 
 class StudentProfileForm(forms.ModelForm):
 
+    gender = forms.ChoiceField(
+        choices=StudentProfile.GenderChoice.choices,
+        required=True,
+        widget=forms.Select(attrs={
+            'class': 'form-select'
+        })
+    )
+
     class Meta:
         model = StudentProfile
         fields = [
             'student_id',
             'course',
             'year',
+            'gender',
             'guardian_name',
             'guardian_phone',
             'address'
@@ -78,7 +88,10 @@ class StudentProfileForm(forms.ModelForm):
             " .'-"
         )
 
-        if any(character not in allowed_characters for character in name):
+        if any(
+            character not in allowed_characters
+            for character in name
+        ):
             raise forms.ValidationError(
                 'Guardian name can contain letters, spaces, periods, hyphens, and apostrophes only.'
             )
@@ -99,3 +112,4 @@ class StudentProfileForm(forms.ModelForm):
             )
 
         return phone
+
