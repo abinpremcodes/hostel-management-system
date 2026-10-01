@@ -7,6 +7,53 @@
 
 <style>
 
+
+/* =========================================================
+   PASSWORD TOGGLE
+========================================================= */
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 45px;
+}
+
+.password-toggle {
+    position: absolute;
+
+    top: 50%;
+    right: 10px;
+
+    transform: translateY(-50%);
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: var(--text-muted);
+
+    cursor: pointer;
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+}
+
+.password-toggle:focus {
+    outline: none;
+}
+
 /* =========================================================
    ADD STUDENT PAGE
 ========================================================= */
@@ -389,30 +436,54 @@
                 <!-- Password -->
                 <div class="col-md-6">
 
-                    <label class="required">
-                        Password
-                    </label>
+    <label class="required">
+        Password
+    </label>
 
-                    {{ user_form.password1 }}
+    <div class="password-wrapper">
 
-                    {{ user_form.password1.errors }}
+        {{ user_form.password1 }}
 
-                </div>
+        <button
+            type="button"
+            class="password-toggle"
+            onclick="togglePassword('id_password1', this)"
+            aria-label="Show password"
+        >
+            <i class="bi bi-eye"></i>
+        </button>
 
+    </div>
+
+    {{ user_form.password1.errors }}
+
+</div>
 
                 <!-- Confirm Password -->
                 <div class="col-md-6">
 
-                    <label class="required">
-                        Confirm Password
-                    </label>
+    <label class="required">
+        Confirm Password
+    </label>
 
-                    {{ user_form.password2 }}
+    <div class="password-wrapper">
 
-                    {{ user_form.password2.errors }}
+        {{ user_form.password2 }}
 
-                </div>
+        <button
+            type="button"
+            class="password-toggle"
+            onclick="togglePassword('id_password2', this)"
+            aria-label="Show password"
+        >
+            <i class="bi bi-eye"></i>
+        </button>
 
+    </div>
+
+    {{ user_form.password2.errors }}
+
+</div>
             </div>
 
         </div>
@@ -573,5 +644,38 @@
 
 </form>
 
+
+<script>
+
+function togglePassword(inputId, button) {
+
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector("i");
+
+    if (input.type === "password") {
+
+        input.type = "text";
+
+        icon.classList.remove("bi-eye");
+
+        icon.classList.add("bi-eye-slash");
+
+        button.setAttribute("aria-label", "Hide password");
+
+    } else {
+
+        input.type = "password";
+
+        icon.classList.remove("bi-eye-slash");
+
+        icon.classList.add("bi-eye");
+
+        button.setAttribute("aria-label", "Show password");
+
+    }
+
+}
+
+</script>
 
 {% endblock %}
