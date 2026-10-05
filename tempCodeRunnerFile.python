@@ -1,0 +1,215 @@
+
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.io import wavfile
+from scipy.signal import butter, filtfilt
+
+# --------------------------------------------------
+# 1. READ INPUT AUDIO
+# --------------------------------------------------
+
+fs, x = wavfile.read("input_audio.wav")
+
+# If stereo, convert to mono
+if x.ndim == 2:
+    x = np.mean(x, axis=1)
+
+# Normalize audio
+x = x.astype(float)
+x = x / np.max(np.abs(x))
+
+print("Sampling Frequency:", fs)
+print("Number of Samples:", len(x))
+print("Duration:", len(x) / fs, "seconds")
+
+
+# --------------------------------------------------
+# 2. FFT SPECTRAL ANALYSIS
+# --------------------------------------------------
+
+N_fft = 16384
+
+# Take first N_fft samples
+x_fft = x[:N_fft]
+
+# Hann window
+window = np.hanning(len(x_fft))
+x_windowed = x_fft * window
+
+# FFT
+X = np.fft.fft(x_windowed, N_fft)
+
+# Frequency axis
+f = np.fft.fftfreq(N_fft, 1/fs)
+
+# Magnitude spectrum
+X_mag = np.abs(X)
+
+# Only positive frequencies
+positive = f >= 0
+
+f_positive = f[positive]
+X_positive = X_mag[positive]
+
+
+# --------------------------------------------------
+# 3. DESIGN 6th ORDER BUTTERWORTH LOW-PASS FILTER
+#    DRUM EXTRACTION
+# --------------------------------------------------
+
+order = 6
+fc_lpf = 220
+
+# Normalized cutoff frequency
+Wn_lpf = fc_lpf / (fs / 2)
+
+b_lpf, a_lpf = butter(
+    order,
+    Wn_lpf,
+    btype='low'
+)
+
+# Zero-phase filtering
+y_drums = filtfilt(b_lpf, a_lpf, x)
+
+
+# --------------------------------------------------
+# 4. DESIGN 6th ORDER BUTTERWORTH BAND-PASS FILTER
+#    VOCAL EXTRACTION
+# --------------------------------------------------
+
+fc1 = 300
+fc2 = 3200
+
+# Normalized cutoff frequencies
+Wn_bpf = [
+    fc1 / (fs / 2),
+    fc2 / (fs / 2)
+]
+
+b_bpf, a_bpf = butter(
+    order,
+    Wn_bpf,
+    btype='bandpass'
+)
+
+# Zero-phase filtering
+y_vocals = filtfilt(b_bpf, a_bpf, x)
+
+
+# --------------------------------------------------
+# 5. NORMALIZE EXTRACTED SIGNALS
+# --------------------------------------------------
+
+y_drums = y_drums / np.max(np.abs(y_drums))
+y_vocals = y_vocals / np.max(np.abs(y_vocals))
+
+
+# --------------------------------------------------
+# 6. SAVE THE TWO EXTRACTED AUDIO SIGNALS
+# --------------------------------------------------
+
+wavfile.write(
+    "extracted_drums.wav",
+    fs,
+    np.int16(y_drums * 32767)
+)
+
+wavfile.write(
+    "extracted_vocals.wav",
+    fs,
+    np.int16(y_vocals * 32767)
+)
+
+
+# --------------------------------------------------
+# 7. PLOT INPUT SIGNAL
+# --------------------------------------------------
+
+time = np.arange(len(x)) / fs
+
+plt.figure(figsize=(10, 4))
+plt.plot(time, x)
+plt.xlabel("Time (seconds)")
+plt.ylabel("Amplitude")
+plt.title("Input Composite Audio")
+plt.grid()
+plt.show()
+
+
+# --------------------------------------------------
+# 8. PLOT FFT MAGNITUDE SPECTRUM
+# --------------------------------------------------
+
+plt.figure(figsize=(10, 4))
+plt.plot(f_positive, X_positive)
+plt.xlim(0, 6000)
+plt.xlabel("Frequency (Hz)")
+plt.ylabel("Magnitude")
+plt.title("FFT Magnitude Spectrum of Input Audio")
+plt.grid()
+plt.show()
+
+
+# --------------------------------------------------
+# 9. PLOT EXTRACTED DRUM SIGNAL
+# --------------------------------------------------
+
+plt.figure(figsize=(10, 4))
+plt.plot(time, y_drums)
+plt.xlabel("Time (seconds)")
+plt.ylabel("Amplitude")
+plt.title("Extracted Drums - 6th Order Butterworth LPF")
+plt.grid()
+plt.show()
+
+
+# --------------------------------------------------
+# 10. PLOT EXTRACTED VOCAL SIGNAL
+# --------------------------------------------------
+
+plt.figure(figsize=(10, 4))
+plt.plot(time, y_vocals)
+plt.xlabel("Time (seconds)")
+plt.ylabel("Amplitude")
+plt.title("Extracted Vocals - 6th Order Butterworth BPF")
+plt.grid()
+plt.show()
+
+
+# --------------------------------------------------
+# 11. FILTER FREQUENCY RESPONSES
+# --------------------------------------------------
+
+from scipy.signal import freqz
+
+w_lpf, h_lpf = freqz(b_lpf, a_lpf, worN=2048)
+w_bpf, h_bpf = freqz(b_bpf, a_bpf, worN=2048)
+
+f_lpf = w_lpf * fs / (2 * np.pi)
+f_bpf = w_bpf * fs / (2 * np.pi)
+
+
+plt.figure(figsize=(10, 5))
+
+plt.plot(
+    f_lpf,
+    20 * np.log10(np.maximum(np.abs(h_lpf), 1e-10)),
+    label="LPF - Drums"
+)
+
+plt.plot(
+    f_bpf,
+    20 * np.log10(np.maximum(np.abs(h_bpf), 1e-10)),
+    label="BPF - Vocals"
+)
+
+plt.xlim(0, 6000)
+plt.ylim(-100, 5)
+
+plt.xlabel("Frequency (Hz)")
+plt.ylabel("Magnitude (dB)")
+plt.title("Butterworth Filter Frequency Responses")
+plt.legend()
+plt.grid()
+plt.show()

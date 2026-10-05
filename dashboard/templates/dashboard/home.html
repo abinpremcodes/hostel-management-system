@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}Dashboard{% endblock %}
@@ -6,633 +7,969 @@
 {% block content %}
 
 <style>
-    /* ==============================
-       DASHBOARD
-    ============================== */
 
-    .dashboard-header {
-        background: linear-gradient(
+/* =========================================
+   DASHBOARD
+========================================= */
+
+.dashboard-page {
+    padding-bottom: 10px;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.dashboard-header {
+    position: relative;
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(255, 255, 255, 0.12),
+            transparent 28%
+        ),
+        linear-gradient(
             135deg,
-            var(--primary),
-            #6366f1
+            #4f46e5,
+            #312e81
         );
-        color: white;
-        border-radius: 20px;
-        padding: 26px 30px;
-        margin-bottom: 24px;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(79, 70, 229, 0.18);
-    }
 
-    .dashboard-header::after {
-        content: "";
-        position: absolute;
-        width: 180px;
-        height: 180px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.08);
-        right: -50px;
-        top: -70px;
-    }
+    color: white;
 
-    .dashboard-header h2 {
-        margin: 0;
-        font-weight: 700;
-    }
+    border-radius: 18px;
 
-    .dashboard-header p {
-        margin: 6px 0 0;
-        opacity: 0.82;
-    }
+    padding: 20px 24px;
+
+    margin-bottom: 16px;
+
+    box-shadow:
+        0 10px 28px rgba(79, 70, 229, 0.18);
+}
+
+.dashboard-header::before {
+    content: "";
+
+    position: absolute;
+
+    width: 160px;
+    height: 160px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    right: -50px;
+    top: -80px;
+}
+
+.dashboard-header::after {
+    content: "";
+
+    position: absolute;
+
+    width: 90px;
+    height: 90px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    right: 100px;
+    bottom: -55px;
+}
+
+.dashboard-header-content {
+    position: relative;
+    z-index: 2;
+}
+
+.dashboard-header .eyebrow {
+    font-size: 10px;
+
+    font-weight: 500;
+
+    letter-spacing: 0.5px;
+
+    opacity: 0.72;
+
+    margin-bottom: 4px;
+}
+
+.dashboard-header h2 {
+    margin: 0;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    line-height: 1.25;
+}
+
+.dashboard-header p {
+    margin: 5px 0 0;
+
+    font-size: 11px;
+
+    opacity: 0.78;
+}
 
 
-    /* ==============================
-       STAT CARDS
-    ============================== */
+/* =========================================
+   STATISTICS
+========================================= */
+
+.dashboard-stats {
+    margin-bottom: 16px;
+}
+
+.dashboard-stat {
+    height: 100%;
+
+    min-height: 82px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 13px 14px;
+
+    background: #ffffff;
+
+    border: 1px solid #e8eaf0;
+
+    border-radius: 15px;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.dashboard-stat:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 22px rgba(0, 0, 0, 0.07);
+
+    border-color: rgba(79, 70, 229, 0.18);
+}
+
+.dashboard-stat-icon {
+    width: 39px;
+    height: 39px;
+
+    min-width: 39px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #eef1ff;
+
+    color: #4f46e5;
+
+    font-size: 17px;
+}
+
+.dashboard-stat-label {
+    color: #6b7280;
+
+    font-size: 10px;
+
+    line-height: 1.3;
+
+    margin-bottom: 3px;
+}
+
+.dashboard-stat-value {
+    color: #111827;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+.dashboard-stat-sub {
+    color: #9ca3af;
+
+    font-size: 9px;
+
+    margin-top: 4px;
+}
+
+
+/* =========================================
+   DASHBOARD GRID
+========================================= */
+
+.dashboard-grid {
+    row-gap: 16px;
+}
+
+
+/* =========================================
+   COMMON CARD
+========================================= */
+
+.dashboard-card {
+    height: 100%;
+
+    background: #ffffff;
+
+    border: 1px solid #e8eaf0;
+
+    border-radius: 16px;
+
+    padding: 16px;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 26px rgba(0, 0, 0, 0.06);
+
+    border-color: rgba(79, 70, 229, 0.14);
+}
+
+
+/* =========================================
+   CARD HEADER
+========================================= */
+
+.dashboard-card-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+.dashboard-card-title {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+.dashboard-card-subtitle {
+    margin: 3px 0 0;
+
+    color: #9ca3af;
+
+    font-size: 9px;
+}
+
+.dashboard-card-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    background: #eef1ff;
+
+    color: #4f46e5;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   CHARTS
+========================================= */
+
+.chart-wrapper {
+    position: relative;
+
+    height: 190px;
+}
+
+.chart-wrapper-small {
+    position: relative;
+
+    height: 185px;
+}
+
+
+/* =========================================
+   HOSTEL OVERVIEW
+========================================= */
+
+.dashboard-info {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.dashboard-info-row {
+    min-height: 39px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 7px 0;
+
+    border-bottom: 1px solid #f1f2f5;
+}
+
+.dashboard-info-row:last-child {
+    border-bottom: none;
+}
+
+.dashboard-info-label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: #6b7280;
+
+    font-size: 10px;
+}
+
+.dashboard-info-icon {
+    width: 27px;
+    height: 27px;
+
+    min-width: 27px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #f1f2ff;
+
+    color: #4f46e5;
+
+    font-size: 12px;
+}
+
+.dashboard-info-value {
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================
+   EMPTY / ZERO STATE
+========================================= */
+
+.dashboard-zero {
+    color: #9ca3af;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1200px) {
 
     .dashboard-stat {
-        background: white;
-        border: 1px solid rgba(0, 0, 0, 0.06);
-        border-radius: 18px;
-        padding: 16px 18px;
-        display: flex;
-        align-items: center;
-        gap: 13px;
-        height: 100%;
-
-        transition:
-            transform 0.22s ease,
-            box-shadow 0.22s ease,
-            border-color 0.22s ease,
-            background-color 0.22s ease;
-    }
-
-    .dashboard-stat:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.09);
-        border-color: rgba(79, 70, 229, 0.18);
-        background: #fafaff;
-    }
-
-    .dashboard-stat-icon {
-        width: 44px;
-        height: 44px;
-        min-width: 44px;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(79, 70, 229, 0.10);
-        color: var(--primary);
-        font-size: 20px;
-
-        transition:
-            transform 0.22s ease,
-            background-color 0.22s ease,
-            color 0.22s ease;
-    }
-
-    .dashboard-stat:hover .dashboard-stat-icon {
-        transform: scale(1.08);
-        background: var(--primary);
-        color: white;
-    }
-
-    .dashboard-stat-label {
-        font-size: 12px;
-        color: #6b7280;
-        margin-bottom: 2px;
+        min-height: 78px;
     }
 
     .dashboard-stat-value {
+        font-size: 18px;
+    }
+
+    .dashboard-stat-icon {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+    }
+}
+
+
+@media (max-width: 991px) {
+
+    .dashboard-header {
+        padding: 18px 20px;
+    }
+
+    .dashboard-header h2 {
         font-size: 22px;
-        font-weight: 700;
-        line-height: 1.1;
+    }
+
+    .chart-wrapper,
+    .chart-wrapper-small {
+        height: 200px;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .dashboard-header {
+        border-radius: 15px;
+
+        margin-bottom: 14px;
+    }
+
+    .dashboard-header h2 {
+        font-size: 20px;
+    }
+
+    .dashboard-header p {
+        font-size: 10px;
+    }
+
+    .dashboard-card {
+        padding: 14px;
+
+        border-radius: 14px;
+    }
+
+    .chart-wrapper,
+    .chart-wrapper-small {
+        height: 190px;
+    }
+}
+
+
+@media (max-width: 576px) {
+
+    .dashboard-stat {
+        min-height: 75px;
+
+        padding: 11px;
+    }
+
+    .dashboard-stat-value {
+        font-size: 17px;
+    }
+
+    .dashboard-stat-label {
+        font-size: 9px;
     }
 
     .dashboard-stat-sub {
-        font-size: 11px;
-        color: #9ca3af;
-        margin-top: 3px;
+        font-size: 8px;
     }
 
-
-    /* ==============================
-       CHART CARDS
-    ============================== */
-
-    .dashboard-chart-card {
-        background: white;
-        border: 1px solid rgba(0, 0, 0, 0.06);
-        border-radius: 20px;
-        padding: 22px;
-
-        transition:
-            transform 0.22s ease,
-            box-shadow 0.22s ease,
-            border-color 0.22s ease;
-    }
-
-    .dashboard-chart-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
-        border-color: rgba(79, 70, 229, 0.15);
-    }
-
-    .chart-heading {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 18px;
-    }
-
-    .chart-heading h6 {
-        margin: 0;
-        font-weight: 700;
-    }
-
-    .chart-heading small {
-        color: #9ca3af;
-    }
-
-    .chart-wrapper {
-        position: relative;
-        height: 280px;
-    }
-
-    .chart-wrapper-small {
-        position: relative;
-        height: 260px;
-    }
-
-
-    /* ==============================
-       QUICK INFORMATION
-    ============================== */
-
-    .dashboard-info {
-        background: white;
-        border: 1px solid rgba(0, 0, 0, 0.06);
-        border-radius: 20px;
-        padding: 22px;
-        height: 100%;
-    }
-
-    .dashboard-info-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 13px 0;
-        border-bottom: 1px solid #f1f1f1;
-    }
-
-    .dashboard-info-row:last-child {
-        border-bottom: none;
+    .dashboard-card-title {
+        font-size: 12px;
     }
 
     .dashboard-info-label {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: #6b7280;
-        font-size: 14px;
+        font-size: 9px;
     }
+}
 
-    .dashboard-info-icon {
-        width: 34px;
-        height: 34px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f5f5ff;
-        color: var(--primary);
-    }
-
-    .dashboard-info-value {
-        font-weight: 700;
-    }
-
-
-    /* ==============================
-       RESPONSIVE
-    ============================== */
-
-    @media (max-width: 768px) {
-
-        .dashboard-header {
-            padding: 22px;
-            border-radius: 16px;
-        }
-
-        .dashboard-header h2 {
-            font-size: 22px;
-        }
-
-        .dashboard-stat {
-            padding: 14px;
-        }
-
-        .dashboard-chart-card {
-            padding: 17px;
-            border-radius: 16px;
-        }
-
-        .chart-wrapper {
-            height: 240px;
-        }
-
-        .chart-wrapper-small {
-            height: 230px;
-        }
-    }
 </style>
 
 
-<!-- ==============================
-     DASHBOARD HEADER
-============================== -->
+<div class="dashboard-page">
 
-<div class="dashboard-header">
 
-    <div class="position-relative" style="z-index: 2;">
+    <!-- =========================================
+         DASHBOARD HEADER
+    ========================================== -->
 
-        <div class="small opacity-75 mb-1">
-            Hostel Management Dashboard
+    <div class="dashboard-header">
+
+        <div class="dashboard-header-content">
+
+            <div class="eyebrow">
+                HOSTEL MANAGEMENT DASHBOARD
+            </div>
+
+            <h2>
+                Welcome, {{ user.username }} 👋
+            </h2>
+
+            <p>
+                Here's an overview of what's happening in your hostel today.
+            </p>
+
         </div>
 
-        <h2>
-            Welcome, {{ user.username }} 👋
-        </h2>
+    </div>
 
-        <p>
-            Here's an overview of what's happening in your hostel today.
-        </p>
+
+    <!-- =========================================
+         STATISTICS
+    ========================================== -->
+
+    <div class="row g-2 dashboard-stats">
+
+
+        <!-- TOTAL STUDENTS -->
+
+        <div class="col-6 col-xl-3">
+
+            <div class="dashboard-stat">
+
+                <div class="dashboard-stat-icon">
+
+                    <i class="bi bi-people"></i>
+
+                </div>
+
+                <div>
+
+                    <div class="dashboard-stat-label">
+                        Total Students
+                    </div>
+
+                    <div class="dashboard-stat-value">
+                        {{ total_students }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL BEDS -->
+
+        <div class="col-6 col-xl-3">
+
+            <div class="dashboard-stat">
+
+                <div class="dashboard-stat-icon">
+
+                    <i class="bi bi-grid-3x3-gap"></i>
+
+                </div>
+
+                <div>
+
+                    <div class="dashboard-stat-label">
+                        Total Beds
+                    </div>
+
+                    <div class="dashboard-stat-value">
+                        {{ total_beds }}
+                    </div>
+
+                    <div class="dashboard-stat-sub">
+                        {{ available_beds }} available
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- OCCUPANCY -->
+
+        <div class="col-6 col-xl-3">
+
+            <div class="dashboard-stat">
+
+                <div class="dashboard-stat-icon">
+
+                    <i class="bi bi-bar-chart"></i>
+
+                </div>
+
+                <div>
+
+                    <div class="dashboard-stat-label">
+                        Bed Occupancy
+                    </div>
+
+                    <div class="dashboard-stat-value">
+                        {{ occupancy_percent }}%
+                    </div>
+
+                    <div class="dashboard-stat-sub">
+                        {{ occupied_beds }} occupied
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- VISITORS -->
+
+        <div class="col-6 col-xl-3">
+
+            <div class="dashboard-stat">
+
+                <div class="dashboard-stat-icon">
+
+                    <i class="bi bi-person-walking"></i>
+
+                </div>
+
+                <div>
+
+                    <div class="dashboard-stat-label">
+                        Visitors Inside
+                    </div>
+
+                    <div class="dashboard-stat-value">
+                        {{ visitors_inside }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         MAIN DASHBOARD GRID
+    ========================================== -->
+
+    <div class="row g-3 dashboard-grid">
+
+
+        <!-- =====================================
+             BED OCCUPANCY
+        ====================================== -->
+
+        <div class="col-lg-5">
+
+            <div class="dashboard-card">
+
+                <div class="dashboard-card-header">
+
+                    <div>
+
+                        <h6 class="dashboard-card-title">
+                            Bed Occupancy
+                        </h6>
+
+                        <p class="dashboard-card-subtitle">
+                            Current hostel capacity
+                        </p>
+
+                    </div>
+
+                    <span class="dashboard-card-badge">
+                        {{ occupancy_percent }}%
+                    </span>
+
+                </div>
+
+
+                <div class="chart-wrapper-small">
+
+                    <canvas id="occupancyChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             FEE OVERVIEW
+        ====================================== -->
+
+        <div class="col-lg-7">
+
+            <div class="dashboard-card">
+
+                <div class="dashboard-card-header">
+
+                    <div>
+
+                        <h6 class="dashboard-card-title">
+                            Fee Overview
+                        </h6>
+
+                        <p class="dashboard-card-subtitle">
+                            Current fee status
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chart-wrapper">
+
+                    <canvas id="feesChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             COMPLAINT OVERVIEW
+        ====================================== -->
+
+        <div class="col-lg-7">
+
+            <div class="dashboard-card">
+
+                <div class="dashboard-card-header">
+
+                    <div>
+
+                        <h6 class="dashboard-card-title">
+                            Complaint Overview
+                        </h6>
+
+                        <p class="dashboard-card-subtitle">
+                            Current complaint status
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chart-wrapper">
+
+                    <canvas id="complaintsChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             HOSTEL OVERVIEW
+        ====================================== -->
+
+        <div class="col-lg-5">
+
+            <div class="dashboard-card dashboard-info">
+
+                <div class="dashboard-card-header">
+
+                    <div>
+
+                        <h6 class="dashboard-card-title">
+                            Hostel Overview
+                        </h6>
+
+                        <p class="dashboard-card-subtitle">
+                            Quick information
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- AVAILABLE BEDS -->
+
+                <div class="dashboard-info-row">
+
+                    <div class="dashboard-info-label">
+
+                        <div class="dashboard-info-icon">
+
+                            <i class="bi bi-check-circle"></i>
+
+                        </div>
+
+                        Available Beds
+
+                    </div>
+
+                    <div class="dashboard-info-value text-success">
+
+                        {{ available_beds }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- PENDING FEES -->
+
+                <div class="dashboard-info-row">
+
+                    <div class="dashboard-info-label">
+
+                        <div class="dashboard-info-icon">
+
+                            <i class="bi bi-credit-card"></i>
+
+                        </div>
+
+                        Pending Fees
+
+                    </div>
+
+                    <div class="dashboard-info-value text-warning">
+
+                        {{ pending_fees }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- OVERDUE FEES -->
+
+                <div class="dashboard-info-row">
+
+                    <div class="dashboard-info-label">
+
+                        <div class="dashboard-info-icon">
+
+                            <i class="bi bi-exclamation-circle"></i>
+
+                        </div>
+
+                        Overdue Fees
+
+                    </div>
+
+                    <div class="dashboard-info-value text-danger">
+
+                        {{ overdue_fees }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- OPEN COMPLAINTS -->
+
+                <div class="dashboard-info-row">
+
+                    <div class="dashboard-info-label">
+
+                        <div class="dashboard-info-icon">
+
+                            <i class="bi bi-chat-left-text"></i>
+
+                        </div>
+
+                        Open Complaints
+
+                    </div>
+
+                    <div class="dashboard-info-value text-danger">
+
+                        {{ open_complaints }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- VISITORS -->
+
+                <div class="dashboard-info-row">
+
+                    <div class="dashboard-info-label">
+
+                        <div class="dashboard-info-icon">
+
+                            <i class="bi bi-people"></i>
+
+                        </div>
+
+                        Visitors Inside
+
+                    </div>
+
+                    <div class="dashboard-info-value text-success">
+
+                        {{ visitors_inside }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
 
     </div>
 
 </div>
 
 
-<!-- ==============================
-     STATISTICS
-============================== -->
-
-<div class="row g-3 mb-4">
-
-    <!-- Total Students -->
-    <div class="col-6 col-xl-3">
-
-        <div class="dashboard-stat">
-
-            <div class="dashboard-stat-icon">
-                <i class="bi bi-people"></i>
-            </div>
-
-            <div>
-
-                <div class="dashboard-stat-label">
-                    Total Students
-                </div>
-
-                <div class="dashboard-stat-value">
-                    {{ total_students }}
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- Total Beds -->
-    <div class="col-6 col-xl-3">
-
-        <div class="dashboard-stat">
-
-            <div class="dashboard-stat-icon">
-                <i class="bi bi-grid-3x3-gap"></i>
-            </div>
-
-            <div>
-
-                <div class="dashboard-stat-label">
-                    Total Beds
-                </div>
-
-                <div class="dashboard-stat-value">
-                    {{ total_beds }}
-                </div>
-
-                <div class="dashboard-stat-sub">
-                    {{ available_beds }} available
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- Occupancy -->
-    <div class="col-6 col-xl-3">
-
-        <div class="dashboard-stat">
-
-            <div class="dashboard-stat-icon">
-                <i class="bi bi-bar-chart"></i>
-            </div>
-
-            <div>
-
-                <div class="dashboard-stat-label">
-                    Bed Occupancy
-                </div>
-
-                <div class="dashboard-stat-value">
-                    {{ occupancy_percent }}%
-                </div>
-
-                <div class="dashboard-stat-sub">
-                    {{ occupied_beds }} occupied
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- Visitors -->
-    <div class="col-6 col-xl-3">
-
-        <div class="dashboard-stat">
-
-            <div class="dashboard-stat-icon">
-                <i class="bi bi-person-walking"></i>
-            </div>
-
-            <div>
-
-                <div class="dashboard-stat-label">
-                    Visitors Inside
-                </div>
-
-                <div class="dashboard-stat-value">
-                    {{ visitors_inside }}
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ==============================
-     CHARTS
-============================== -->
-
-<div class="row g-4">
-
-    <!-- BED OCCUPANCY -->
-    <div class="col-lg-5">
-
-        <div class="dashboard-chart-card h-100">
-
-            <div class="chart-heading">
-
-                <div>
-                    <h6>Bed Occupancy</h6>
-
-                    <small>
-                        Current hostel capacity
-                    </small>
-                </div>
-
-                <span class="badge rounded-pill bg-light text-dark">
-                    {{ occupancy_percent }}%
-                </span>
-
-            </div>
-
-            <div class="chart-wrapper-small">
-
-                <canvas id="occupancyChart"></canvas>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- FEES -->
-    <div class="col-lg-7">
-
-        <div class="dashboard-chart-card h-100">
-
-            <div class="chart-heading">
-
-                <div>
-                    <h6>Fee Overview</h6>
-
-                    <small>
-                        Current fee status
-                    </small>
-                </div>
-
-            </div>
-
-            <div class="chart-wrapper">
-
-                <canvas id="feesChart"></canvas>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- COMPLAINTS -->
-    <div class="col-lg-7">
-
-        <div class="dashboard-chart-card h-100">
-
-            <div class="chart-heading">
-
-                <div>
-                    <h6>Complaint Overview</h6>
-
-                    <small>
-                        Current complaint status
-                    </small>
-                </div>
-
-            </div>
-
-            <div class="chart-wrapper">
-
-                <canvas id="complaintsChart"></canvas>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- QUICK INFORMATION -->
-    <div class="col-lg-5">
-
-        <div class="dashboard-info">
-
-            <div class="chart-heading">
-
-                <div>
-                    <h6>Hostel Overview</h6>
-
-                    <small>
-                        Quick information
-                    </small>
-                </div>
-
-            </div>
-
-
-            <div class="dashboard-info-row">
-
-                <div class="dashboard-info-label">
-
-                    <div class="dashboard-info-icon">
-                        <i class="bi bi-check-circle"></i>
-                    </div>
-
-                    Available Beds
-
-                </div>
-
-                <div class="dashboard-info-value text-success">
-                    {{ available_beds }}
-                </div>
-
-            </div>
-
-
-            <div class="dashboard-info-row">
-
-                <div class="dashboard-info-label">
-
-                    <div class="dashboard-info-icon">
-                        <i class="bi bi-credit-card"></i>
-                    </div>
-
-                    Pending Fees
-
-                </div>
-
-                <div class="dashboard-info-value text-warning">
-                    {{ pending_fees }}
-                </div>
-
-            </div>
-
-
-            <div class="dashboard-info-row">
-
-                <div class="dashboard-info-label">
-
-                    <div class="dashboard-info-icon">
-                        <i class="bi bi-exclamation-circle"></i>
-                    </div>
-
-                    Overdue Fees
-
-                </div>
-
-                <div class="dashboard-info-value text-danger">
-                    {{ overdue_fees }}
-                </div>
-
-            </div>
-
-
-            <div class="dashboard-info-row">
-
-                <div class="dashboard-info-label">
-
-                    <div class="dashboard-info-icon">
-                        <i class="bi bi-chat-left-text"></i>
-                    </div>
-
-                    Open Complaints
-
-                </div>
-
-                <div class="dashboard-info-value text-danger">
-                    {{ open_complaints }}
-                </div>
-
-            </div>
-
-
-            <div class="dashboard-info-row">
-
-                <div class="dashboard-info-label">
-
-                    <div class="dashboard-info-icon">
-                        <i class="bi bi-people"></i>
-                    </div>
-
-                    Visitors Inside
-
-                </div>
-
-                <div class="dashboard-info-value text-success">
-                    {{ visitors_inside }}
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ==============================
+<!-- =========================================
      CHART.JS
-============================== -->
+========================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
 
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    /* ==============================
+
+    /* =====================================
        GLOBAL CHART SETTINGS
-    ============================== */
+    ====================================== */
 
     Chart.defaults.font.family = "Poppins";
-    Chart.defaults.font.size = 12;
-    Chart.defaults.animation.duration = 1000;
+
+    Chart.defaults.font.size = 10;
+
+    Chart.defaults.animation.duration = 700;
 
 
-    /* ==============================
+    /* =====================================
        BED OCCUPANCY
-    ============================== */
+    ====================================== */
 
     const occupancyCanvas =
         document.getElementById("occupancyChart");
+
 
     if (occupancyCanvas) {
 
@@ -668,7 +1005,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     borderColor: "#ffffff",
 
-                    hoverOffset: 10
+                    hoverOffset: 7
 
                 }]
 
@@ -690,11 +1027,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         labels: {
 
-                            padding: 18,
+                            padding: 10,
 
                             usePointStyle: true,
 
-                            pointStyle: "circle"
+                            pointStyle: "circle",
+
+                            font: {
+                                size: 10
+                            }
 
                         }
 
@@ -728,12 +1069,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* ==============================
+    /* =====================================
        FEE STATUS
-    ============================== */
+    ====================================== */
 
     const feesCanvas =
         document.getElementById("feesChart");
+
 
     if (feesCanvas) {
 
@@ -771,9 +1113,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         "#dc2626"
                     ],
 
-                    borderRadius: 10,
+                    borderRadius: 7,
 
-                    borderSkipped: false
+                    borderSkipped: false,
+
+                    barThickness: 34
 
                 }]
 
@@ -792,11 +1136,20 @@ document.addEventListener("DOMContentLoaded", function () {
                         beginAtZero: true,
 
                         ticks: {
-                            precision: 0
+
+                            precision: 0,
+
+                            font: {
+                                size: 9
+                            }
+
                         },
 
                         grid: {
-                            color: "rgba(0,0,0,0.05)"
+
+                            color:
+                                "rgba(0,0,0,0.04)"
+
                         }
 
                     },
@@ -805,6 +1158,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         grid: {
                             display: false
+                        },
+
+                        ticks: {
+
+                            font: {
+                                size: 10
+                            }
+
                         }
 
                     }
@@ -844,12 +1205,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* ==============================
+    /* =====================================
        COMPLAINT STATUS
-    ============================== */
+    ====================================== */
 
     const complaintsCanvas =
         document.getElementById("complaintsChart");
+
 
     if (complaintsCanvas) {
 
@@ -889,7 +1251,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     borderColor: "#ffffff",
 
-                    hoverOffset: 10
+                    hoverOffset: 7
 
                 }]
 
@@ -911,11 +1273,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         labels: {
 
-                            padding: 18,
+                            padding: 10,
 
                             usePointStyle: true,
 
-                            pointStyle: "circle"
+                            pointStyle: "circle",
+
+                            font: {
+                                size: 10
+                            }
 
                         }
 
@@ -952,3 +1318,5 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 {% endblock %}
+
+
