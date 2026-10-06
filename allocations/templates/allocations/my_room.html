@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}My Room{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">My Room</h1>
+        <p class="page-subtitle">
+            View your current hostel room allocation
+        </p>
+    </div>
+</div>
+
+{% if allocation %}
+
+<div class="row g-4">
+
+    <!-- Room Details -->
+    <div class="col-lg-8">
+        <div class="card h-100">
+
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <h5 class="fw-semibold mb-1">
+                    <i class="bi bi-house-door me-2 text-primary"></i>
+                    Room Details
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Your currently assigned hostel accommodation
+                </p>
+            </div>
+
+            <div class="card-body px-4">
+
+                <div class="row g-4">
+
+                    <!-- Building -->
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 h-100">
+                            <div class="text-muted small mb-1">
+                                <i class="bi bi-building me-1"></i>
+                                Building
+                            </div>
+
+                            <h6 class="fw-semibold mb-0">
+                                {{ allocation.bed.room.floor.building.name }}
+                            </h6>
+                        </div>
+                    </div>
+
+                    <!-- Floor -->
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 h-100">
+                            <div class="text-muted small mb-1">
+                                <i class="bi bi-layers me-1"></i>
+                                Floor
+                            </div>
+
+                            <h6 class="fw-semibold mb-0">
+                                {{ allocation.bed.room.floor.name }}
+                            </h6>
+                        </div>
+                    </div>
+
+                    <!-- Room -->
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 h-100">
+                            <div class="text-muted small mb-1">
+                                <i class="bi bi-door-open me-1"></i>
+                                Room
+                            </div>
+
+                            <h6 class="fw-semibold mb-0">
+                                {{ allocation.bed.room.room_number }}
+                            </h6>
+                        </div>
+                    </div>
+
+                    <!-- Bed -->
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 h-100">
+                            <div class="text-muted small mb-1">
+                                <i class="bi bi-bed me-1"></i>
+                                Bed
+                            </div>
+
+                            <h6 class="fw-semibold mb-0">
+                                {{ allocation.bed.bed_number }}
+                            </h6>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Allocation Status -->
+    <div class="col-lg-4">
+
+        <div class="card h-100">
+
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <h5 class="fw-semibold mb-1">
+                    <i class="bi bi-info-circle me-2 text-primary"></i>
+                    Allocation
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Allocation information
+                </p>
+            </div>
+
+            <div class="card-body px-4">
+
+                <div class="mb-4">
+                    <div class="text-muted small mb-2">
+                        Allocation Date
+                    </div>
+
+                    <div class="fw-semibold">
+                        <i class="bi bi-calendar-event me-2"></i>
+                        {{ allocation.allocated_date|date:"d M Y" }}
+                    </div>
+                </div>
+
+
+                <div>
+                    <div class="text-muted small mb-2">
+                        Status
+                    </div>
+
+                    {% if allocation.status == "ACTIVE" %}
+                        <span class="badge bg-success">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {{ allocation.get_status_display }}
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary">
+                            {{ allocation.get_status_display }}
+                        </span>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% else %}
+
+<!-- No Room Allocation -->
+<div class="card">
+
+    <div class="card-body">
+
+        <div class="empty-state">
+
+            <i class="bi bi-house-x"></i>
+
+            <h6 class="fw-semibold">
+                No Room Allocation Found
+            </h6>
+
+            <p class="mb-0">
+                You currently do not have an active hostel room allocation.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

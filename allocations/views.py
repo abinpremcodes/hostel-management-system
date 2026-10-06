@@ -115,3 +115,26 @@ def allocation_transfer(request, pk):
         }
     )
 
+@login_required
+def my_room(request):
+    if not request.user.is_student:
+        return redirect('dashboard:home')
+
+    allocation = (
+        Allocation.objects
+        .filter(
+            student=request.user.student_profile,
+            status=Allocation.Status.ACTIVE
+        )
+        .select_related(
+            'bed__room__floor__building'
+        )
+        .first()
+    )
+
+    return render(
+        request,
+        'allocations/my_room.html',
+        {'allocation': allocation}
+    )
+
