@@ -11,6 +11,7 @@ urlpatterns=[
     path('<int:pk>/edit/',views.visitor_edit,name='visitor_edit'),
     path('<int:pk>/delete/',views.visitor_delete,name='visitor_delete'),
     path('<int:pk>/checkout/', views.visitor_checkout, name='visitor_checkout'),
+    path('my-visitors/', views.my_visitors, name='my_visitors'),
 
          
 ]

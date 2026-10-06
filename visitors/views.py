@@ -72,3 +72,19 @@ def visitor_checkout(request, pk):
         return redirect('visitors:visitor_list')
 
     return render(request, 'visitors/visitor_confirm_checkout.html', {'visitor': visitor})
+
+
+@login_required
+def my_visitors(request):
+    if not request.user.is_student:
+        return redirect('dashboard:home')
+
+    visitors = Visitor.objects.filter(
+        student=request.user.student_profile
+    ).order_by('-check_in')
+
+    return render(
+        request,
+        'visitors/my_visitors.html',
+        {'visitors': visitors}
+    )

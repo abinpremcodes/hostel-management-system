@@ -1,7 +1,12 @@
-
 {% extends "base.html" %}
 
-{% block title %}Attendance{% endblock %}
+{% block title %}
+    {% if is_student %}
+        My Attendance
+    {% else %}
+        Attendance
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 
@@ -240,45 +245,71 @@
 
 
 <!-- Page Header -->
+
 <div class="attendance-header d-flex justify-content-between align-items-center">
 
     <div>
 
-        <h2>
-            <i class="bi bi-calendar-check me-2"></i>
-            Attendance
-        </h2>
+        {% if is_student %}
 
-        <p>
-            Track and manage student attendance
-        </p>
+            <h2>
+                <i class="bi bi-calendar-check me-2"></i>
+                My Attendance
+            </h2>
+
+            <p>
+                View your hostel attendance history
+            </p>
+
+        {% else %}
+
+            <h2>
+                <i class="bi bi-calendar-check me-2"></i>
+                Attendance
+            </h2>
+
+            <p>
+                Track and manage student attendance
+            </p>
+
+        {% endif %}
 
     </div>
 
 
-    <a href="{% url 'attendance:attendance_add' %}"
-       class="btn btn-dark attendance-add-btn">
+    {% if not is_student %}
 
-        <i class="bi bi-plus-circle"></i>
+        <a href="{% url 'attendance:attendance_add' %}"
+           class="btn btn-dark attendance-add-btn">
 
-        Mark Attendance
+            <i class="bi bi-plus-circle"></i>
 
-    </a>
+            Mark Attendance
+
+        </a>
+
+    {% endif %}
 
 </div>
 
 
 <!-- Attendance Card -->
+
 <div class="attendance-card">
 
+
     <!-- Filter Toolbar -->
+
     <div class="attendance-toolbar">
 
         <div class="attendance-filter">
 
             <label for="dateFilter">
+
                 <i class="bi bi-calendar3 me-1"></i>
+
                 Filter by Date
+
             </label>
 
             <input type="date"
@@ -291,6 +322,7 @@
         <span class="attendance-count">
 
             {{ attendance|length }}
+
             record{{ attendance|length|pluralize }}
 
         </span>
@@ -299,6 +331,7 @@
 
 
     <!-- Table -->
+
     <div class="attendance-table-wrapper">
 
         <table class="table attendance-table align-middle"
@@ -308,21 +341,32 @@
 
                 <tr>
 
-                    <th>
-                        Student
-                    </th>
+                    {% if not is_student %}
+
+                        <th>
+                            Student
+                        </th>
+
+                    {% endif %}
+
 
                     <th>
                         Date
                     </th>
 
+
                     <th>
                         Status
                     </th>
 
-                    <th class="text-center">
-                        Actions
-                    </th>
+
+                    {% if not is_student %}
+
+                        <th class="text-center">
+                            Actions
+                        </th>
+
+                    {% endif %}
 
                 </tr>
 
@@ -333,163 +377,197 @@
 
                 {% for record in attendance %}
 
-                <tr data-date="{{ record.date|date:'Y-m-d' }}">
+                    <tr data-date="{{ record.date|date:'Y-m-d' }}">
 
-                    <!-- Student -->
-                    <td>
 
-                        <div class="student-info">
+                        <!-- Student -->
 
-                            {% if record.student.user.get_full_name %}
+                        {% if not is_student %}
 
-                                <div class="student-name">
-                                    {{ record.student.user.get_full_name }}
+                            <td>
+
+                                <div class="student-info">
+
+                                    {% if record.student.user.get_full_name %}
+
+                                        <div class="student-name">
+
+                                            {{ record.student.user.get_full_name }}
+
+                                        </div>
+
+                                    {% else %}
+
+                                        <div class="student-name">
+
+                                            {{ record.student.user.username }}
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <div class="student-id">
+
+                                        <i class="bi bi-person-badge me-1"></i>
+
+                                        {{ record.student.student_id }}
+
+                                    </div>
+
                                 </div>
 
-                            {% else %}
-
-                                <div class="student-name">
-                                    {{ record.student.user.username }}
-                                </div>
-
-                            {% endif %}
-
-
-                            <div class="student-id">
-
-                                <i class="bi bi-person-badge me-1"></i>
-
-                                {{ record.student.student_id }}
-
-                            </div>
-
-                        </div>
-
-                    </td>
-
-
-                    <!-- Date -->
-                    <td>
-
-                        <div class="attendance-date">
-
-                            <i class="bi bi-calendar3 me-1"></i>
-
-                            {{ record.date|date:"d M Y" }}
-
-                        </div>
-
-                    </td>
-
-
-                    <!-- Status -->
-                    <td>
-
-                        {% if record.status == "present" %}
-
-                            <span class="status-badge status-present">
-
-                                <i class="bi bi-check-circle"></i>
-
-                                {{ record.get_status_display }}
-
-                            </span>
-
-                        {% elif record.status == "absent" %}
-
-                            <span class="status-badge status-absent">
-
-                                <i class="bi bi-x-circle"></i>
-
-                                {{ record.get_status_display }}
-
-                            </span>
-
-                        {% else %}
-
-                            <span class="status-badge status-default">
-
-                                {{ record.get_status_display }}
-
-                            </span>
+                            </td>
 
                         {% endif %}
 
-                    </td>
+
+                        <!-- Date -->
+
+                        <td>
+
+                            <div class="attendance-date">
+
+                                <i class="bi bi-calendar3 me-1"></i>
+
+                                {{ record.date|date:"d M Y" }}
+
+                            </div>
+
+                        </td>
 
 
-                    <!-- Actions -->
-                    <td>
+                        <!-- Status -->
 
-                        <div class="attendance-actions">
+                        <td>
 
-                            <!-- Edit -->
-                            <a href="{% url 'attendance:attendance_edit' record.pk %}"
-                               class="btn btn-outline-primary attendance-action-btn"
-                               title="Edit Attendance">
+                            {% if record.status == "PRESENT" %}
 
-                                <i class="bi bi-pencil"></i>
+                                <span class="status-badge status-present">
 
-                            </a>
+                                    <i class="bi bi-check-circle"></i>
+
+                                    {{ record.get_status_display }}
+
+                                </span>
+
+                            {% elif record.status == "ABSENT" %}
+
+                                <span class="status-badge status-absent">
+
+                                    <i class="bi bi-x-circle"></i>
+
+                                    {{ record.get_status_display }}
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge status-default">
+
+                                    {{ record.get_status_display }}
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
 
 
-                            <!-- Delete -->
-                            <button type="button"
-                                    class="btn btn-outline-danger attendance-action-btn delete-attendance-btn"
-                                    data-attendance-name="{{ record.student }} - {{ record.date }}"
-                                    data-delete-url="{% url 'attendance:attendance_delete' record.pk %}"
-                                    title="Delete Attendance">
+                        <!-- Actions -->
 
-                                <i class="bi bi-trash"></i>
+                        {% if not is_student %}
 
-                            </button>
+                            <td>
 
-                        </div>
+                                <div class="attendance-actions">
 
-                    </td>
 
-                </tr>
+                                    <!-- Edit -->
+
+                                    <a href="{% url 'attendance:attendance_edit' record.pk %}"
+                                       class="btn btn-outline-primary attendance-action-btn"
+                                       title="Edit Attendance">
+
+                                        <i class="bi bi-pencil"></i>
+
+                                    </a>
+
+
+                                    <!-- Delete -->
+
+                                    <button type="button"
+                                            class="btn btn-outline-danger attendance-action-btn delete-attendance-btn"
+                                            data-attendance-name="{{ record.student }} - {{ record.date }}"
+                                            data-delete-url="{% url 'attendance:attendance_delete' record.pk %}"
+                                            title="Delete Attendance">
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        {% endif %}
+
+                    </tr>
 
 
                 {% empty %}
 
-                <tr>
+                    <tr>
 
-                    <td colspan="4">
+                        <td colspan="{% if is_student %}2{% else %}4{% endif %}">
 
-                        <div class="empty-state">
+                            <div class="empty-state">
 
-                            <div class="empty-state-icon">
+                                <div class="empty-state-icon">
 
-                                <i class="bi bi-calendar-x"></i>
+                                    <i class="bi bi-calendar-x"></i>
+
+                                </div>
+
+
+                                <h5>
+                                    No attendance records found
+                                </h5>
+
+
+                                {% if is_student %}
+
+                                    <p>
+                                        Your attendance has not been marked yet.
+                                    </p>
+
+                                {% else %}
+
+                                    <p>
+                                        No attendance has been marked yet.
+                                    </p>
+
+                                {% endif %}
+
+
+                                {% if not is_student %}
+
+                                    <a href="{% url 'attendance:attendance_add' %}"
+                                       class="btn btn-dark">
+
+                                        <i class="bi bi-plus-circle me-1"></i>
+
+                                        Mark Attendance
+
+                                    </a>
+
+                                {% endif %}
 
                             </div>
 
+                        </td>
 
-                            <h5>
-                                No attendance records found
-                            </h5>
-
-
-                            <p>
-                                No attendance has been marked yet.
-                            </p>
-
-
-                            <a href="{% url 'attendance:attendance_add' %}"
-                               class="btn btn-dark">
-
-                                <i class="bi bi-plus-circle me-1"></i>
-
-                                Mark Attendance
-
-                            </a>
-
-                        </div>
-
-                    </td>
-
-                </tr>
+                    </tr>
 
                 {% endfor %}
 
@@ -504,76 +582,82 @@
 
 <!-- Delete Confirmation Modal -->
 
-<div class="modal fade"
-     id="deleteModal"
-     tabindex="-1"
-     aria-labelledby="deleteModalLabel"
-     aria-hidden="true">
+{% if not is_student %}
 
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade"
+         id="deleteModal"
+         tabindex="-1"
+         aria-labelledby="deleteModalLabel"
+         aria-hidden="true">
 
-        <div class="modal-content border-0 shadow">
+        <div class="modal-dialog modal-dialog-centered">
 
-            <div class="modal-header">
+            <div class="modal-content border-0 shadow">
 
-                <h5 class="modal-title" id="deleteModalLabel">
+                <div class="modal-header">
 
-                    <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+                    <h5 class="modal-title"
+                        id="deleteModalLabel">
 
-                    Confirm Delete
+                        <i class="bi bi-exclamation-triangle text-danger me-2"></i>
 
-                </h5>
+                        Confirm Delete
 
-
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close">
-                </button>
-
-            </div>
+                    </h5>
 
 
-            <div class="modal-body">
-
-                Are you sure you want to delete
-
-                <strong id="deleteAttendanceName"></strong>?
-
-                <div class="text-muted small mt-2">
-
-                    This action cannot be undone.
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
 
                 </div>
 
-            </div>
+
+                <div class="modal-body">
+
+                    Are you sure you want to delete
+
+                    <strong id="deleteAttendanceName"></strong>?
+
+                    <div class="text-muted small mt-2">
+
+                        This action cannot be undone.
+
+                    </div>
+
+                </div>
 
 
-            <div class="modal-footer">
+                <div class="modal-footer">
 
-                <button type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
 
-                    Cancel
-
-                </button>
-
-
-                <form id="deleteForm" method="post">
-
-                    {% csrf_token %}
-
-                    <button type="submit"
-                            class="btn btn-danger">
-
-                        <i class="bi bi-trash me-1"></i>
-
-                        Yes, Delete
+                        Cancel
 
                     </button>
 
-                </form>
+
+                    <form id="deleteForm"
+                          method="post">
+
+                        {% csrf_token %}
+
+                        <button type="submit"
+                                class="btn btn-danger">
+
+                            <i class="bi bi-trash me-1"></i>
+
+                            Yes, Delete
+
+                        </button>
+
+                    </form>
+
+                </div>
 
             </div>
 
@@ -581,12 +665,13 @@
 
     </div>
 
-</div>
+{% endif %}
 
 
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
+
 
     /* =========================
        DATE FILTER
@@ -594,6 +679,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const dateFilter =
         document.getElementById("dateFilter");
+
 
     const attendanceTable =
         document.getElementById("attendanceTable");
@@ -604,6 +690,7 @@ document.addEventListener("DOMContentLoaded", function () {
         dateFilter.addEventListener("change", function () {
 
             const selectedDate = this.value;
+
 
             const rows =
                 attendanceTable
@@ -641,19 +728,6 @@ document.addEventListener("DOMContentLoaded", function () {
        DELETE MODAL
     ========================= */
 
-    const deleteButtons =
-        document.querySelectorAll(
-            ".delete-attendance-btn"
-        );
-
-    const deleteAttendanceName =
-        document.getElementById(
-            "deleteAttendanceName"
-        );
-
-    const deleteForm =
-        document.getElementById("deleteForm");
-
     const deleteModalElement =
         document.getElementById("deleteModal");
 
@@ -661,6 +735,22 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!deleteModalElement) {
         return;
     }
+
+
+    const deleteButtons =
+        document.querySelectorAll(
+            ".delete-attendance-btn"
+        );
+
+
+    const deleteAttendanceName =
+        document.getElementById(
+            "deleteAttendanceName"
+        );
+
+
+    const deleteForm =
+        document.getElementById("deleteForm");
 
 
     const deleteModal =
@@ -674,12 +764,14 @@ document.addEventListener("DOMContentLoaded", function () {
             const attendanceName =
                 this.dataset.attendanceName;
 
+
             const deleteUrl =
                 this.dataset.deleteUrl;
 
 
             deleteAttendanceName.textContent =
                 attendanceName;
+
 
             deleteForm.action =
                 deleteUrl;
@@ -696,6 +788,3 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 {% endblock %}
-
-
-

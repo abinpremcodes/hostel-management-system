@@ -1,815 +1,840 @@
+
 {% load static %}
 
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>{% block title %}Hostel Management{% endblock %}</title>
 
-<title>{% block title %}Hostel Management{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
 
-<style>
+        /* =========================================================
+           GLOBAL DESIGN SYSTEM
+        ========================================================= */
 
-    /* =========================================================
-       GLOBAL DESIGN SYSTEM
-    ========================================================= */
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --primary-light: #eef1ff;
 
-    :root {
-        --primary: #4f46e5;
-        --primary-dark: #3730a3;
-        --primary-light: #eef1ff;
+            --sidebar-bg: #171b2e;
+            --sidebar-bg-dark: #0d1120;
+            --sidebar-hover: #282f4d;
 
-        --sidebar-bg: #171b2e;
-        --sidebar-bg-dark: #0d1120;
-        --sidebar-hover: #282f4d;
+            --page-bg: #f5f7fb;
+            --card-bg: #ffffff;
 
-        --page-bg: #f5f7fb;
-        --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
 
-        --text-dark: #1f2937;
-        --text-muted: #6b7280;
+            --border: #e5e7eb;
 
-        --border: #e5e7eb;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --info: #2563eb;
 
-        --success: #16a34a;
-        --warning: #f59e0b;
-        --danger: #dc2626;
-        --info: #2563eb;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
 
-        --radius-sm: 8px;
-        --radius-md: 12px;
-        --radius-lg: 16px;
+            --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+            --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+            --shadow-lg: 0 14px 35px rgba(15, 23, 42, 0.12);
 
-        --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
-        --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
-        --shadow-lg: 0 14px 35px rgba(15, 23, 42, 0.12);
-
-        --transition: all 0.25s ease;
-    }
-
-
-    /* =========================================================
-       GLOBAL
-    ========================================================= */
-
-    * {
-        font-family: 'Poppins', sans-serif;
-        box-sizing: border-box;
-    }
-
-    html {
-        scroll-behavior: smooth;
-    }
-
-    body {
-        margin: 0;
-        background: var(--page-bg);
-        color: var(--text-dark);
-        animation: pageFadeIn 0.35s ease;
-    }
-
-    @keyframes pageFadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(4px);
+            --transition: all 0.25s ease;
         }
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
+
+
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        * {
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
         }
-    }
 
-
-    /* =========================================================
-       SIDEBAR
-    ========================================================= */
-
-    .sidebar {
-        background: linear-gradient(
-            180deg,
-            var(--sidebar-bg),
-            var(--sidebar-bg-dark)
-        );
-
-        min-height: 100vh;
-        width: 250px;
-        flex-shrink: 0;
-
-        box-shadow: 4px 0 18px rgba(15, 23, 42, 0.08);
-    }
-
-    .sidebar-brand {
-        padding: 8px 10px 20px;
-        margin-bottom: 8px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .sidebar-brand-icon {
-        width: 38px;
-        height: 38px;
-
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-
-        border-radius: 10px;
-
-        background: linear-gradient(
-            135deg,
-            var(--primary),
-            var(--primary-dark)
-        );
-
-        color: white;
-
-        box-shadow:
-            0 6px 15px rgba(79, 70, 229, 0.3);
-    }
-
-    .sidebar-brand-text {
-        color: white;
-        font-size: 18px;
-        font-weight: 700;
-    }
-
-
-    .sidebar a {
-        color: #aeb7d4;
-
-        text-decoration: none;
-
-        display: flex;
-        align-items: center;
-
-        gap: 11px;
-
-        padding: 11px 14px;
-
-        margin: 4px 7px;
-
-        border-radius: 10px;
-
-        font-size: 13.5px;
-        font-weight: 500;
-
-        transition: var(--transition);
-
-        position: relative;
-        overflow: hidden;
-    }
-
-    .sidebar a i {
-        width: 20px;
-        text-align: center;
-        font-size: 17px;
-
-        transition: var(--transition);
-    }
-
-
-    .sidebar a:hover {
-        background: var(--sidebar-hover);
-        color: white;
-
-        transform: translateX(4px);
-
-        box-shadow:
-            0 5px 14px rgba(0, 0, 0, 0.15);
-    }
-
-    .sidebar a:hover i {
-        transform: scale(1.12);
-        color: #c7caff;
-    }
-
-
-    .sidebar a.active {
-        background: linear-gradient(
-            135deg,
-            var(--primary),
-            var(--primary-dark)
-        );
-
-        color: white;
-
-        box-shadow:
-            0 7px 18px rgba(79, 70, 229, 0.28);
-    }
-
-    .sidebar a.active i {
-        color: white;
-    }
-
-
-    .sidebar-section-title {
-        color: #66708e;
-
-        font-size: 10px;
-        font-weight: 700;
-
-        text-transform: uppercase;
-
-        letter-spacing: 1.2px;
-
-        padding: 18px 15px 7px;
-    }
-
-
-    /* =========================================================
-       TOPBAR
-    ========================================================= */
-
-    .topbar {
-        background: rgba(255, 255, 255, 0.95);
-
-        border-bottom: 1px solid var(--border);
-
-        min-height: 68px;
-
-        position: sticky;
-        top: 0;
-
-        z-index: 1000;
-
-        backdrop-filter: blur(10px);
-
-        box-shadow:
-            0 2px 10px rgba(15, 23, 42, 0.03);
-    }
-
-
-    .topbar-user {
-        color: var(--text-muted);
-        font-size: 13px;
-    }
-
-    .role-badge {
-        background: var(--primary);
-        color: white;
-
-        padding: 5px 9px;
-
-        border-radius: 7px;
-
-        font-size: 10px;
-        font-weight: 600;
-    }
-
-
-    /* =========================================================
-       CARDS
-    ========================================================= */
-
-    .card {
-        border: 1px solid rgba(229, 231, 235, 0.8);
-
-        border-radius: var(--radius-lg);
-
-        background: var(--card-bg);
-
-        box-shadow: var(--shadow-sm);
-
-        transition: var(--transition);
-    }
-
-    .card:hover {
-        box-shadow: var(--shadow-md);
-    }
-
-
-    .kpi-card {
-        border: none;
-
-        border-radius: 15px;
-
-        box-shadow: var(--shadow-sm);
-
-        transition:
-            transform 0.25s ease,
-            box-shadow 0.25s ease;
-    }
-
-    .kpi-card:hover {
-        transform: translateY(-5px);
-
-        box-shadow: var(--shadow-lg);
-    }
-
-
-    /* =========================================================
-       BUTTONS
-    ========================================================= */
-
-    .btn {
-        border-radius: 9px;
-
-        font-weight: 500;
-
-        transition: var(--transition);
-
-        position: relative;
-    }
-
-    .btn:hover {
-        transform: translateY(-2px);
-
-        box-shadow:
-            0 6px 15px rgba(15, 23, 42, 0.12);
-    }
-
-    .btn:active {
-        transform: translateY(0) scale(0.98);
-    }
-
-
-    .btn-primary {
-        background: linear-gradient(
-            135deg,
-            var(--primary),
-            var(--primary-dark)
-        );
-
-        border: none;
-    }
-
-    .btn-primary:hover {
-        background: linear-gradient(
-            135deg,
-            #5b52ee,
-            #312e81
-        );
-    }
-
-
-    /* =========================================================
-       FORM CONTROLS
-    ========================================================= */
-
-    .form-control,
-    .form-select {
-        border: 1px solid #dfe3eb;
-
-        border-radius: 9px;
-
-        min-height: 42px;
-
-        color: var(--text-dark);
-
-        background-color: white;
-
-        transition:
-            border-color 0.2s ease,
-            box-shadow 0.2s ease,
-            transform 0.2s ease;
-    }
-
-    .form-control:hover,
-    .form-select:hover {
-        border-color: #b9bfd0;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-        border-color: var(--primary);
-
-        box-shadow:
-            0 0 0 3px rgba(79, 70, 229, 0.12);
-
-        outline: none;
-
-        transform: translateY(-1px);
-    }
-
-    textarea.form-control {
-        min-height: 100px;
-    }
-
-    .form-label {
-        color: #374151;
-
-        font-size: 13px;
-
-        font-weight: 600;
-
-        margin-bottom: 6px;
-    }
-
-    .form-text {
-        color: var(--text-muted);
-        font-size: 11px;
-    }
-
-
-    /* =========================================================
-       TABLES
-    ========================================================= */
-
-    .table {
-        margin-bottom: 0;
-
-        vertical-align: middle;
-    }
-
-    .table thead th {
-        background: #f8f9fc;
-
-        color: #667085;
-
-        border-bottom: 1px solid var(--border);
-
-        font-size: 11px;
-
-        font-weight: 700;
-
-        text-transform: uppercase;
-
-        letter-spacing: 0.5px;
-
-        padding: 13px 14px;
-    }
-
-    .table tbody td {
-        padding: 13px 14px;
-
-        border-color: #eef0f4;
-
-        font-size: 13px;
-    }
-
-    .table tbody tr {
-        transition:
-            background-color 0.2s ease,
-            transform 0.2s ease;
-    }
-
-    .table tbody tr:hover {
-        background-color: #f5f7ff !important;
-    }
-
-
-    /* =========================================================
-       ACTION BUTTONS / ICON BUTTONS
-    ========================================================= */
-
-    .action-btn {
-        width: 34px;
-        height: 34px;
-
-        display: inline-flex;
-
-        align-items: center;
-        justify-content: center;
-
-        border-radius: 8px;
-
-        border: 1px solid var(--border);
-
-        background: white;
-
-        color: #667085;
-
-        text-decoration: none;
-
-        transition: var(--transition);
-    }
-
-    .action-btn:hover {
-        transform: translateY(-2px) scale(1.04);
-
-        color: var(--primary);
-
-        border-color: #c7c9ff;
-
-        background: var(--primary-light);
-
-        box-shadow:
-            0 5px 12px rgba(79, 70, 229, 0.12);
-    }
-
-
-    /* =========================================================
-       PAGE HEADERS
-    ========================================================= */
-
-    .page-header {
-        display: flex;
-
-        justify-content: space-between;
-
-        align-items: center;
-
-        gap: 15px;
-
-        margin-bottom: 24px;
-    }
-
-    .page-title {
-        margin: 0;
-
-        font-size: 24px;
-
-        font-weight: 700;
-
-        color: var(--text-dark);
-    }
-
-    .page-subtitle {
-        margin: 4px 0 0;
-
-        color: var(--text-muted);
-
-        font-size: 13px;
-    }
-
-
-    /* =========================================================
-       BACK BUTTON
-    ========================================================= */
-
-    .back-btn {
-        display: inline-flex;
-
-        align-items: center;
-
-        gap: 7px;
-
-        color: #667085;
-
-        text-decoration: none;
-
-        font-size: 13px;
-
-        font-weight: 500;
-
-        margin-bottom: 16px;
-
-        transition: var(--transition);
-    }
-
-    .back-btn i {
-        transition: transform 0.2s ease;
-    }
-
-    .back-btn:hover {
-        color: var(--primary);
-
-        transform: translateX(-2px);
-    }
-
-    .back-btn:hover i {
-        transform: translateX(-4px);
-    }
-
-
-    /* =========================================================
-       MODALS
-    ========================================================= */
-
-    .modal-content {
-        border: none;
-
-        border-radius: 16px;
-
-        box-shadow: 0 20px 60px rgba(15, 23, 42, 0.22);
-
-        overflow: hidden;
-    }
-
-    .modal-header {
-        border-bottom: 1px solid var(--border);
-
-        padding: 18px 20px;
-    }
-
-    .modal-title {
-        font-size: 17px;
-
-        font-weight: 600;
-    }
-
-    .modal-body {
-        padding: 20px;
-    }
-
-    .modal-footer {
-        border-top: 1px solid var(--border);
-
-        padding: 15px 20px;
-    }
-
-
-    /* =========================================================
-       BADGES
-    ========================================================= */
-
-    .badge {
-        border-radius: 7px;
-
-        font-weight: 600;
-
-        padding: 5px 8px;
-    }
-
-
-    /* =========================================================
-       STUDENT DASHBOARD
-    ========================================================= */
-
-    .student-welcome {
-        background: linear-gradient(
-            135deg,
-            var(--primary),
-            var(--primary-dark)
-        );
-
-        color: white;
-
-        border-radius: 18px;
-
-        padding: 27px;
-
-        box-shadow:
-            0 10px 28px rgba(79, 70, 229, 0.18);
-    }
-
-
-    .student-action-card {
-        border: none;
-
-        border-radius: 14px;
-
-        transition: var(--transition);
-
-        text-decoration: none;
-
-        color: inherit;
-    }
-
-    .student-action-card:hover {
-        transform: translateY(-5px);
-
-        box-shadow: var(--shadow-lg);
-
-        color: inherit;
-    }
-
-
-    .student-action-icon {
-        width: 45px;
-        height: 45px;
-
-        border-radius: 12px;
-
-        display: flex;
-
-        align-items: center;
-        justify-content: center;
-
-        background: var(--primary-light);
-
-        color: var(--primary);
-
-        font-size: 20px;
-
-        transition: var(--transition);
-    }
-
-    .student-action-card:hover .student-action-icon {
-        transform: scale(1.08) rotate(-3deg);
-
-        background: var(--primary);
-
-        color: white;
-    }
-
-
-    /* =========================================================
-       EMPTY STATES
-    ========================================================= */
-
-    .empty-state {
-        text-align: center;
-
-        padding: 45px 20px;
-
-        color: var(--text-muted);
-    }
-
-    .empty-state i {
-        font-size: 42px;
-
-        margin-bottom: 12px;
-
-        opacity: 0.45;
-    }
-
-
-    /* =========================================================
-       TOASTS
-    ========================================================= */
-
-    .toast {
-        border-radius: 10px !important;
-
-        box-shadow:
-            0 10px 30px rgba(15, 23, 42, 0.15);
-
-        border: none !important;
-
-        overflow: hidden;
-    }
-
-
-    /* =========================================================
-       RESPONSIVE
-    ========================================================= */
-
-    @media (max-width: 991px) {
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: var(--page-bg);
+            color: var(--text-dark);
+            animation: pageFadeIn 0.35s ease;
+        }
+
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+
+        /* =========================================================
+           SIDEBAR
+        ========================================================= */
 
         .sidebar {
-            width: 220px;
+            background: linear-gradient(
+                180deg,
+                var(--sidebar-bg),
+                var(--sidebar-bg-dark)
+            );
+
+            min-height: 100vh;
+            width: 250px;
+            flex-shrink: 0;
+
+            box-shadow: 4px 0 18px rgba(15, 23, 42, 0.08);
         }
 
-        .page-title {
-            font-size: 21px;
+        .sidebar-brand {
+            padding: 8px 10px 20px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
 
-    }
+        .sidebar-brand-icon {
+            width: 38px;
+            height: 38px;
 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
 
-    @media (max-width: 768px) {
+            border-radius: 10px;
 
-        .sidebar {
-            width: 190px;
-        }
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
 
-        .topbar {
-            padding-left: 15px !important;
-            padding-right: 15px !important;
-        }
+            color: white;
 
-        .page-header {
-            align-items: flex-start;
-
-            flex-direction: column;
-        }
-
-        .page-title {
-            font-size: 20px;
-        }
-
-        .p-4 {
-            padding: 18px !important;
-        }
-
-    }
-
-
-    @media (max-width: 576px) {
-
-        .sidebar {
-            width: 175px;
-        }
-
-        .sidebar a {
-            font-size: 12px;
-
-            padding: 10px 10px;
-
-            gap: 8px;
-        }
-
-        .sidebar-section-title {
-            font-size: 9px;
-
-            padding-left: 10px;
+            box-shadow:
+                0 6px 15px rgba(79, 70, 229, 0.3);
         }
 
         .sidebar-brand-text {
-            font-size: 15px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
         }
 
+
+
+        .sidebar a {
+            color: #aeb7d4;
+
+            text-decoration: none;
+
+            display: flex;
+            align-items: center;
+
+            gap: 11px;
+
+            padding: 11px 14px;
+
+            margin: 4px 7px;
+
+            border-radius: 10px;
+
+            font-size: 13.5px;
+            font-weight: 500;
+
+            transition: var(--transition);
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+            font-size: 17px;
+
+            transition: var(--transition);
+        }
+
+
+
+        .sidebar a:hover {
+            background: var(--sidebar-hover);
+            color: white;
+
+            transform: translateX(4px);
+
+            box-shadow:
+                0 5px 14px rgba(0, 0, 0, 0.15);
+        }
+
+        .sidebar a:hover i {
+            transform: scale(1.12);
+            color: #c7caff;
+        }
+
+
+
+        .sidebar a.active {
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+
+            color: white;
+
+            box-shadow:
+                0 7px 18px rgba(79, 70, 229, 0.28);
+        }
+
+        .sidebar a.active i {
+            color: white;
+        }
+
+
+
+        .sidebar-section-title {
+            color: #66708e;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1.2px;
+
+            padding: 18px 15px 7px;
+        }
+
+
+
+        /* =========================================================
+           TOPBAR
+        ========================================================= */
+
+        .topbar {
+            background: rgba(255, 255, 255, 0.95);
+
+            border-bottom: 1px solid var(--border);
+
+            min-height: 68px;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 1000;
+
+            backdrop-filter: blur(10px);
+
+            box-shadow:
+                0 2px 10px rgba(15, 23, 42, 0.03);
+        }
+
+
+
         .topbar-user {
-            font-size: 11px;
+            color: var(--text-muted);
+            font-size: 13px;
         }
 
         .role-badge {
-            display: none;
+            background: var(--primary);
+            color: white;
+
+            padding: 5px 9px;
+
+            border-radius: 7px;
+
+            font-size: 10px;
+            font-weight: 600;
         }
 
-    }
 
-</style>
 
-{% block extra_css %}{% endblock %}
+        /* =========================================================
+           CARDS
+        ========================================================= */
 
+        .card {
+            border: 1px solid rgba(229, 231, 235, 0.8);
+
+            border-radius: var(--radius-lg);
+
+            background: var(--card-bg);
+
+            box-shadow: var(--shadow-sm);
+
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+
+
+        .kpi-card {
+            border: none;
+
+            border-radius: 15px;
+
+            box-shadow: var(--shadow-sm);
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow: var(--shadow-lg);
+        }
+
+
+
+        /* =========================================================
+           BUTTONS
+        ========================================================= */
+
+        .btn {
+            border-radius: 9px;
+
+            font-weight: 500;
+
+            transition: var(--transition);
+
+            position: relative;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 6px 15px rgba(15, 23, 42, 0.12);
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+
+
+        .btn-primary {
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(
+                135deg,
+                #5b52ee,
+                #312e81
+            );
+        }
+
+
+
+        /* =========================================================
+           FORM CONTROLS
+        ========================================================= */
+
+        .form-control,
+        .form-select {
+            border: 1px solid #dfe3eb;
+
+            border-radius: 9px;
+
+            min-height: 42px;
+
+            color: var(--text-dark);
+
+            background-color: white;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .form-control:hover,
+        .form-select:hover {
+            border-color: #b9bfd0;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 3px rgba(79, 70, 229, 0.12);
+
+            outline: none;
+
+            transform: translateY(-1px);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+        }
+
+        .form-label {
+            color: #374151;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-bottom: 6px;
+        }
+
+        .form-text {
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+
+
+        /* =========================================================
+           TABLES
+        ========================================================= */
+
+        .table {
+            margin-bottom: 0;
+
+            vertical-align: middle;
+        }
+
+        .table thead th {
+            background: #f8f9fc;
+
+            color: #667085;
+
+            border-bottom: 1px solid var(--border);
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            padding: 13px 14px;
+        }
+
+        .table tbody td {
+            padding: 13px 14px;
+
+            border-color: #eef0f4;
+
+            font-size: 13px;
+        }
+
+        .table tbody tr {
+            transition:
+                background-color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f5f7ff !important;
+        }
+
+
+
+        /* =========================================================
+           ACTION BUTTONS / ICON BUTTONS
+        ========================================================= */
+
+        .action-btn {
+            width: 34px;
+            height: 34px;
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 8px;
+
+            border: 1px solid var(--border);
+
+            background: white;
+
+            color: #667085;
+
+            text-decoration: none;
+
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px) scale(1.04);
+
+            color: var(--primary);
+
+            border-color: #c7c9ff;
+
+            background: var(--primary-light);
+
+            box-shadow:
+                0 5px 12px rgba(79, 70, 229, 0.12);
+        }
+
+
+
+        /* =========================================================
+           PAGE HEADERS
+        ========================================================= */
+
+        .page-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            margin: 0;
+
+            font-size: 24px;
+
+            font-weight: 700;
+
+            color: var(--text-dark);
+        }
+
+        .page-subtitle {
+            margin: 4px 0 0;
+
+            color: var(--text-muted);
+
+            font-size: 13px;
+        }
+
+
+
+        /* =========================================================
+           BACK BUTTON
+        ========================================================= */
+
+        .back-btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #667085;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 500;
+
+            margin-bottom: 16px;
+
+            transition: var(--transition);
+        }
+
+        .back-btn i {
+            transition: transform 0.2s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+
+            transform: translateX(-2px);
+        }
+
+        .back-btn:hover i {
+            transform: translateX(-4px);
+        }
+
+
+
+        /* =========================================================
+           MODALS
+        ========================================================= */
+
+        .modal-content {
+            border: none;
+
+            border-radius: 16px;
+
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.22);
+
+            overflow: hidden;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border);
+
+            padding: 18px 20px;
+        }
+
+        .modal-title {
+            font-size: 17px;
+
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--border);
+
+            padding: 15px 20px;
+        }
+
+
+
+        /* =========================================================
+           BADGES
+        ========================================================= */
+
+        .badge {
+            border-radius: 7px;
+
+            font-weight: 600;
+
+            padding: 5px 8px;
+        }
+
+
+
+        /* =========================================================
+           STUDENT DASHBOARD
+        ========================================================= */
+
+        .student-welcome {
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+
+            color: white;
+
+            border-radius: 18px;
+
+            padding: 27px;
+
+            box-shadow:
+                0 10px 28px rgba(79, 70, 229, 0.18);
+        }
+
+
+
+        .student-action-card {
+            border: none;
+
+            border-radius: 14px;
+
+            transition: var(--transition);
+
+            text-decoration: none;
+
+            color: inherit;
+        }
+
+        .student-action-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow: var(--shadow-lg);
+
+            color: inherit;
+        }
+
+
+
+        .student-action-icon {
+            width: 45px;
+            height: 45px;
+
+            border-radius: 12px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: var(--primary-light);
+
+            color: var(--primary);
+
+            font-size: 20px;
+
+            transition: var(--transition);
+        }
+
+        .student-action-card:hover .student-action-icon {
+            transform: scale(1.08) rotate(-3deg);
+
+            background: var(--primary);
+
+            color: white;
+        }
+
+
+
+        /* =========================================================
+           EMPTY STATES
+        ========================================================= */
+
+        .empty-state {
+            text-align: center;
+
+            padding: 45px 20px;
+
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 42px;
+
+            margin-bottom: 12px;
+
+            opacity: 0.45;
+        }
+
+
+
+        /* =========================================================
+           TOASTS
+        ========================================================= */
+
+        .toast {
+            border-radius: 10px !important;
+
+            box-shadow:
+                0 10px 30px rgba(15, 23, 42, 0.15);
+
+            border: none !important;
+
+            overflow: hidden;
+        }
+
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 991px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .page-title {
+                font-size: 21px;
+            }
+
+        }
+
+
+
+        @media (max-width: 768px) {
+
+            .sidebar {
+                width: 190px;
+            }
+
+            .topbar {
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+            }
+
+            .page-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .page-title {
+                font-size: 20px;
+            }
+
+            .p-4 {
+                padding: 18px !important;
+            }
+
+        }
+
+
+
+        @media (max-width: 576px) {
+
+            .sidebar {
+                width: 175px;
+            }
+
+            .sidebar a {
+                font-size: 12px;
+
+                padding: 10px 10px;
+
+                gap: 8px;
+            }
+
+            .sidebar-section-title {
+                font-size: 9px;
+
+                padding-left: 10px;
+            }
+
+            .sidebar-brand-text {
+                font-size: 15px;
+            }
+
+            .topbar-user {
+                font-size: 11px;
+            }
+
+            .role-badge {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+    {% block extra_css %}{% endblock %}
 
 </head>
 
@@ -824,258 +849,286 @@
     style="z-index: 1100;"
 >
 
+    {% if messages %}
 
-{% if messages %}
+        {% for message in messages %}
 
-    {% for message in messages %}
+            <div
+                class="toast align-items-center text-white bg-{{ message.tags }} border-0 show"
+                role="alert"
+                data-bs-delay="4000"
+            >
 
-        <div
-            class="toast align-items-center text-white bg-{{ message.tags }} border-0 show"
-            role="alert"
-            data-bs-delay="4000"
-        >
+                <div class="d-flex">
 
-            <div class="d-flex">
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
 
-                <div class="toast-body">
-                    {{ message }}
+                    <button
+                        type="button"
+                        class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"
+                    ></button>
+
                 </div>
-
-                <button
-                    type="button"
-                    class="btn-close btn-close-white me-2 m-auto"
-                    data-bs-dismiss="toast"
-                ></button>
 
             </div>
 
-        </div>
+        {% endfor %}
 
-    {% endfor %}
-
-{% endif %}
-
+    {% endif %}
 
 </div>
+
+
 
 <div class="d-flex">
 
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
 
-<!-- =====================================================
-     SIDEBAR
-====================================================== -->
+    <nav class="sidebar p-3">
 
-<nav class="sidebar p-3">
+        <!-- BRAND -->
 
+        <div class="sidebar-brand">
 
-    <!-- BRAND -->
+            <div class="d-flex align-items-center gap-2">
 
-    <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">
+                    <i class="bi bi-building"></i>
+                </div>
 
-        <div class="d-flex align-items-center gap-2">
+                <div class="sidebar-brand-text">
+                    HostelMS
+                </div>
 
-            <div class="sidebar-brand-icon">
-                <i class="bi bi-building"></i>
-            </div>
-
-            <div class="sidebar-brand-text">
-                HostelMS
             </div>
 
         </div>
 
-    </div>
 
 
+        <!-- DASHBOARD -->
 
-    <!-- DASHBOARD -->
+        <a
+            href="{% url 'dashboard:home' %}"
+            class="{% block nav_dashboard %}{% endblock %}"
+        >
 
-    <a
-        href="{% url 'dashboard:home' %}"
-        class="{% block nav_dashboard %}{% endblock %}"
-    >
+            <i class="bi bi-speedometer2"></i>
 
-        <i class="bi bi-speedometer2"></i>
+            Dashboard
 
-        Dashboard
-
-    </a>
-
-
-
-    <!-- =================================================
-         ADMIN / WARDEN MENU
-    ================================================== -->
-
-    {% if user.is_admin or user.is_warden %}
-
-        <div class="sidebar-section-title">
-            Management
-        </div>
-
-
-        <a href="{% url 'accounts:student_list' %}">
-            <i class="bi bi-people"></i>
-            Students
         </a>
 
 
-        <a href="{% url 'hostel:building_list' %}">
-            <i class="bi bi-building-fill"></i>
-            Buildings
-        </a>
 
+        <!-- =================================================
+             ADMIN / WARDEN MENU
+        ================================================== -->
 
-        <a href="{% url 'hostel:floor_list' %}">
-            <i class="bi bi-layers"></i>
-            Floors
-        </a>
+        {% if user.is_admin or user.is_warden %}
 
-
-        <a href="{% url 'hostel:room_list' %}">
-            <i class="bi bi-door-open"></i>
-            Rooms
-        </a>
-
-
-        <a href="{% url 'hostel:bed_list' %}">
-            <i class="bi bi-grid-3x3-gap"></i>
-            Beds
-        </a>
-
-
-        <a href="{% url 'allocations:allocation_list' %}">
-            <i class="bi bi-arrow-left-right"></i>
-            Allocations
-        </a>
-
-
-        <a href="{% url 'fees:fee_list' %}">
-            <i class="bi bi-cash-coin"></i>
-            Fees
-        </a>
-
-
-        <a href="{% url 'complaints:complaint_list' %}">
-            <i class="bi bi-exclamation-circle"></i>
-            Complaints
-        </a>
-
-
-        <a href="{% url 'visitors:visitor_list' %}">
-            <i class="bi bi-person-badge"></i>
-            Visitors
-        </a>
-
-
-        <a href="{% url 'attendance:attendance_list' %}">
-            <i class="bi bi-calendar-check"></i>
-            Attendance
-        </a>
-
-    {% endif %}
-
-
-
-    <!-- =================================================
-         STUDENT MENU
-    ================================================== -->
-
-    {% if user.is_student %}
-
-        <div class="sidebar-section-title">
-            My Hostel
-        </div>
-
-
-        <a href="{% url 'accounts:my_fees' %}">
-            <i class="bi bi-cash-coin"></i>
-            My Fees
-        </a>
-
-
-        <a href="{% url 'accounts:my_complaints' %}">
-            <i class="bi bi-exclamation-circle"></i>
-            My Complaints
-        </a>
-
-    {% endif %}
-
-</nav>
-
-
-
-<!-- =====================================================
-     MAIN CONTENT
-====================================================== -->
-
-<div class="flex-grow-1">
-
-
-    <!-- TOPBAR -->
-
-    <div class="topbar d-flex justify-content-between align-items-center px-4 py-3">
-
-        <div></div>
-
-
-        {% if user.is_authenticated %}
-
-            <div class="d-flex align-items-center">
-
-                <span class="topbar-user me-3">
-
-                    {{ user.username }}
-
-                    <span class="role-badge ms-1">
-                        {{ user.get_role_display }}
-                    </span>
-
-                </span>
-
-
-                <form
-                    method="post"
-                    action="{% url 'accounts:logout' %}"
-                    class="d-inline"
-                >
-
-                    {% csrf_token %}
-
-                    <button
-                        type="submit"
-                        class="btn btn-sm btn-outline-danger"
-                    >
-
-                        <i class="bi bi-box-arrow-right me-1"></i>
-
-                        Logout
-
-                    </button>
-
-                </form>
-
+            <div class="sidebar-section-title">
+                Management
             </div>
+
+
+
+            <a href="{% url 'accounts:student_list' %}">
+                <i class="bi bi-people"></i>
+                Students
+            </a>
+
+
+
+            <a href="{% url 'hostel:building_list' %}">
+                <i class="bi bi-building-fill"></i>
+                Buildings
+            </a>
+
+
+
+            <a href="{% url 'hostel:floor_list' %}">
+                <i class="bi bi-layers"></i>
+                Floors
+            </a>
+
+
+
+            <a href="{% url 'hostel:room_list' %}">
+                <i class="bi bi-door-open"></i>
+                Rooms
+            </a>
+
+
+
+            <a href="{% url 'hostel:bed_list' %}">
+                <i class="bi bi-grid-3x3-gap"></i>
+                Beds
+            </a>
+
+
+
+            <a href="{% url 'allocations:allocation_list' %}">
+                <i class="bi bi-arrow-left-right"></i>
+                Allocations
+            </a>
+
+
+
+            <a href="{% url 'fees:fee_list' %}">
+                <i class="bi bi-cash-coin"></i>
+                Fees
+            </a>
+
+
+
+            <a href="{% url 'complaints:complaint_list' %}">
+                <i class="bi bi-exclamation-circle"></i>
+                Complaints
+            </a>
+
+
+
+            <a href="{% url 'visitors:visitor_list' %}">
+                <i class="bi bi-person-badge"></i>
+                Visitors
+            </a>
+
+
+
+            <a href="{% url 'attendance:attendance_list' %}">
+                <i class="bi bi-calendar-check"></i>
+                Attendance
+            </a>
 
         {% endif %}
 
-    </div>
+
+
+        <!-- =================================================
+             STUDENT MENU
+        ================================================== -->
+
+        {% if user.is_student %}
+
+            <div class="sidebar-section-title">
+                My Hostel
+            </div>
 
 
 
-    <!-- PAGE CONTENT -->
+            <a href="{% url 'accounts:my_fees' %}">
+                <i class="bi bi-cash-coin"></i>
+                My Fees
+            </a>
 
-    <div class="p-4">
 
-        {% block content %}
-        {% endblock %}
+
+            <a href="{% url 'accounts:my_complaints' %}">
+                <i class="bi bi-exclamation-circle"></i>
+                My Complaints
+            </a>
+
+
+
+            <a href="{% url 'attendance:my_attendance' %}">
+                <i class="bi bi-calendar-check"></i>
+                My Attendance
+            </a>
+
+
+
+            <!-- NEW: MY VISITORS -->
+
+            <a href="{% url 'visitors:my_visitors' %}">
+                <i class="bi bi-people"></i>
+                My Visitors
+            </a>
+
+        {% endif %}
+
+    </nav>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <div class="flex-grow-1">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar d-flex justify-content-between align-items-center px-4 py-3">
+
+            <div></div>
+
+
+
+            {% if user.is_authenticated %}
+
+                <div class="d-flex align-items-center">
+
+                    <span class="topbar-user me-3">
+
+                        {{ user.username }}
+
+                        <span class="role-badge ms-1">
+                            {{ user.get_role_display }}
+                        </span>
+
+                    </span>
+
+
+
+                    <form
+                        method="post"
+                        action="{% url 'accounts:logout' %}"
+                        class="d-inline"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-sm btn-outline-danger"
+                        >
+
+                            <i class="bi bi-box-arrow-right me-1"></i>
+
+                            Logout
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- PAGE CONTENT -->
+
+        <div class="p-4">
+
+            {% block content %}
+            {% endblock %}
+
+        </div>
 
     </div>
 
 </div>
 
 
-</div>
 
 <!-- =========================================================
      BOOTSTRAP JS
@@ -1106,3 +1159,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </body>
 </html>
+
