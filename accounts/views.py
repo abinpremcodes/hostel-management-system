@@ -1,20 +1,24 @@
+
 from django.contrib.auth.decorators import login_required
-from .models import StudentProfile, User
-from django.shortcuts import redirect, render
-from .forms import StudentProfileForm, StudentUserForm
-from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.db import models
 from django.contrib import messages
 
+from .models import StudentProfile, User
+from .forms import StudentProfileForm, StudentUserForm
+
+
+# =========================================================
+# Student Management
+# =========================================================
 
 @login_required
 def student_list(request):
-
-    # Only Admin and Warden can access student management
     if not (request.user.is_admin or request.user.is_warden):
         return redirect('dashboard:home')
 
     query = request.GET.get('q', '')
+
     students = StudentProfile.objects.all()
 
     if query:
@@ -36,24 +40,25 @@ def student_list(request):
 
 @login_required
 def student_add(request):
-
-    # Only Admin and Warden can add students
     if not (request.user.is_admin or request.user.is_warden):
         return redirect('dashboard:home')
 
     if request.method == 'POST':
-
         user_form = StudentUserForm(request.POST)
         profile_form = StudentProfileForm(request.POST)
 
         if user_form.is_valid() and profile_form.is_valid():
 
             new_user = user_form.save(commit=False)
+
             new_user.role = User.Role.STUDENT
+
             new_user.save()
 
             new_profile = profile_form.save(commit=False)
+
             new_profile.user = new_user
+
             new_profile.save()
 
             messages.success(
@@ -72,19 +77,20 @@ def student_add(request):
         'accounts/student_form.html',
         {
             'user_form': user_form,
-            'profile_form': profile_form,
+            'profile_form': profile_form
         }
     )
 
 
 @login_required
 def student_edit(request, pk):
-
-    # Only Admin and Warden can edit students
     if not (request.user.is_admin or request.user.is_warden):
         return redirect('dashboard:home')
 
-    student = get_object_or_404(StudentProfile, pk=pk)
+    student = get_object_or_404(
+        StudentProfile,
+        pk=pk
+    )
 
     if request.method == 'POST':
 
@@ -114,15 +120,13 @@ def student_edit(request, pk):
         'accounts/student_edit.html',
         {
             'profile_form': profile_form,
-            'student': student,
+            'student': student
         }
     )
 
 
 @login_required
 def student_delete(request, pk):
-
-    # Only Admin and Warden can delete students
     if not (request.user.is_admin or request.user.is_warden):
         return redirect('dashboard:home')
 
@@ -153,13 +157,17 @@ def student_delete(request, pk):
     )
 
 
+# =========================================================
+# Student Dashboard
+# =========================================================
+
 @login_required
 def my_fees(request):
-
     if not request.user.is_student:
         return redirect('dashboard:home')
 
     student = request.user.student_profile
+
     fees = student.fees.all()
 
     return render(
@@ -173,8 +181,24 @@ def my_fees(request):
 
 @login_required
 def my_complaints(request):
-
     if not request.user.is_student:
         return redirect('dashboard:home')
 
     return redirect('complaints:complaint_list')
+
+
+@login_required
+def my_profile(request):
+    if not request.user.is_student:
+        return redirect('dashboard:home')
+
+    student = request.user.student_profile
+
+    return render(
+        request,
+        'accounts/my_profile.html',
+        {
+            'student': student
+        }
+    )
+
