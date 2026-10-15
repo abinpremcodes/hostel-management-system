@@ -1,188 +1,357 @@
+
 {% extends 'base.html' %}
 
 {% block title %}My Profile{% endblock %}
 
 {% block content %}
 
-<!-- Page Header -->
-<div class="page-header">
-    <div>
-        <h1 class="page-title">My Profile</h1>
-        <p class="page-subtitle">
-            View your personal and hostel information
-        </p>
-    </div>
-</div>
+<style>
+    .complaint-header {
+        margin-bottom: 24px;
+    }
 
+    .complaint-header h2 {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+    }
+
+    .complaint-header p {
+        color: var(--muted);
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+
+    .complaint-card {
+        background: var(--card);
+        border: none;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .complaint-card-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .complaint-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0 0 6px;
+    }
+
+    .complaint-card-title i {
+        color: var(--primary);
+        font-size: 19px;
+    }
+
+    .complaint-card-subtitle {
+        color: var(--muted);
+        font-size: 13px;
+        margin: 0;
+    }
+
+    .profile-content {
+        padding: 22px;
+    }
+
+    .profile-info-box {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px 18px;
+        height: 100%;
+        transition: background 0.2s ease;
+    }
+
+    .profile-info-box:hover {
+        background: #fafbff;
+    }
+
+    .profile-info-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        margin-bottom: 9px;
+    }
+
+    .profile-info-label i {
+        color: var(--primary);
+        font-size: 15px;
+    }
+
+    .profile-info-value {
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+        overflow-wrap: anywhere;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+        .complaint-card-header {
+            padding: 16px;
+        }
+
+        .profile-content {
+            padding: 16px;
+        }
+
+        .profile-info-box {
+            padding: 14px;
+        }
+    }
+</style>
+
+<!-- Page Header -->
+<div class="complaint-header">
+    <h2>My Profile</h2>
+    <p>View your personal, academic, guardian, and hostel information.</p>
+</div>
 
 <div class="row g-4">
 
     <!-- Personal Information -->
     <div class="col-lg-6">
-        <div class="card h-100">
+        <div class="complaint-card">
 
-            <div class="card-header bg-white border-0 pt-4 px-4">
-                <h5 class="fw-semibold mb-1">
-                    <i class="bi bi-person-circle me-2 text-primary"></i>
+            <div class="complaint-card-header">
+                <h5 class="complaint-card-title">
+                    <i class="bi bi-person-circle"></i>
                     Personal Information
                 </h5>
-                <p class="text-muted small mb-0">
+                <p class="complaint-card-subtitle">
                     Your basic account details
                 </p>
             </div>
 
-            <div class="card-body px-4 pt-4">
+            <div class="profile-content">
+                <div class="row g-3">
 
-                <div class="mb-4">
-                    <div class="text-muted small mb-1">Full Name</div>
-                    <div class="fw-semibold">
-                        {{ student.user.first_name }}
-                        {{ student.user.last_name }}
+                    <div class="col-12">
+                        <div class="profile-info-box">
+                            <div class="profile-info-label">
+                                <i class="bi bi-person"></i>
+                                Full Name
+                            </div>
+                            <p class="profile-info-value">
+                                {{ student.user.first_name }}
+                                {{ student.user.last_name }}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-4">
-                    <div class="text-muted small mb-1">Username</div>
-                    <div class="fw-semibold">
-                        {{ student.user.username }}
+                    <div class="col-md-6">
+                        <div class="profile-info-box">
+                            <div class="profile-info-label">
+                                <i class="bi bi-person-badge"></i>
+                                Username
+                            </div>
+                            <p class="profile-info-value">
+                                {{ student.user.username }}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-4">
-                    <div class="text-muted small mb-1">Student ID</div>
-                    <div class="fw-semibold">
-                        {{ student.student_id }}
+                    <div class="col-md-6">
+                        <div class="profile-info-box">
+                            <div class="profile-info-label">
+                                <i class="bi bi-card-text"></i>
+                                Student ID
+                            </div>
+                            <p class="profile-info-value">
+                                {{ student.student_id }}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-4">
-                    <div class="text-muted small mb-1">Email</div>
-                    <div class="fw-semibold">
-                        {{ student.user.email|default:"Not provided" }}
+                    <div class="col-12">
+                        <div class="profile-info-box">
+                            <div class="profile-info-label">
+                                <i class="bi bi-envelope"></i>
+                                Email
+                            </div>
+                            <p class="profile-info-value">
+                                {{ student.user.email|default:"Not provided" }}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <div class="text-muted small mb-1">Phone</div>
-                    <div class="fw-semibold">
-                        {{ student.user.phone|default:"Not provided" }}
+                    <div class="col-12">
+                        <div class="profile-info-box">
+                            <div class="profile-info-label">
+                                <i class="bi bi-telephone"></i>
+                                Phone
+                            </div>
+                            <p class="profile-info-value">
+                                {{ student.user.phone|default:"Not provided" }}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </div>
 
-
     <!-- Academic Information -->
     <div class="col-lg-6">
-        <div class="card h-100">
+        <div class="complaint-card">
 
-            <div class="card-header bg-white border-0 pt-4 px-4">
-                <h5 class="fw-semibold mb-1">
-                    <i class="bi bi-mortarboard me-2 text-primary"></i>
+            <div class="complaint-card-header">
+                <h5 class="complaint-card-title">
+                    <i class="bi bi-mortarboard"></i>
                     Academic Information
                 </h5>
-                <p class="text-muted small mb-0">
+                <p class="complaint-card-subtitle">
                     Your course and academic details
                 </p>
             </div>
 
-            <div class="card-body px-4 pt-4">
+            <div class="profile-content">
+                <div class="row g-3">
 
-                <div class="mb-4">
-                    <div class="text-muted small mb-1">Course</div>
-                    <div class="fw-semibold">
-                        {{ student.course|default:"Not provided" }}
+                    <div class="col-12">
+                        <div class="profile-info-box">
+                            <div class="profile-info-label">
+                                <i class="bi bi-book"></i>
+                                Course
+                            </div>
+                            <p class="profile-info-value">
+                                {{ student.course|default:"Not provided" }}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-4">
-                    <div class="text-muted small mb-1">Year</div>
-                    <div class="fw-semibold">
-                        {{ student.get_year_display|default:"Not provided" }}
+                    <div class="col-md-6">
+                        <div class="profile-info-box">
+                            <div class="profile-info-label">
+                                <i class="bi bi-calendar3"></i>
+                                Year
+                            </div>
+                            <p class="profile-info-value">
+                                {{ student.get_year_display|default:"Not provided" }}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <div class="text-muted small mb-1">Gender</div>
-                    <div class="fw-semibold">
-                        {{ student.get_gender_display|default:"Not provided" }}
+                    <div class="col-md-6">
+                        <div class="profile-info-box">
+                            <div class="profile-info-label">
+                                <i class="bi bi-person"></i>
+                                Gender
+                            </div>
+                            <p class="profile-info-value">
+                                {{ student.get_gender_display|default:"Not provided" }}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </div>
 
-
     <!-- Guardian Information -->
     <div class="col-lg-6">
-        <div class="card h-100">
+        <div class="complaint-card">
 
-            <div class="card-header bg-white border-0 pt-4 px-4">
-                <h5 class="fw-semibold mb-1">
-                    <i class="bi bi-person-hearts me-2 text-primary"></i>
+            <div class="complaint-card-header">
+                <h5 class="complaint-card-title">
+                    <i class="bi bi-people"></i>
                     Guardian Information
                 </h5>
-                <p class="text-muted small mb-0">
+                <p class="complaint-card-subtitle">
                     Your guardian contact details
                 </p>
             </div>
 
-            <div class="card-body px-4 pt-4">
+            <div class="profile-content">
+                <div class="row g-3">
 
-                <div class="mb-4">
-                    <div class="text-muted small mb-1">Guardian Name</div>
-                    <div class="fw-semibold">
-                        {{ student.guardian_name|default:"Not provided" }}
+                    <div class="col-12">
+                        <div class="profile-info-box">
+                            <div class="profile-info-label">
+                                <i class="bi bi-person-heart"></i>
+                                Guardian Name
+                            </div>
+                            <p class="profile-info-value">
+                                {{ student.guardian_name|default:"Not provided" }}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <div class="text-muted small mb-1">Guardian Phone</div>
-                    <div class="fw-semibold">
-                        {{ student.guardian_phone|default:"Not provided" }}
+                    <div class="col-12">
+                        <div class="profile-info-box">
+                            <div class="profile-info-label">
+                                <i class="bi bi-telephone"></i>
+                                Guardian Phone
+                            </div>
+                            <p class="profile-info-value">
+                                {{ student.guardian_phone|default:"Not provided" }}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </div>
 
-
     <!-- Hostel Information -->
     <div class="col-lg-6">
-        <div class="card h-100">
+        <div class="complaint-card">
 
-            <div class="card-header bg-white border-0 pt-4 px-4">
-                <h5 class="fw-semibold mb-1">
-                    <i class="bi bi-house-door me-2 text-primary"></i>
+            <div class="complaint-card-header">
+                <h5 class="complaint-card-title">
+                    <i class="bi bi-house-door"></i>
                     Hostel Information
                 </h5>
-                <p class="text-muted small mb-0">
+                <p class="complaint-card-subtitle">
                     Your hostel registration details
                 </p>
             </div>
 
-            <div class="card-body px-4 pt-4">
+            <div class="profile-content">
+                <div class="row g-3">
 
-                <div class="mb-4">
-                    <div class="text-muted small mb-1">
-                        Hostel Joining Date
+                    <div class="col-12">
+                        <div class="profile-info-box">
+                            <div class="profile-info-label">
+                                <i class="bi bi-calendar-event"></i>
+                                Hostel Joining Date
+                            </div>
+                            <p class="profile-info-value">
+                                {{ student.date_joined_hostel|date:"d M Y" }}
+                            </p>
+                        </div>
                     </div>
-                    <div class="fw-semibold">
-                        {{ student.date_joined_hostel|date:"d M Y" }}
+
+                    <div class="col-12">
+                        <div class="profile-info-box">
+                            <div class="profile-info-label">
+                                <i class="bi bi-geo-alt"></i>
+                                Address
+                            </div>
+                            <p class="profile-info-value">
+                                {{ student.address|default:"Not provided"|linebreaksbr }}
+                            </p>
+                        </div>
                     </div>
+
                 </div>
-
-                <div>
-                    <div class="text-muted small mb-1">Address</div>
-                    <div class="fw-semibold">
-                        {{ student.address|default:"Not provided"|linebreaksbr }}
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>

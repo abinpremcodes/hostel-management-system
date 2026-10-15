@@ -1,10 +1,11 @@
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.utils import timezone
+
 from .models import Allocation
 from .forms import AllocationForm, TransferForm
-from django.shortcuts import get_object_or_404
-from django.utils import timezone
 from hostel.models import Bed
 
 
@@ -32,6 +33,12 @@ def allocation_add(request):
 
         if form.is_valid():
             form.save()
+
+            messages.success(
+                request,
+                'Student allocated successfully!'
+            )
+
             return redirect('allocations:allocation_list')
 
     else:
@@ -58,6 +65,11 @@ def allocation_vacate(request, pk):
 
         allocation.bed.status = Bed.Status.AVAILABLE
         allocation.bed.save()
+
+        messages.success(
+            request,
+            'Student allocation vacated successfully!'
+        )
 
         return redirect('allocations:allocation_list')
 
@@ -99,6 +111,11 @@ def allocation_transfer(request, pk):
             new_bed.status = Bed.Status.OCCUPIED
             new_bed.save()
 
+            messages.success(
+                request,
+                'Student transferred successfully!'
+            )
+
             return redirect('allocations:allocation_list')
 
     else:
@@ -114,6 +131,7 @@ def allocation_transfer(request, pk):
             'allocation': allocation
         }
     )
+
 
 @login_required
 def my_room(request):
@@ -137,4 +155,3 @@ def my_room(request):
         'allocations/my_room.html',
         {'allocation': allocation}
     )
-

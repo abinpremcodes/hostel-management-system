@@ -1,106 +1,289 @@
+
 {% extends 'base.html' %}
 
 {% block title %}My Visitors{% endblock %}
 
 {% block content %}
 
-<div class="page-header">
-    <div>
-        <h1 class="page-title">My Visitors</h1>
-        <p class="page-subtitle">
-            View your visitor history
-        </p>
-    </div>
+<style>
+    .complaint-header {
+        margin-bottom: 24px;
+    }
+
+    .complaint-header h2 {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+    }
+
+    .complaint-header p {
+        color: var(--muted);
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+
+    .complaint-card {
+        background: var(--card);
+        border: none;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .complaint-card-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .complaint-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0;
+    }
+
+    .complaint-card-title i {
+        color: var(--primary);
+        font-size: 19px;
+    }
+
+    .complaint-count {
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .complaint-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .complaint-table {
+        width: 100%;
+        min-width: 1050px;
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .complaint-table thead th {
+        background: #f8fafc;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+    }
+
+    .complaint-table tbody td {
+        padding: 16px 20px;
+        color: var(--text);
+        font-size: 14px;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .complaint-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .complaint-table tbody tr:hover {
+        background: #fafbff;
+    }
+
+    .visitor-name {
+        font-weight: 600;
+        color: var(--text);
+        white-space: nowrap;
+    }
+
+    .visitor-phone {
+        white-space: nowrap;
+    }
+
+    .visitor-purpose {
+        min-width: 140px;
+    }
+
+    .visitor-date {
+        color: var(--muted);
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .visitor-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 11px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .visitor-inside {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .visitor-checked-out {
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    .fees-empty {
+        text-align: center;
+        padding: 48px 20px !important;
+        color: var(--muted) !important;
+    }
+
+    .fees-empty i {
+        display: block;
+        font-size: 36px;
+        margin-bottom: 12px;
+        opacity: 0.6;
+    }
+
+    .fees-empty h5 {
+        color: var(--text);
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .fees-empty p {
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+        .complaint-card-header {
+            padding: 16px;
+        }
+
+        .complaint-table thead th,
+        .complaint-table tbody td {
+            padding: 13px 15px;
+        }
+    }
+</style>
+
+<div class="complaint-header">
+    <h2>My Visitors</h2>
+    <p>View your visitor history, check-in details and visitor status.</p>
 </div>
 
-<div class="card">
-    <div class="card-body p-0">
+<div class="complaint-card">
 
-        {% if visitors %}
+    <div class="complaint-card-header">
+        <h5 class="complaint-card-title">
+            <i class="bi bi-people"></i>
+            Visitor Records
+        </h5>
 
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Visitor Name</th>
-                            <th>Relation</th>
-                            <th>Phone</th>
-                            <th>Purpose</th>
-                            <th>Check In</th>
-                            <th>Check Out</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for visitor in visitors %}
-                            <tr>
-
-                                <td>
-                                    <strong>{{ visitor.visitor_name }}</strong>
-                                </td>
-
-                                <td>
-                                    {{ visitor.get_relation_display }}
-                                </td>
-
-                                <td>
-                                    {{ visitor.phone }}
-                                </td>
-
-                                <td>
-                                    {{ visitor.purpose }}
-                                </td>
-
-                                <td>
-                                    {{ visitor.check_in|date:"d M Y, h:i A" }}
-                                </td>
-
-                                <td>
-                                    {% if visitor.check_out %}
-                                        {{ visitor.check_out|date:"d M Y, h:i A" }}
-                                    {% else %}
-                                        —
-                                    {% endif %}
-                                </td>
-
-                                <td>
-                                    {% if visitor.is_checked_in %}
-                                        <span class="badge bg-success">
-                                            <i class="bi bi-person-check me-1"></i>
-                                            Inside
-                                        </span>
-                                    {% else %}
-                                        <span class="badge bg-secondary">
-                                            <i class="bi bi-person-x me-1"></i>
-                                            Checked Out
-                                        </span>
-                                    {% endif %}
-                                </td>
-
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-        {% else %}
-
-            <div class="empty-state">
-                <i class="bi bi-people"></i>
-
-                <h6 class="fw-semibold">
-                    No visitors found
-                </h6>
-
-                <p class="mb-0">
-                    Your visitor records will appear here once a visitor is registered.
-                </p>
-            </div>
-
-        {% endif %}
-
+        <span class="complaint-count">
+            {{ visitors|length }} Record{{ visitors|length|pluralize }}
+        </span>
     </div>
+
+    <div class="complaint-table-wrapper">
+        <table class="complaint-table">
+            <thead>
+                <tr>
+                    <th>Visitor Name</th>
+                    <th>Relation</th>
+                    <th>Phone</th>
+                    <th>Purpose</th>
+                    <th>Check In</th>
+                    <th>Check Out</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for visitor in visitors %}
+                <tr>
+                    <td>
+                        <span class="visitor-name">
+                            {{ visitor.visitor_name }}
+                        </span>
+                    </td>
+
+                    <td>
+                        {{ visitor.get_relation_display }}
+                    </td>
+
+                    <td>
+                        <span class="visitor-phone">
+                            {{ visitor.phone }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="visitor-purpose">
+                            {{ visitor.purpose }}
+                        </div>
+                    </td>
+
+                    <td>
+                        <span class="visitor-date">
+                            {{ visitor.check_in|date:"d M Y, h:i A" }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="visitor-date">
+                            {% if visitor.check_out %}
+                                {{ visitor.check_out|date:"d M Y, h:i A" }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </span>
+                    </td>
+
+                    <td>
+                        {% if visitor.is_checked_in %}
+                            <span class="visitor-status visitor-inside">
+                                <i class="bi bi-person-check"></i>
+                                Inside
+                            </span>
+                        {% else %}
+                            <span class="visitor-status visitor-checked-out">
+                                <i class="bi bi-person-x"></i>
+                                Checked Out
+                            </span>
+                        {% endif %}
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="fees-empty">
+                        <i class="bi bi-people"></i>
+                        <h5>No visitors found</h5>
+                        <p>Your visitor records will appear here once a visitor is registered.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 {% endblock %}

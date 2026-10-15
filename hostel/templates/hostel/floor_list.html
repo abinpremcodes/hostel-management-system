@@ -1,12 +1,10 @@
+
 {% extends "base.html" %}
 
 {% block title %}Floors{% endblock %}
 
-
 {% block extra_css %}
-
 <style>
-
 /* =========================================================
    FLOOR LIST PAGE
 ========================================================= */
@@ -21,53 +19,63 @@
     color: var(--text-dark);
 }
 
-.floor-page-header p {
-    font-size: 13px;
-}
-
-
 /* =========================================================
-   STAT CARD
+   FLOOR STAT - MATCH BUILDINGS PAGE
 ========================================================= */
 
 .floor-stat-card {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
+    min-height: 58px;
+    padding: 8px 18px 8px 10px;
+    margin-bottom: 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
 
-    padding: 18px 20px;
-
-    margin-bottom: 22px;
+.floor-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: #d5d9e5;
 }
 
 .floor-stat-icon {
-    width: 46px;
-    height: 46px;
-
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    border-radius: 12px;
-
-    background: var(--primary-light);
-    color: var(--primary);
-
-    font-size: 21px;
+    background: var(--primary);
+    color: white;
+    flex-shrink: 0;
+    transition: var(--transition);
 }
 
-.floor-stat-number {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--text-dark);
-    line-height: 1.1;
+.floor-stat-icon i {
+    font-size: 16px;
+}
+
+.floor-stat-card:hover .floor-stat-icon {
+    transform: scale(1.08) rotate(4deg);
 }
 
 .floor-stat-label {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted);
+    margin-bottom: 1px;
 }
 
+.floor-stat-number {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-dark);
+}
 
 /* =========================================================
    FLOOR TABLE CARD
@@ -75,35 +83,33 @@
 
 .floor-table-card {
     overflow: hidden;
+    transition: var(--transition);
+}
+
+.floor-table-card:hover {
+    box-shadow: var(--shadow-md);
 }
 
 .floor-table-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     padding: 18px 20px;
-
     border-bottom: 1px solid var(--border);
-
     background: #ffffff;
 }
 
 .floor-table-header h5 {
     margin: 0;
-
     font-size: 16px;
     font-weight: 700;
-
     color: var(--text-dark);
 }
 
 .floor-table-header p {
     margin: 4px 0 0;
-
     font-size: 12px;
 }
-
 
 /* =========================================================
    TABLE
@@ -119,31 +125,21 @@
 
 .floor-table thead th {
     padding: 13px 16px;
-
     background: #f8f9fc;
-
     border-bottom: 1px solid var(--border);
-
     color: var(--text-muted);
-
     font-size: 11px;
     font-weight: 700;
-
     text-transform: uppercase;
     letter-spacing: 0.5px;
-
     white-space: nowrap;
 }
 
 .floor-table tbody td {
     padding: 14px 16px;
-
     vertical-align: middle;
-
     border-color: var(--border);
-
     color: var(--text-dark);
-
     font-size: 13px;
 }
 
@@ -155,7 +151,6 @@
     background: #fafbff;
 }
 
-
 /* =========================================================
    BUILDING NAME
 ========================================================= */
@@ -163,28 +158,22 @@
 .building-name {
     display: flex;
     align-items: center;
-
     gap: 10px;
-
     font-weight: 600;
 }
 
 .building-icon {
     width: 34px;
     height: 34px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 9px;
-
     background: var(--primary-light);
     color: var(--primary);
-
     font-size: 15px;
+    flex-shrink: 0;
 }
-
 
 /* =========================================================
    FLOOR NUMBER
@@ -192,25 +181,17 @@
 
 .floor-number {
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
-
     min-width: 34px;
     height: 30px;
-
     padding: 0 10px;
-
     border-radius: 8px;
-
     background: #f1f3f8;
-
     color: var(--text-dark);
-
     font-size: 12px;
     font-weight: 700;
 }
-
 
 /* =========================================================
    ACTION BUTTONS
@@ -218,23 +199,17 @@
 
 .floor-actions {
     display: flex;
-
     align-items: center;
-
     gap: 7px;
 }
 
 .floor-actions .action-btn {
     width: 34px;
     height: 34px;
-
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
-
     padding: 0;
-
     border-radius: 8px;
 }
 
@@ -242,51 +217,39 @@
     font-size: 14px;
 }
 
-
 /* =========================================================
    EMPTY STATE
 ========================================================= */
 
 .floor-empty-state {
     padding: 55px 20px;
-
     text-align: center;
-
     color: var(--text-muted);
 }
 
 .floor-empty-icon {
     width: 58px;
     height: 58px;
-
     margin: 0 auto 14px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     border-radius: 16px;
-
     background: #f1f3f8;
-
     font-size: 24px;
 }
 
 .floor-empty-state h5 {
     margin-bottom: 5px;
-
     color: var(--text-dark);
-
     font-size: 15px;
     font-weight: 600;
 }
 
 .floor-empty-state p {
     margin-bottom: 0;
-
     font-size: 12px;
 }
-
 
 /* =========================================================
    DELETE MODAL
@@ -294,33 +257,25 @@
 
 #deleteModal .modal-content {
     border: none;
-
     border-radius: 16px;
-
     overflow: hidden;
-
     box-shadow: var(--shadow-md);
 }
 
 #deleteModal .modal-header {
     padding: 18px 20px;
-
     border-bottom: 1px solid var(--border);
 }
 
 #deleteModal .modal-title {
     font-size: 16px;
-
     font-weight: 700;
-
     color: var(--text-dark);
 }
 
 #deleteModal .modal-body {
     padding: 20px;
-
     color: var(--text-muted);
-
     font-size: 13px;
 }
 
@@ -330,22 +285,17 @@
 
 #deleteModal .modal-footer {
     padding: 14px 20px;
-
     border-top: 1px solid var(--border);
 }
-
 
 /* =========================================================
    RESPONSIVE
 ========================================================= */
 
 @media (max-width: 768px) {
-
     .floor-page-header {
         flex-direction: column;
-
         align-items: flex-start !important;
-
         gap: 15px;
     }
 
@@ -361,187 +311,96 @@
     .floor-table thead th {
         padding: 12px;
     }
-
 }
-
 </style>
-
 {% endblock %}
-
 
 {% block content %}
 
-
-<!-- =========================================================
-     PAGE HEADER
-========================================================= -->
+<!-- PAGE HEADER -->
 
 <div class="floor-page-header d-flex justify-content-between align-items-center">
-
     <div>
-
-        <h2 class="mb-1">
-            Floors
-        </h2>
-
+        <h2 class="mb-1">Floors</h2>
         <p class="text-muted mb-0">
             Manage floors within your hostel buildings.
         </p>
-
     </div>
 
-
-    <a
-        href="{% url 'hostel:floor_add' %}"
-        class="btn btn-primary"
-    >
-
+    <a href="{% url 'hostel:floor_add' %}" class="btn btn-primary">
         <i class="bi bi-plus-circle me-1"></i>
-
         Add Floor
-
     </a>
-
 </div>
 
+<!-- FLOOR STAT -->
 
-
-<!-- =========================================================
-     FLOOR STAT
-========================================================= -->
-
-<div class="card floor-stat-card">
-
+<div class="floor-stat-card">
     <div class="floor-stat-icon">
-
         <i class="bi bi-layers"></i>
-
     </div>
-
 
     <div>
-
-        <div class="floor-stat-number">
-            {{ floors|length }}
-        </div>
-
-        <div class="floor-stat-label">
-            Total Floors
-        </div>
-
+        <div class="floor-stat-label">Total Floors</div>
+        <div class="floor-stat-number">{{ floors|length }}</div>
     </div>
-
 </div>
 
-
-
-<!-- =========================================================
-     FLOOR TABLE
-========================================================= -->
+<!-- FLOOR TABLE -->
 
 <div class="card floor-table-card">
-
-
     <div class="floor-table-header">
-
         <div>
-
             <h5>
                 <i class="bi bi-layers me-2"></i>
                 Floor List
             </h5>
-
             <p class="text-muted">
                 View and manage all hostel floors.
             </p>
-
         </div>
-
     </div>
 
-
-
     <div class="floor-table-wrapper">
-
         <table class="table floor-table">
-
             <thead>
-
                 <tr>
-
-                    <th>
-                        Building
-                    </th>
-
-                    <th>
-                        Floor Number
-                    </th>
-
-                    <th class="text-end">
-                        Actions
-                    </th>
-
+                    <th>Building</th>
+                    <th>Floor Number</th>
+                    <th class="text-end">Actions</th>
                 </tr>
-
             </thead>
 
-
             <tbody>
-
                 {% for floor in floors %}
-
                 <tr>
-
                     <td>
-
                         <div class="building-name">
-
                             <div class="building-icon">
-
                                 <i class="bi bi-building"></i>
-
                             </div>
-
-                            <span>
-                                {{ floor.building.name }}
-                            </span>
-
+                            <span>{{ floor.building.name }}</span>
                         </div>
-
                     </td>
 
-
                     <td>
-
                         <span class="floor-number">
-
                             Floor {{ floor.floor_number }}
-
                         </span>
-
                     </td>
 
-
                     <td>
-
                         <div class="floor-actions justify-content-end">
-
-
                             <!-- EDIT -->
-
                             <a
                                 href="{% url 'hostel:floor_edit' floor.pk %}"
                                 class="btn btn-sm btn-outline-primary action-btn"
                                 title="Edit Floor"
                             >
-
                                 <i class="bi bi-pencil"></i>
-
                             </a>
 
-
                             <!-- DELETE -->
-
                             <button
                                 type="button"
                                 class="btn btn-sm btn-outline-danger action-btn delete-floor-btn"
@@ -549,62 +408,31 @@
                                 data-floor-name="{{ floor.building.name }} - Floor {{ floor.floor_number }}"
                                 data-delete-url="{% url 'hostel:floor_delete' floor.pk %}"
                             >
-
                                 <i class="bi bi-trash"></i>
-
                             </button>
-
-
                         </div>
-
                     </td>
-
                 </tr>
-
 
                 {% empty %}
-
                 <tr>
-
                     <td colspan="3">
-
                         <div class="floor-empty-state">
-
                             <div class="floor-empty-icon">
-
                                 <i class="bi bi-layers"></i>
-
                             </div>
-
-                            <h5>
-                                No Floors Found
-                            </h5>
-
-                            <p>
-                                Add your first floor to get started.
-                            </p>
-
+                            <h5>No Floors Found</h5>
+                            <p>Add your first floor to get started.</p>
                         </div>
-
                     </td>
-
                 </tr>
-
                 {% endfor %}
-
             </tbody>
-
         </table>
-
     </div>
-
 </div>
 
-
-
-<!-- =========================================================
-     DELETE CONFIRMATION MODAL
-========================================================= -->
+<!-- DELETE CONFIRMATION MODAL -->
 
 <div
     class="modal fade"
@@ -612,121 +440,68 @@
     tabindex="-1"
     aria-hidden="true"
 >
-
     <div class="modal-dialog modal-dialog-centered">
-
         <div class="modal-content">
-
-
             <div class="modal-header">
-
                 <h5 class="modal-title">
-
                     <i class="bi bi-exclamation-triangle text-danger me-2"></i>
-
                     Confirm Delete
-
                 </h5>
-
 
                 <button
                     type="button"
                     class="btn-close"
                     data-bs-dismiss="modal"
                 ></button>
-
             </div>
-
 
             <div class="modal-body">
-
                 Are you sure you want to delete
-
                 <strong id="deleteFloorName"></strong>?
-
                 <br><br>
-
                 This action cannot be undone.
-
             </div>
 
-
             <div class="modal-footer">
-
                 <button
                     type="button"
                     class="btn btn-outline-secondary"
                     data-bs-dismiss="modal"
                 >
-
                     Cancel
-
                 </button>
 
-
-                <form
-                    id="deleteForm"
-                    method="post"
-                >
-
+                <form id="deleteForm" method="post">
                     {% csrf_token %}
 
-                    <button
-                        type="submit"
-                        class="btn btn-danger"
-                    >
-
+                    <button type="submit" class="btn btn-danger">
                         <i class="bi bi-trash me-1"></i>
-
                         Yes, Delete
-
                     </button>
-
                 </form>
-
             </div>
-
-
         </div>
-
     </div>
-
 </div>
 
-
-
-<!-- =========================================================
-     DELETE MODAL JAVASCRIPT
-========================================================= -->
+<!-- DELETE MODAL JAVASCRIPT -->
 
 <script>
-
 document.querySelectorAll('.delete-floor-btn').forEach(function(button) {
-
     button.addEventListener('click', function() {
-
         const floorName = this.dataset.floorName;
-
         const deleteUrl = this.dataset.deleteUrl;
 
-
         document.getElementById('deleteFloorName').textContent = floorName;
-
         document.getElementById('deleteForm').action = deleteUrl;
-
 
         const modal = new bootstrap.Modal(
             document.getElementById('deleteModal')
         );
 
-
         modal.show();
-
     });
-
 });
-
 </script>
-
 
 {% endblock %}

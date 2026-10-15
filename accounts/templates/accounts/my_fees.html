@@ -1,34 +1,249 @@
+
 {% extends "base.html" %}
 
 {% block title %}My Fees{% endblock %}
 
 {% block content %}
-<h2>My Fees</h2>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Due Date</th>
-            <th>Status</th>
-            <th>Balance</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for fee in fees %}
-        <tr>
-            <td>{{ fee.get_fee_type_display }}</td>
-            <td>₹{{ fee.amount }}</td>
-            <td>{{ fee.due_date }}</td>
-            <td>{{ fee.get_status_display }}</td>
-            <td>₹{{ fee.balance }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5" class="text-center">No fees found.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<style>
+    .complaint-header {
+        margin-bottom: 24px;
+    }
+
+    .complaint-header h2 {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+    }
+
+    .complaint-header p {
+        color: var(--muted);
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+
+    .complaint-card {
+        background: var(--card);
+        border: none;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .complaint-card-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .complaint-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0;
+    }
+
+    .complaint-card-title i {
+        color: var(--primary);
+        font-size: 19px;
+    }
+
+    .complaint-count {
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .complaint-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .complaint-table {
+        width: 100%;
+        min-width: 700px;
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .complaint-table thead th {
+        background: #f8fafc;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+    }
+
+    .complaint-table tbody td {
+        padding: 16px 20px;
+        color: var(--text);
+        font-size: 14px;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .complaint-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .complaint-table tbody tr:hover {
+        background: #fafbff;
+    }
+
+    .fee-type {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .fee-amount,
+    .fee-balance {
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .fee-date {
+        color: var(--muted);
+        white-space: nowrap;
+    }
+
+    .fee-status {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        background: var(--primary-light);
+        color: var(--primary);
+        white-space: nowrap;
+    }
+
+    .fees-empty {
+        text-align: center;
+        padding: 48px 20px !important;
+        color: var(--muted) !important;
+    }
+
+    .fees-empty i {
+        display: block;
+        font-size: 36px;
+        margin-bottom: 12px;
+        opacity: 0.6;
+    }
+
+    .fees-empty h5 {
+        color: var(--text);
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .fees-empty p {
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+        .complaint-card-header {
+            padding: 16px;
+        }
+
+        .complaint-table thead th,
+        .complaint-table tbody td {
+            padding: 13px 15px;
+        }
+    }
+</style>
+
+<div class="complaint-header">
+    <h2>My Fees</h2>
+    <p>View your fee details, due dates, payment status and balance.</p>
+</div>
+
+<div class="complaint-card">
+
+    <div class="complaint-card-header">
+        <h5 class="complaint-card-title">
+            <i class="bi bi-receipt"></i>
+            Fee Details
+        </h5>
+
+        <span class="complaint-count">
+            {{ fees|length }} Record{{ fees|length|pluralize }}
+        </span>
+    </div>
+
+    <div class="complaint-table-wrapper">
+        <table class="complaint-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for fee in fees %}
+                <tr>
+                    <td>
+                        <span class="fee-type">
+                            {{ fee.get_fee_type_display }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="fee-amount">
+                            ₹{{ fee.amount }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="fee-date">
+                            {{ fee.due_date }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="fee-status">
+                            {{ fee.get_status_display }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="fee-balance">
+                            ₹{{ fee.balance }}
+                        </span>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="fees-empty">
+                        <i class="bi bi-receipt"></i>
+                        <h5>No fees found</h5>
+                        <p>Your fee records will appear here when available.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
 {% endblock %}

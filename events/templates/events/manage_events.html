@@ -1,0 +1,397 @@
+
+{% extends "base.html" %}
+
+{% block title %}Events{% endblock %}
+{% block nav_events %}active{% endblock %}
+
+{% block content %}
+
+<style>
+    .complaint-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .complaint-header h2 {
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+    }
+
+    .complaint-header p {
+        color: var(--muted);
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+
+    .add-event-btn {
+        background: var(--primary);
+        border: none;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 9px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .add-event-btn:hover {
+        filter: brightness(0.92);
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    .complaint-card {
+        width: 100%;
+        background: var(--card);
+        border: none;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .complaint-card-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .complaint-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0;
+    }
+
+    .complaint-card-title i {
+        color: var(--primary);
+        font-size: 19px;
+    }
+
+    .complaint-count {
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .complaint-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .complaint-table {
+        width: 100%;
+        min-width: 750px;
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .complaint-table thead th {
+        background: #f8fafc;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+    }
+
+    .complaint-table tbody td {
+        padding: 16px 20px;
+        color: var(--text);
+        font-size: 14px;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .complaint-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .complaint-table tbody tr:hover {
+        background: #fafbff;
+    }
+
+    .event-title {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 5px;
+    }
+
+    .event-description {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+        max-width: 300px;
+    }
+
+    .event-detail {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        white-space: nowrap;
+    }
+
+    .event-detail i {
+        color: var(--primary);
+        font-size: 15px;
+    }
+
+    .event-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .event-action-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .event-edit-btn {
+        background: #eef2ff;
+        color: #4f46e5;
+        border: 1px solid #e0e7ff;
+    }
+
+    .event-edit-btn:hover {
+        background: #e0e7ff;
+        color: #3730a3;
+        transform: translateY(-1px);
+    }
+
+    .event-delete-btn {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fee2e2;
+    }
+
+    .event-delete-btn:hover {
+        background: #fee2e2;
+        color: #b91c1c;
+        transform: translateY(-1px);
+    }
+
+    .event-empty {
+        text-align: center;
+        padding: 48px 20px;
+    }
+
+    .event-empty-icon {
+        width: 58px;
+        height: 58px;
+        margin: 0 auto 15px;
+        border-radius: 14px;
+        background: var(--primary-light);
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+    }
+
+    .event-empty h5 {
+        color: var(--text);
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 7px;
+    }
+
+    .event-empty p {
+        color: var(--muted);
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+        .complaint-header {
+            align-items: stretch;
+        }
+
+        .add-event-btn {
+            align-self: flex-start;
+        }
+
+        .complaint-card-header {
+            padding: 16px;
+        }
+
+        .complaint-table thead th,
+        .complaint-table tbody td {
+            padding: 13px 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .add-event-btn {
+            width: 100%;
+        }
+
+        .complaint-count {
+            font-size: 11px;
+            padding: 5px 9px;
+        }
+    }
+</style>
+
+<!-- Page Header -->
+<div class="complaint-header">
+    <div>
+        <h2>Events</h2>
+        <p>Create and manage hostel events.</p>
+    </div>
+
+    <a href="{% url 'events:create_event' %}" class="add-event-btn">
+        <i class="bi bi-plus-lg"></i>
+        Add Event
+    </a>
+</div>
+
+<!-- Events Card -->
+<div class="complaint-card">
+
+    <div class="complaint-card-header">
+        <h5 class="complaint-card-title">
+            <i class="bi bi-calendar-event"></i>
+            Event Records
+        </h5>
+
+        <span class="complaint-count">
+            {{ events|length }}
+            Event{{ events|length|pluralize }}
+        </span>
+    </div>
+
+    <div class="complaint-table-wrapper">
+
+        {% if events %}
+
+        <table class="complaint-table">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Venue</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <!-- Event -->
+                    <td>
+                        <div class="event-title">
+                            {{ event.title }}
+                        </div>
+
+                        <small class="event-description">
+                            {{ event.description|truncatewords:10 }}
+                        </small>
+                    </td>
+
+                    <!-- Date -->
+                    <td>
+                        <span class="event-detail">
+                            <i class="bi bi-calendar3"></i>
+                            {{ event.date|date:"d M Y" }}
+                        </span>
+                    </td>
+
+                    <!-- Time -->
+                    <td>
+                        <span class="event-detail">
+                            <i class="bi bi-clock"></i>
+                            {{ event.time|time:"h:i A" }}
+                        </span>
+                    </td>
+
+                    <!-- Venue -->
+                    <td>
+                        <span class="event-detail">
+                            <i class="bi bi-geo-alt"></i>
+                            {{ event.venue }}
+                        </span>
+                    </td>
+
+                    <!-- Actions -->
+                    <td>
+                        <div class="event-actions">
+
+                            <a
+                                href="{% url 'events:edit_event' event.pk %}"
+                                class="event-action-btn event-edit-btn"
+                                title="Edit event"
+                                aria-label="Edit {{ event.title }}"
+                            >
+                                <i class="bi bi-pencil"></i>
+                            </a>
+
+                            <a
+                                href="{% url 'events:delete_event' event.pk %}"
+                                class="event-action-btn event-delete-btn"
+                                title="Delete event"
+                                aria-label="Delete {{ event.title }}"
+                            >
+                                <i class="bi bi-trash"></i>
+                            </a>
+
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+
+        <!-- Empty State -->
+        <div class="event-empty">
+            <div class="event-empty-icon">
+                <i class="bi bi-calendar-event"></i>
+            </div>
+
+            <h5>No events found</h5>
+
+            <p>
+                Events you create will appear here.
+            </p>
+        </div>
+
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

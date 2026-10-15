@@ -1,0 +1,300 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Events{% endblock %}
+
+{% block content %}
+
+<style>
+    .events-header {
+        margin-bottom: 24px;
+    }
+
+    .events-header h2 {
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: var(--text);
+    }
+
+    .events-header p {
+        color: var(--muted);
+        margin-bottom: 0;
+    }
+
+    .events-card {
+        border: 0;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        background: var(--card);
+    }
+
+    .events-card-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .events-card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        color: var(--text);
+        margin: 0;
+    }
+
+    .events-count {
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .events-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .events-table {
+        margin-bottom: 0;
+        min-width: 700px;
+    }
+
+    .events-table thead th {
+        background: #f8fafc;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-bottom: 1px solid var(--border);
+        padding: 14px 16px;
+        white-space: nowrap;
+    }
+
+    .events-table tbody td {
+        padding: 16px;
+        border-bottom: 1px solid #f0f1f5;
+        color: var(--text);
+        vertical-align: middle;
+    }
+
+    .events-table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .events-table tbody tr:hover {
+        background: #fafbff;
+    }
+
+    .event-title {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 4px;
+    }
+
+    .event-description {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+        max-width: 320px;
+    }
+
+    .event-date-time {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        font-size: 13px;
+    }
+
+    .event-date-time i,
+    .event-venue i {
+        color: var(--primary);
+        font-size: 15px;
+    }
+
+    .event-venue {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 13px;
+        overflow-wrap: anywhere;
+    }
+
+    .event-details-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--primary);
+        background: var(--card);
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+    }
+
+    .event-details-btn:hover {
+        color: var(--primary);
+        background: var(--primary-light);
+        border-color: var(--primary);
+    }
+
+    .events-empty {
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .events-empty-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        background: var(--primary-light);
+        color: var(--primary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin-bottom: 16px;
+    }
+
+    .events-empty h5 {
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--text);
+    }
+
+    .events-empty p {
+        color: var(--muted);
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 576px) {
+        .events-card-header {
+            padding: 15px;
+        }
+
+        .events-table {
+            min-width: 700px;
+        }
+    }
+</style>
+
+<!-- Page Header -->
+<div class="events-header">
+    <h2>
+        <i class="bi bi-calendar-event me-2"></i>
+        My Events
+    </h2>
+
+    <p>View upcoming events and activities in your hostel.</p>
+</div>
+
+<!-- Events Card -->
+<div class="events-card">
+
+    <div class="events-card-header">
+        <h5 class="events-card-title">
+            <i class="bi bi-list-check"></i>
+            Event List
+        </h5>
+
+        <span class="events-count">
+            {{ events|length }}
+            event{{ events|length|pluralize }}
+        </span>
+    </div>
+
+    <div class="events-table-wrapper">
+        <table class="table events-table align-middle">
+            <thead>
+                <tr>
+                    <th style="width: 32%;">Event</th>
+                    <th style="width: 17%;">Date</th>
+                    <th style="width: 14%;">Time</th>
+                    <th style="width: 20%;">Venue</th>
+                    <th style="width: 17%;" class="text-center">Details</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>
+                        <div class="event-title">
+                            {{ event.title }}
+                        </div>
+
+                        {% if event.description %}
+                        <div class="event-description">
+                            {{ event.description|truncatechars:85 }}
+                        </div>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <div class="event-date-time">
+                            <i class="bi bi-calendar3"></i>
+                            <span>{{ event.date|date:"d M Y" }}</span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="event-date-time">
+                            <i class="bi bi-clock"></i>
+                            <span>{{ event.time|time:"h:i A" }}</span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="event-venue">
+                            <i class="bi bi-geo-alt"></i>
+                            <span>{{ event.venue }}</span>
+                        </div>
+                    </td>
+
+                    <td class="text-center">
+                        <a href="{% url 'events:event_detail' event.pk %}"
+                           class="event-details-btn">
+                            View Details
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="5">
+                        <div class="events-empty">
+                            <div class="events-empty-icon">
+                                <i class="bi bi-calendar2-event"></i>
+                            </div>
+
+                            <h5>No events found</h5>
+
+                            <p>
+                                Upcoming hostel events will appear here.
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}
