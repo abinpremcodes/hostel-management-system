@@ -2,6 +2,17 @@
 
 A web-based hostel management application built with Django to simplify hostel administration and student services through a centralized platform.
 
+## Live Demo
+
+**Website:** https://hostel-management-system-r1pe.onrender.com
+
+### Demo Admin Login
+
+- **Username:** `demo_admin`
+- **Password:** 'demoabin'
+
+*Note: This is an application-level admin account, not a Django superuser. Demo student credentials will be added after creating the student account.*
+
 ## Overview
 
 The Hostel Management System helps administrators and wardens manage hostel operations, while students can access their personal hostel information and services through a dedicated dashboard.
@@ -62,10 +73,8 @@ Make sure you have installed:
 
 ```bash
 git clone https://github.com/abinpremcodes/hostel-management-system.git
-cd Hostel_Management_System
+cd hostel-management-system
 ```
-
-
 
 ### 2. Create a virtual environment
 
@@ -146,6 +155,7 @@ Hostel_Management_System/
 - Do not commit `.env` files or database backups containing private information.
 - Use `DEBUG=False` and configure `ALLOWED_HOSTS` appropriately before production deployment.
 - Use HTTPS and secure production settings when deploying the application.
+- Demo credentials are public and should never be reused for personal accounts.
 
 ## Future Improvements
 
