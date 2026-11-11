@@ -9,13 +9,23 @@ A web-based hostel management application built with Django to simplify hostel a
 ### Demo Admin Login
 
 - **Username:** `demo_admin`
-- **Password:** 'demoabin'
+- **Password:** Demo credentials are provided separately for testing.
 
-*Note: This is an application-level admin account, not a Django superuser. Demo student credentials will be added after creating the student account.*
+*Note: This is an application-level admin account, not a Django superuser.*
 
 ## Overview
 
 The Hostel Management System helps administrators and wardens manage hostel operations, while students can access their personal hostel information and services through a dedicated dashboard.
+
+## User Roles and Access
+
+The application implements role-based access control with three user roles:
+
+- **Admin:** Manages hostel operations, creates student accounts, and manages student information.
+- **Warden:** Handles assigned hostel management activities.
+- **Student:** Logs in using credentials provided by the administrator and accesses their personal hostel dashboard.
+
+**Important:** Student self-registration is disabled. Student accounts can only be created by an administrator to maintain controlled access.
 
 ## Features
 
@@ -155,7 +165,7 @@ Hostel_Management_System/
 - Do not commit `.env` files or database backups containing private information.
 - Use `DEBUG=False` and configure `ALLOWED_HOSTS` appropriately before production deployment.
 - Use HTTPS and secure production settings when deploying the application.
-- Demo credentials are public and should never be reused for personal accounts.
+- Demo accounts should contain sample data only and must not use personal credentials.
 
 ## Future Improvements
 
