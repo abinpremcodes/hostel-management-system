@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 
 
 from pathlib import Path
+
 import os
 import dj_database_url
 
@@ -105,6 +106,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 
+
+
 if os.getenv("DATABASE_URL"):
     DATABASES = {
         "default": dj_database_url.parse(
@@ -120,10 +123,11 @@ else:
             "NAME": os.getenv("DB_NAME"),
             "USER": os.getenv("DB_USER"),
             "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": "localhost",
+            "HOST": os.getenv("DB_HOST", "localhost"),
             "PORT": "5432",
         }
     }
+
 
 
 
